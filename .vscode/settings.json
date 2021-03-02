@@ -6,4 +6,12 @@
     "iostream": "cpp",
     "vector": "cpp"
   },
+  "triggerTaskOnSave.on": true,
+  "triggerTaskOnSave.tasks": {
+    "Build tests": [ // Nome da tarefa a ser desencadeada
+      "src/!main.c",
+      "tests/*.cpp",
+      "tests/**/*.cpp",
+    ]
+  },
 }
