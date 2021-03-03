@@ -17,6 +17,9 @@ std::vector<std::string> parseLine(std::string line) {
   std::string label = "", operation = "", operand1 = "", operand2 = "";
 
   // encontrar label 
+  // label = findLabel(line);
+  // operation = findOperation(line); // eu preciso verificar a existencia da operação?
+
   for (int i = 0; i < line.length(); i++) {
     if (line[i] == ':' && !labelFound) {
       labelFound = true;
@@ -85,5 +88,6 @@ std::string findLabel(std::string line) {
     //    throw new TwoLabelsSameLineExeception
   }
   
-  return label;
+  return nullptr;
+  // return label;
 }

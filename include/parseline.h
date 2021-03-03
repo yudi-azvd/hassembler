@@ -12,18 +12,11 @@ struct LineAndItsTokens {
 };
 
 
-struct TokenizedLine {
-  std::string label;
-  std::string operation;
-  std::string operand1;
-  std::string operand2;
-};
-
-
 /**
  * @brief Processa uma linha retornando LABEL, OPERAÇÃO, OPERANDO_1 e OPERANDO_2
  * 
  * @param[in] line Linha
+ * @return vetor de strings com 0: ROTULO?, 1: OPERAÇÃO, 2: OPERANDO1, 3: OPERANDO2
  */
 std::vector<std::string> parseLine(std::string line);
 

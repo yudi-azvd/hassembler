@@ -27,6 +27,7 @@ TEST_CASE("findLabel") {
   expectedLabel = "N2";
   CHECK_EQ(gotLabel, expectedLabel);
 
+  
   gotLabel = findLabel("N2: CONST: 2");
   expectedLabel = "N2";
   CHECK_EQ(gotLabel, expectedLabel);

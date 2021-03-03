@@ -1,6 +1,5 @@
-# 
 
-MAIN_EXEC ?= assembler
+MAIN_EXEC ?= montador
 
 TESTS_EXEC ?= test_exec
 
