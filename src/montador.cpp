@@ -48,9 +48,13 @@ void assemble(
     // if tokens.size() == 0: continue; savedLabelForLater=label; lineCounter++; // linha vazia
     // if label?.size() == 0: continue; savedLabelForLater=label; lineCounter++; // linha vazia
     // doStuffWithTokens(tokens); // teste de unidade
-    label = savedLabelForLater.length() > 0
-      ? savedLabelForLater
-      : tokens[0];
+    if (savedLabelForLater.length() > 0) {
+      label = savedLabelForLater;
+      savedLabelForLater = "";
+    }
+    else {
+      label = tokens[0];
+    }
     operation = tokens[1];
     operand1 = tokens[2];
     operand2 = tokens[3];
