@@ -1,6 +1,8 @@
 #include <cctype>
+#include <exception>
 
 #include "../include/parseline.h"
+#include "../include/errors.h"
 
 std::ostream &operator<<(std::ostream& os, const LineAndItsTokens& line) {
   std::string tokens = "";
@@ -17,29 +19,9 @@ std::vector<std::string> parseLine(std::string line) {
   std::string label = "", operation = "", operand1 = "", operand2 = "";
 
   // encontrar label 
-  // label = findLabel(line);
+  label = findLabel(line);
+
   // operation = findOperation(line); // eu preciso verificar a existencia da operação?
-
-  for (int i = 0; i < line.length(); i++) {
-    if (line[i] == ':' && !labelFound) {
-      labelFound = true;
-      labelIndex = i-1; // desconsiderar ':'
-
-      // tem que verificar se tem _ ou outros chars válidos.
-      while (std::isalpha(line[labelIndex]) || std::isdigit(line[labelIndex]) && labelIndex >= 0) {
-        char c = line[labelIndex--];
-        label.insert(0, 1, c);
-      }
-      
-      // label mal escrito vai dar ruim!!!
-      /**
-       * if (label[0] is not letter) {
-       *    throw new LexicalError
-       * }
-      */
-    }
-  }
-
   // encontrar operando 
   // i = label.length()+1 
   // procurar operandos a partir de i
@@ -64,30 +46,44 @@ std::string findLabel(std::string line) {
       labelFound = true;
       labelIndex = i-1; // desconsiderar ':'
 
-      // tem que verificar se tem _ ou outros chars válidos.
-      // isValidCharForLabel(line[labelIndex])
-      while (std::isalpha(line[labelIndex]) || std::isdigit(line[labelIndex]) && labelIndex >= 0) {
-        c = line[labelIndex--]; // c não é necessário!
+      while (
+        labelIndex >= 0 && 
+        (line[labelIndex] != ' ' 
+        || line[labelIndex] != '\t' 
+        || line[labelIndex] == '_')
+      ) {
+        c = line[labelIndex--];
         label.insert(0, 1, c);
       }
       
-      // label mal escrito vai dar ruim!!!
-      /**
-       * if (label[0] is not letter) {
-       *    throw new LexicalError
-       * }
-      */
+      validateLabel(label);
 
       break;
     }
   }
 
   // erro sintático
-  for (; i < line.length(); i++) {
-    // if found another label && labelFound 
-    //    throw new TwoLabelsSameLineExeception
-  }
+  // ++i; // pra ir pra depois do ':'
+  // for (; i < line.length(); i++) {
+  //   if (line[i] == ':' && labelFound) {
+  //     throw SyntaticError("two labels in the same line");
+  //   }
+  // }
   
-  return nullptr;
-  // return label;
+  return label;
+}
+
+
+void validateLabel(std::string label) {
+  if (!std::isalpha(label[0]) && label[0] != '_') {
+    throw LexicalError("invalid label: " + label);
+  }
+
+  bool isValidChar = true;
+  for (auto c : label) {
+    isValidChar = std::isalpha(c) || std::isdigit(c) || c == '_';
+    if (!isValidChar) {
+      throw LexicalError("invalid label: " + label);
+    }
+  }
 }

@@ -22,4 +22,12 @@ std::vector<std::string> parseLine(std::string line);
 
 std::string findLabel(std::string line);
 
+/**
+ * @brief Valida um label (generalizar pra  umm símbolo?)
+ * 
+ * Válidos: n2, N2, __N2
+ */
+void validateLabel(std::string label);
+
+
 #endif // !PARSELINE_H_INCLUDED

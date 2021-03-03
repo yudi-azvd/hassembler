@@ -61,7 +61,8 @@
   "triggerTaskOnSave.on": true,
   "triggerTaskOnSave.tasks": {
     "Build tests": [ // Nome da tarefa a ser desencadeada
-      "src/!main.c",
+      "src/!main.cpp",
+      "src/*.cpp",
       "tests/*.cpp",
       "tests/**/*.cpp",
     ]

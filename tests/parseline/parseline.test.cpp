@@ -6,10 +6,7 @@
 #include "../../include/parseline.h"
 
 
-TEST_CASE(
-  "parse line, dummy"
-  * doctest::skip(true)
-) {
+TEST_CASE("parse line, dummy") {
   std::string line;
   std::vector<std::string> expectedTokens;
   std::vector<std::string> gotTokens;
