@@ -5,7 +5,7 @@ TESTS_EXEC ?= test_exec
 
 CXX = g++
 
-CXXFLAGS = -g
+CXXFLAGS = -g -Wall -pedantic
 
 BUILD_DIR ?= build
 SRC_DIRS ?= src 
@@ -26,8 +26,8 @@ all: main tests
 # Executável principal             #
 ####################################
 main: $(BUILD_DIR)/$(MAIN_EXEC) 
-	@echo "  > main: Done $@ => $<"
-	@echo "  ------------------------\n"
+	@echo " > main: Done $@ => $<"
+	@echo " ------------------------"
 
 $(BUILD_DIR)/$(MAIN_EXEC): $(OBJS) $(MAIN)
 	@echo ">> main: Building executable"
@@ -46,9 +46,9 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 ####################################
 tests: $(BUILD_DIR)/$(TESTS_EXEC)
 	@echo " > test: Build done"
+	@echo " ------------------------"
 
 $(BUILD_DIR)/$(TESTS_EXEC): $(TEST_OBJS)
-	@echo ">> deps $(TEST_OBJS)"
 	@echo ">> test: Building TEST executable $@"
 	@$(CXX) $(CXXFLAGS) $(TEST_OBJS) -o $@
 
