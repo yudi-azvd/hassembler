@@ -50,8 +50,6 @@ void Assembler::runFirstPass() {
   std::string savedLabelForLater;
 
   for (std::string line : sourceFileContent) {
-    std::cout << lineCounter << ": " << line << std::endl;
-
     // not necessarily length = 0
     // if line is empty: continue; lineCounter++;
     tokens = parseLine(line);
@@ -102,13 +100,16 @@ void Assembler::runFirstPass() {
 
 
 std::vector<std::string> Assembler::parseLine(std::string line) {
-  bool labelFound = false;
-  int labelIndex = 0, operationIndex = 0, operand1Index = 0, operand2Index = 0;
+  // bool labelFound = false;
+  // int labelIndex = 0, operationIndex = 0, operand1Index = 0, operand2Index = 0;
   std::string label = "", operation = "", operand1 = "", operand2 = "";
   std::vector<std::string> tokens;
 
   // encontrar label 
   label = findLabel(line);
+
+  // while not comment 
+  //    tokens.push(findNextTokenStarttingFrom());
 
   // operation = findOperation(line); // eu preciso verificar a existencia da operação?
   // encontrar operando 
@@ -126,8 +127,9 @@ std::vector<std::string> Assembler::parseLine(std::string line) {
 
 std::string Assembler::findLabel(std::string line) {
   char c;
-  int i, labelIndex = 0;
   bool labelFound = false;
+  size_t i = 0;
+  int labelIndex = 0;
   std::string label = "";
 
   for (i = 0; i < line.length(); i++) {
@@ -150,18 +152,40 @@ std::string Assembler::findLabel(std::string line) {
       break;
     }
   }
-
-  // erro sintático
-  // ++i; // pra ir pra depois do ':'
-  // for (; i < line.length(); i++) {
-  //   if (line[i] == ':' && labelFound) {
-  //     throw SyntaticError("two labels in the same line");
-  //   }
-  // }
   
   return label;
 }
 
+
+std::string Assembler::findNextTokenStartingFrom(size_t start, std::string line) {
+  bool symbolStarted = false;
+  std::string symbol = ""; 
+
+  for (size_t i = start; i < line.length(); i++) {
+    if (line[i] == ';') {
+      return symbol;
+    }
+
+    if (!symbolStarted && (line[i] == ' ' || line[i] == '\t')) {
+      continue;
+    }
+
+    if (symbolStarted && (line[i] == ' ' || line[i] == '\t' || line[i] == ':' )) {
+      return symbol;
+    }
+
+    if (line[i] != ' ' || line[i] != '\t') {
+      symbolStarted = true;
+      symbol.push_back(line[i]);
+
+      if (line[i] == ':') {
+        return symbol;
+      }
+    }
+  }
+
+  return symbol;
+}
 
 
 void Assembler::validateLabel(std::string label) {

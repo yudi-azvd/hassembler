@@ -1,5 +1,17 @@
 {
   "makefile.extensionOutputFolder": "./.vscode",
+  "triggerTaskOnSave.on": true,
+  "triggerTaskOnSave.tasks": {
+    "Build tests": [ // Nome da tarefa a ser desencadeada
+      "src/!main.cpp",
+      "src/*.cpp",
+      "tests/*.cpp",
+      "tests/**/*.cpp",
+    ]
+  },
+  "clang.completion.enable": true,
+  "clang.diagnostic.enable": true,
+  "clang.cxxflags": ["-pedantic", "-Wall"],
   "files.associations": {
     ".sequelizerc": "javascript",
     ".prettierrc": "json",
@@ -57,14 +69,5 @@
     "random": "cpp",
     "set": "cpp",
     "string": "cpp"
-  },
-  "triggerTaskOnSave.on": true,
-  "triggerTaskOnSave.tasks": {
-    "Build tests": [ // Nome da tarefa a ser desencadeada
-      "src/!main.cpp",
-      "src/*.cpp",
-      "tests/*.cpp",
-      "tests/**/*.cpp",
-    ]
   },
 }

@@ -1,7 +1,7 @@
 
 MAIN_EXEC ?= montador
 
-TESTS_EXEC ?= test_exec
+TESTS_EXEC ?= utests
 
 CXX = g++
 
@@ -44,7 +44,7 @@ $(BUILD_DIR)/%.cpp.o: %.cpp
 ####################################
 # Executável do testes unitários	 #
 ####################################
-tests: $(BUILD_DIR)/$(TESTS_EXEC)
+utests: $(BUILD_DIR)/$(TESTS_EXEC)
 	@echo " > test: Build done"
 	@echo " ------------------------"
 

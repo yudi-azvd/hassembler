@@ -18,7 +18,7 @@ TEST_CASE("findLabel") {
   expectedLabel = "";
   CHECK_EQ(gotLabel, expectedLabel);
 
-  gotLabel = as.findLabel("COPY NEW_DATA, OLD_DATA");
+  gotLabel = as.findLabel("COPY NEW_DATA,OLD_DATA");
   expectedLabel = "";
   CHECK_EQ(gotLabel, expectedLabel);
 

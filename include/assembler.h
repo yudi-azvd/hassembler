@@ -2,6 +2,7 @@
 #define ASSEMBLER_H_INCLUDED
 
 #include <iostream>
+#include <vector>
 #include <map>
 
 struct LineAndItsTokens {
@@ -35,6 +36,12 @@ public:
 
   std::string findLabel(std::string line);
   
+  /**
+   * @brief Encontra um token na linha separado por espaço em branco
+   * começando no índice {@c start}.
+  */
+  std::string findNextTokenStartingFrom(size_t start, std::string line);
+
   void validateLabel(std::string label);
 };
 
