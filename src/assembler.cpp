@@ -165,16 +165,18 @@ std::string Assembler::findNextTokenStartingFrom(
   int& tokenStartsAt
 ) {
   size_t i;
+  char c;
   bool symbolStarted = false,
-    commentStarted, isTokenDelimiter, isWhitespace;
+    isCommentDelimiter, isTokenDelimiter, isWhitespace;
   std::string symbol = ""; 
 
   for (i = start; i < line.length(); i++) {
-    commentStarted = line[i] == ';';
-    isWhitespace = (line[i] == ' ' || line[i] == '\t');
-    isTokenDelimiter = line[i] == ':';
+    c = line[i];
+    isCommentDelimiter = c == ';';
+    isWhitespace = (c == ' ' || c == '\t');
+    isTokenDelimiter = c == ':';
 
-    if (commentStarted) {
+    if (isCommentDelimiter) {
       tokenStartsAt = symbolStarted 
         ? i-symbol.length() 
         : -1;
@@ -192,7 +194,7 @@ std::string Assembler::findNextTokenStartingFrom(
 
     if (!isWhitespace) {
       symbolStarted = true;
-      symbol.push_back(line[i]);
+      symbol.push_back(c);
 
       if (isTokenDelimiter) {
         tokenStartsAt = i;
