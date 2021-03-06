@@ -7,41 +7,42 @@
 #include "../../include/assembler.h"
 
 
-// TEST_CASE("parse line, dummy") {
-//   std::string line;
-//   std::vector<std::string> expectedTokens;
-//   std::vector<std::string> gotTokens;
+std::string tokensToString(std::vector<std::string> tokens) {
+  std::string finalString = "";
 
-//   Assembler as;
-
-//   std::vector<LineAndItsTokens> lineAndItsTokens {
-//     {"COPY SRC DST", {"COPY", "SRC", "DST"}},
-//     {"N2: SPACE", {"N2", "SPACE"}},
-//   };
-
-//   int i = 0;
-//   for (auto ln : lineAndItsTokens) {
-//     line = ln.line;
-//     expectedTokens = ln.tokens;
-//     gotTokens = as.parseLine(line);
-//     INFO(i++, ": ", ln);
-//     CHECK_EQ(gotTokens, expectedTokens);
-//   }
-// }
+  for (auto &t : tokens) {
+    finalString.append("\"" + t + "\" ");
+  }
+  
+  return finalString;
+}
 
 
-TEST_CASE("parse line") {
+TEST_CASE("parseLine") {
   std::string line;
   std::vector<std::string> expectedTokens;
   std::vector<std::string> gotTokens;
 
   Assembler as;
 
-  std::vector<LineAndItsTokens> lineAndItsTokens {
-    {"N2: SPACE", {"N2", "SPACE"}},
+  std::vector<LineAndItsTokens> linesAndItsExpectedTokens {
+    {"N2: SPACE", {"N2", ":", "SPACE"}},
+    {"COPY    NEW_DATA,OLD_DATA", {"COPY", "NEW_DATA", ",", "OLD_DATA"}},
+    {"TMP_DATA: SPACE", {"TMP_DATA", ":", "SPACE"}},
+    {"TMP_DATA\t:SPACE", {"TMP_DATA", ":", "SPACE"}},
+    {"TMP_DATA\t:\tSPACE", {"TMP_DATA", ":", "SPACE"}},
+    {"DOIS: CONST 2", {"DOIS", ":", "CONST", "2"}},
+    {"L1: DIV DOIS", {"L1", ":", "DIV", "DOIS"}}
   };
 
-  gotTokens = as.parseLine(lineAndItsTokens[0].line);
-  
-  CHECK_EQ(gotTokens[0], "N2");
+  int i = 0;
+  for (auto lineExpectedTokens : linesAndItsExpectedTokens) {
+    line = lineExpectedTokens.line;
+    expectedTokens = lineExpectedTokens.tokens;
+
+    gotTokens = as.parseLine(line);
+    INFO(i++, ": [", line, "]");
+    INFO(i++, ": [", tokensToString(gotTokens), "]");
+    CHECK_EQ(gotTokens, expectedTokens);
+  }
 }

@@ -42,14 +42,24 @@ TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 1") {
   std::string token = "";
 
   token = as.findNextTokenStartingFrom(0, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "COPY");
   CHECK_EQ(tokenStartsAt, 0);
 
-  token = as.findNextTokenStartingFrom(newStart+1, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
-  CHECK_EQ(token, "NEW_DATA,OLD_DATA");
+  token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
+  newStart = tokenStartsAt + token.length();
+  CHECK_EQ(token, "NEW_DATA");
   CHECK_EQ(tokenStartsAt, 5);
+
+  token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
+  newStart = tokenStartsAt + token.length();
+  CHECK_EQ(token, ",");
+  CHECK_EQ(tokenStartsAt, 13);
+
+  token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
+  newStart = tokenStartsAt + token.length();
+  CHECK_EQ(token, "OLD_DATA");
+  CHECK_EQ(tokenStartsAt, 14);
 }
 
 
@@ -86,17 +96,17 @@ TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 3") {
   std::vector<std::string> tokens;
 
   token = as.findNextTokenStartingFrom(0, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "NEW_DATA");
   CHECK_EQ(tokenStartsAt, 6);
 
   token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, ":");
   CHECK_EQ(tokenStartsAt, 14);
 
   token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "SPACE");
   CHECK_EQ(tokenStartsAt, 15);
 
@@ -104,17 +114,17 @@ TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 3") {
   line = "\tNEW_DATA  :   SPACE     ";
 
   token = as.findNextTokenStartingFrom(0, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "NEW_DATA");
   CHECK_EQ(tokenStartsAt, 1);
 
   token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, ":");
   CHECK_EQ(tokenStartsAt, 11);
 
   token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "SPACE");
   CHECK_EQ(tokenStartsAt, 15);
 }
@@ -153,13 +163,13 @@ TEST_CASE("fntsf: should not find tokens at the end of the line") {
   std::string line = "COPY    NEW_DATA,OLD_DATA";
   std::string token = "";
 
-  token = as.findNextTokenStartingFrom(6, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
-  CHECK_EQ(token, "NEW_DATA,OLD_DATA");
-  CHECK_EQ(tokenStartsAt, 8);
+  token = as.findNextTokenStartingFrom(17, line, tokenStartsAt);
+  newStart = tokenStartsAt + token.length();
+  CHECK_EQ(token, "OLD_DATA");
+  CHECK_EQ(tokenStartsAt, 17);
 
   token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "");
   CHECK_EQ(tokenStartsAt, -1);
 
@@ -168,7 +178,7 @@ TEST_CASE("fntsf: should not find tokens at the end of the line") {
 
   int semiColonPosition = 16;
   token = as.findNextTokenStartingFrom(semiColonPosition, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "");
   CHECK_EQ(tokenStartsAt, -1);
 
@@ -177,7 +187,7 @@ TEST_CASE("fntsf: should not find tokens at the end of the line") {
 
   newStart = 15;
   token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-  newStart = token.length() + tokenStartsAt;
+  newStart = tokenStartsAt + token.length();
   CHECK_EQ(token, "");
   CHECK_EQ(tokenStartsAt, -1);
 }
@@ -189,12 +199,12 @@ TEST_CASE("fntsf: should work in iterative calls") {
   Assembler as; 
   std::string line = "COPY    NEW_DATA,OLD_DATA";
   std::string token = "";
-  std::vector<std::string> expectedtokens = {"COPY", "NEW_DATA,OLD_DATA"};
+  std::vector<std::string> expectedtokens = {"COPY", "NEW_DATA", ",", "OLD_DATA"};
   std::vector<std::string> gotTokens;
 
   while (tokenStartsAt >= 0) {
     token = as.findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-    newStart = token.length() + tokenStartsAt;
+    newStart = tokenStartsAt + token.length();
     gotTokens.push_back(token);
   }
 

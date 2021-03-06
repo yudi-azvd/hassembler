@@ -5,6 +5,11 @@
 #include <vector>
 #include <map>
 
+/**
+ * @brief Classe para facilitar testes unitários. 
+ * Linha (string) e tokens esperados (vetor de strings).
+ * Registro para facilitar testes unitários.
+*/
 struct LineAndItsTokens {
   std::string line;
   std::vector<std::string> tokens;
@@ -37,9 +42,14 @@ public:
   std::string findLabel(std::string line);
   
   /**
-   * @brief Encontra um token na linha separado por espaço em branco
-   * começando no índice {@c start}.
-  */
+   * @brief Encontra um token na linha separado por espaços em branco.
+   * 
+   * @param start Índice onde vai começar a procura.
+   * @param line Linha a ser analisada.
+   * @param tokenStartsAt Posição inicial do token encontrado. 
+   * 
+   * @return Token e sua posição inicial.
+   */
   std::string findNextTokenStartingFrom(
     size_t start, 
     std::string line,

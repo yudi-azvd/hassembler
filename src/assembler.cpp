@@ -102,25 +102,19 @@ void Assembler::runFirstPass() {
 std::vector<std::string> Assembler::parseLine(std::string line) {
   // bool labelFound = false;
   // int labelIndex = 0, operationIndex = 0, operand1Index = 0, operand2Index = 0;
-  std::string label = "", operation = "", operand1 = "", operand2 = "";
+  int newStart = 0;
+  int tokenStartsAt = 0;
+  std::string token = "";
   std::vector<std::string> tokens;
 
-  // encontrar label 
-  label = findLabel(line);
+  while (tokenStartsAt >= 0) {
+    token = findNextTokenStartingFrom(newStart, line, tokenStartsAt);
+    newStart = tokenStartsAt + token.length();
+    tokens.push_back(token);
+  }
 
-  // while not comment 
-  //    tokens.push(findNextTokenStarttingFrom());
+  tokens.pop_back();
 
-  // operation = findOperation(line); // eu preciso verificar a existencia da operação?
-  // encontrar operando 
-  // i = label.length()+1 
-  // procurar operandos a partir de i
-
-  tokens.push_back(label);
-  tokens.push_back(operation);
-  tokens.push_back(operand1);
-  tokens.push_back(operand2);
-  
   return tokens;
 }
 
@@ -128,8 +122,8 @@ std::vector<std::string> Assembler::parseLine(std::string line) {
 std::string Assembler::findLabel(std::string line) {
   char c;
   bool labelFound = false;
-  size_t i = 0;
   int labelIndex = 0;
+  size_t i = 0;
   std::string label = "";
 
   for (i = 0; i < line.length(); i++) {
@@ -157,8 +151,6 @@ std::string Assembler::findLabel(std::string line) {
 }
 
 
-// retonar mais de um valor na função
-// https://www.educative.io/edpresso/how-to-return-multiple-values-from-a-function-in-cpp17
 std::string Assembler::findNextTokenStartingFrom(
   size_t start, 
   std::string line,
@@ -174,7 +166,7 @@ std::string Assembler::findNextTokenStartingFrom(
     c = line[i];
     isCommentDelimiter = c == ';';
     isWhitespace = (c == ' ' || c == '\t');
-    isTokenDelimiter = c == ':';
+    isTokenDelimiter = c == ':' || c == ',';
 
     if (isCommentDelimiter) {
       tokenStartsAt = symbolStarted 
@@ -209,6 +201,7 @@ std::string Assembler::findNextTokenStartingFrom(
 
   return symbol;
 }
+
 
 /**
  * CORRETO É CRIAR UMA LISTA PARA OS ERROS EM VEZ DE 
