@@ -63,36 +63,36 @@ void Assembler::runFirstPass() {
     else {
       label = tokens[0];
     }
-    operation = tokens[1];
-    operand1 = tokens[2];
-    operand2 = tokens[3];
+    // operation = tokens[1];
+    // operand1 = tokens[2];
+    // operand2 = tokens[3];
 
-    // LABEL
-    if (label.length() > 0) {
-      bool labelFound = symbolTable.find(label) != symbolTable.end();
-      if (!labelFound) {
-        symbolTable[label] = positionCounter;
-      }
-      else {
-        // throw error: símbolo redefinido
-      }
-    }
+    // // LABEL
+    // if (label.length() > 0) {
+    //   bool labelFound = symbolTable.find(label) != symbolTable.end();
+    //   if (!labelFound) {
+    //     symbolTable[label] = positionCounter;
+    //   }
+    //   else {
+    //     // throw error: símbolo redefinido
+    //   }
+    // }
 
-    // OPERATION 
-    bool operationFound = opcodeTable.find(operation) != opcodeTable.end();
-    if (operationFound) {
-      // positionCounter += 
-      // erro por número errado de operandos?
-      positionCounter += 2; // numero de operandos ou tamanho da instrução
-    }
-    else {
-      // procura na tabela de diretivas
-      // Se achou:
-      //   chama subrotina que executa a diretiva
-      //   contador_posição = valor retornado pela subrotina
-      // Senão: 
-      //   Erro, operação não identificada
-    }
+    // // OPERATION 
+    // bool operationFound = opcodeTable.find(operation) != opcodeTable.end();
+    // if (operationFound) {
+    //   // positionCounter += 
+    //   // erro por número errado de operandos?
+    //   positionCounter += 2; // numero de operandos ou tamanho da instrução
+    // }
+    // else {
+    //   // procura na tabela de diretivas
+    //   // Se achou:
+    //   //   chama subrotina que executa a diretiva
+    //   //   contador_posição = valor retornado pela subrotina
+    //   // Senão: 
+    //   //   Erro, operação não identificada
+    // }
 
     lineCounter++;
   }
@@ -119,36 +119,36 @@ std::vector<std::string> Assembler::parseLine(std::string line) {
 }
 
 
-std::string Assembler::findLabel(std::string line) {
-  char c;
-  bool labelFound = false;
-  int labelIndex = 0;
-  size_t i = 0;
-  std::string label = "";
+// std::string Assembler::findLabel(std::string line) {
+//   char c;
+//   bool labelFound = false;
+//   int labelIndex = 0;
+//   size_t i = 0;
+//   std::string label = "";
 
-  for (i = 0; i < line.length(); i++) {
-    if (line[i] == ':' && !labelFound) {
-      labelFound = true;
-      labelIndex = i-1; // desconsiderar ':'
+//   for (i = 0; i < line.length(); i++) {
+//     if (line[i] == ':' && !labelFound) {
+//       labelFound = true;
+//       labelIndex = i-1; // desconsiderar ':'
 
-      while (
-        labelIndex >= 0 && 
-        (line[labelIndex] != ' ' 
-        || line[labelIndex] != '\t' 
-        || line[labelIndex] == '_')
-      ) {
-        c = line[labelIndex--];
-        label.insert(0, 1, c);
-      }
+//       while (
+//         labelIndex >= 0 && 
+//         (line[labelIndex] != ' ' 
+//         || line[labelIndex] != '\t' 
+//         || line[labelIndex] == '_')
+//       ) {
+//         c = line[labelIndex--];
+//         label.insert(0, 1, c);
+//       }
       
-      validateLabel(label);
+//       validateLabel(label);
 
-      break;
-    }
-  }
+//       break;
+//     }
+//   }
   
-  return label;
-}
+//   return label;
+// }
 
 
 std::string Assembler::findNextTokenStartingFrom(

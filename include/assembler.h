@@ -39,7 +39,7 @@ public:
 
   std::vector<std::string> parseLine(std::string line);
 
-  std::string findLabel(std::string line);
+  // std::string findLabel(std::string line);
   
   /**
    * @brief Encontra um token na linha separado por espaços em branco.

@@ -70,4 +70,10 @@
     "set": "cpp",
     "string": "cpp"
   },
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/home/yudi/Documents/programming/estudos/unb/sb/sb-assembler/build",
+      "binaryPath": "/home/yudi/Documents/programming/estudos/unb/sb/sb-assembler/build/montador",
+    }
+  ],
 }

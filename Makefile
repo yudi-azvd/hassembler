@@ -1,5 +1,5 @@
 
-MAIN_EXEC ?= montador
+EXEC_ASSEMBLER ?= montador
 
 TESTS_EXEC ?= utests
 
@@ -10,26 +10,28 @@ CXXFLAGS = -g -Wall -pedantic
 BUILD_DIR ?= build
 SRC_DIRS ?= src 
 
-MAIN := src/$(MAIN_EXEC).cpp
+MAIN := src/$(EXEC_ASSEMBLER).cpp
 SRCS := $(wildcard src/*.cpp)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 
 # Existe alguma maneira mais concisa de fazer o que está na linha debaixo?
 TEST_SRCS := $(wildcard tests/*.test.cpp) $(wildcard tests/**/*.test.cpp)
-TEST_OBJS := $(filter-out build/src/$(MAIN_EXEC).cpp.o, $(OBJS)) \
+TEST_OBJS := $(filter-out build/src/$(EXEC_ASSEMBLER).cpp.o, $(OBJS)) \
 						 $(TEST_SRCS:%=$(BUILD_DIR)/%.o)
 
-all: main utests
+all: assembler 
+# all: assembler simulator
 
 
 ####################################
 # Executável principal             #
 ####################################
-main: $(BUILD_DIR)/$(MAIN_EXEC) 
+assembler: $(BUILD_DIR)/$(EXEC_ASSEMBLER) 
 	@echo " > main: Done $@ => $<"
+	@cp $< $(EXEC_ASSEMBLER)
 	@echo " ------------------------"
 
-$(BUILD_DIR)/$(MAIN_EXEC): $(OBJS) $(MAIN)
+$(BUILD_DIR)/$(EXEC_ASSEMBLER): $(OBJS) $(MAIN)
 	@echo ">> main: Building executable"
 	@$(CXX) $(CXXFLAGS) $(OBJS) -o $@
 
@@ -62,7 +64,7 @@ $(BUILD_DIR)/%.test.cpp.o: %.test.cpp
 .PHONY: clean test main
 
 clean:
-	rm -fr $(BUILD_DIR)/* $(MAIN_EXEC) $(TESTS_EXEC)
+	rm -fr $(BUILD_DIR)/* $(EXEC_ASSEMBLER) $(TESTS_EXEC)
 
 
 MKDIR_P ?= mkdir -p

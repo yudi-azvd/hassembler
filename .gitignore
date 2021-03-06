@@ -4,3 +4,6 @@ build/**
 
 *.o
 *.out
+
+./montador
+./simulador
