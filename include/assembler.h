@@ -40,7 +40,11 @@ public:
    * @brief Encontra um token na linha separado por espaço em branco
    * começando no índice {@c start}.
   */
-  std::string findNextTokenStartingFrom(size_t start, std::string line);
+  std::string findNextTokenStartingFrom(
+    size_t start, 
+    std::string line,
+    int& tokenStartsAt
+  );
 
   void validateLabel(std::string label);
 };

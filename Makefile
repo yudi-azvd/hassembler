@@ -19,7 +19,7 @@ TEST_SRCS := $(wildcard tests/*.test.cpp) $(wildcard tests/**/*.test.cpp)
 TEST_OBJS := $(filter-out build/src/$(MAIN_EXEC).cpp.o, $(OBJS)) \
 						 $(TEST_SRCS:%=$(BUILD_DIR)/%.o)
 
-all: main tests
+all: main utests
 
 
 ####################################

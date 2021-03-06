@@ -157,12 +157,22 @@ std::string Assembler::findLabel(std::string line) {
 }
 
 
-std::string Assembler::findNextTokenStartingFrom(size_t start, std::string line) {
+// retonar mais de um valor na função
+// https://www.educative.io/edpresso/how-to-return-multiple-values-from-a-function-in-cpp17
+std::string Assembler::findNextTokenStartingFrom(
+  size_t start, 
+  std::string line,
+  int& tokenStartsAt
+) {
+  size_t i;
   bool symbolStarted = false;
   std::string symbol = ""; 
 
-  for (size_t i = start; i < line.length(); i++) {
+  for (i = start; i < line.length(); i++) {
     if (line[i] == ';') {
+      tokenStartsAt = symbolStarted 
+        ? i-symbol.length() 
+        : -1;
       return symbol;
     }
 
@@ -171,6 +181,7 @@ std::string Assembler::findNextTokenStartingFrom(size_t start, std::string line)
     }
 
     if (symbolStarted && (line[i] == ' ' || line[i] == '\t' || line[i] == ':' )) {
+      tokenStartsAt = i-symbol.length();
       return symbol;
     }
 
@@ -179,10 +190,15 @@ std::string Assembler::findNextTokenStartingFrom(size_t start, std::string line)
       symbol.push_back(line[i]);
 
       if (line[i] == ':') {
+        tokenStartsAt = i;
         return symbol;
       }
     }
   }
+
+  tokenStartsAt = symbolStarted 
+    ? i-symbol.length() 
+    : -1;
 
   return symbol;
 }

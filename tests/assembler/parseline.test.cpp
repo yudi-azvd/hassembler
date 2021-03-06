@@ -7,27 +7,27 @@
 #include "../../include/assembler.h"
 
 
-TEST_CASE("parse line, dummy") {
-  std::string line;
-  std::vector<std::string> expectedTokens;
-  std::vector<std::string> gotTokens;
+// TEST_CASE("parse line, dummy") {
+//   std::string line;
+//   std::vector<std::string> expectedTokens;
+//   std::vector<std::string> gotTokens;
 
-  Assembler as;
+//   Assembler as;
 
-  std::vector<LineAndItsTokens> lineAndItsTokens {
-    {"COPY SRC DST", {"COPY", "SRC", "DST"}},
-    {"N2: SPACE", {"N2", "SPACE"}},
-  };
+//   std::vector<LineAndItsTokens> lineAndItsTokens {
+//     {"COPY SRC DST", {"COPY", "SRC", "DST"}},
+//     {"N2: SPACE", {"N2", "SPACE"}},
+//   };
 
-  int i = 0;
-  for (auto ln : lineAndItsTokens) {
-    line = ln.line;
-    expectedTokens = ln.tokens;
-    gotTokens = as.parseLine(line);
-    INFO(i++, ": ", ln);
-    CHECK_EQ(gotTokens, expectedTokens);
-  }
-}
+//   int i = 0;
+//   for (auto ln : lineAndItsTokens) {
+//     line = ln.line;
+//     expectedTokens = ln.tokens;
+//     gotTokens = as.parseLine(line);
+//     INFO(i++, ": ", ln);
+//     CHECK_EQ(gotTokens, expectedTokens);
+//   }
+// }
 
 
 TEST_CASE("parse line") {
