@@ -165,31 +165,36 @@ std::string Assembler::findNextTokenStartingFrom(
   int& tokenStartsAt
 ) {
   size_t i;
-  bool symbolStarted = false;
+  bool symbolStarted = false,
+    commentStarted, isTokenDelimiter, isWhitespace;
   std::string symbol = ""; 
 
   for (i = start; i < line.length(); i++) {
-    if (line[i] == ';') {
+    commentStarted = line[i] == ';';
+    isWhitespace = (line[i] == ' ' || line[i] == '\t');
+    isTokenDelimiter = line[i] == ':';
+
+    if (commentStarted) {
       tokenStartsAt = symbolStarted 
         ? i-symbol.length() 
         : -1;
       return symbol;
     }
 
-    if (!symbolStarted && (line[i] == ' ' || line[i] == '\t')) {
+    if (!symbolStarted && isWhitespace) {
       continue;
     }
 
-    if (symbolStarted && (line[i] == ' ' || line[i] == '\t' || line[i] == ':' )) {
+    if (symbolStarted && (isWhitespace || isTokenDelimiter)) {
       tokenStartsAt = i-symbol.length();
       return symbol;
     }
 
-    if (line[i] != ' ' || line[i] != '\t') {
+    if (!isWhitespace) {
       symbolStarted = true;
       symbol.push_back(line[i]);
 
-      if (line[i] == ':') {
+      if (isTokenDelimiter) {
         tokenStartsAt = i;
         return symbol;
       }
@@ -203,7 +208,10 @@ std::string Assembler::findNextTokenStartingFrom(
   return symbol;
 }
 
-
+/**
+ * CORRETO É CRIAR UMA LISTA PARA OS ERROS EM VEZ DE 
+ * lançar uma excessão
+ */
 void Assembler::validateLabel(std::string label) {
   if (!std::isalpha(label[0]) && label[0] != '_') {
     throw LexicalError("invalid label: " + label);
