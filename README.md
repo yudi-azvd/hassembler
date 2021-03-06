@@ -19,7 +19,7 @@ cd sb-assembler-and-simulator
 
 ## Usar e executar
 Para compilar o projeto é necessário ter o Make instalado em seu computador.
-Foi usado g++ com Ubuntu 18.04.
+Foi usado **g++** com **Ubuntu 18.04**.
 
 Para compilar o `montador`:
 <!-- e o `simulador`: -->
