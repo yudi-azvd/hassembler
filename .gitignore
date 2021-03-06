@@ -5,5 +5,5 @@ build/**
 *.o
 *.out
 
-./montador
-./simulador
+montador
+simulador
