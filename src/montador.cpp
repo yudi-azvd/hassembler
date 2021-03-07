@@ -6,7 +6,6 @@
 #include <vector>
 #include <map>
 
-#include "../include/parseline.h"
 #include "../include/assembler.h"
 
 

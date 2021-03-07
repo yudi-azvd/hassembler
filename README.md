@@ -49,7 +49,3 @@ compilados com:
 ```sh
 make utests
 ```
-
-
-
-
