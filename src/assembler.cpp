@@ -304,7 +304,6 @@ std::map<std::string, int> Assembler::symbolTable() {
 }
 
 
-// To pedindo pra criar bugs dificeis de serem resolvidos
 int Assembler::directiveSpace(int posCounter) { 
   return posCounter + 1;
 }
