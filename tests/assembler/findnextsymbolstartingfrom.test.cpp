@@ -33,7 +33,7 @@ TEST_CASE("fntsf: findNextTokenStartingFrom") {
 }
 
 
-TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 1") {
+TEST_CASE("fntsf: sequential calls 1") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
@@ -62,7 +62,7 @@ TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 1") {
 }
 
 
-TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 2") {
+TEST_CASE("fntsf: sequential calls 2") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
@@ -85,7 +85,7 @@ TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 2") {
 }
 
 
-TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 3") {
+TEST_CASE("fntsf: sequential calls 3") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as;
@@ -129,7 +129,7 @@ TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 3") {
 }
 
 
-TEST_CASE("fntsf: sequential calls to findNextTokenStartingFrom 4 - comment") {
+TEST_CASE("fntsf: sequential calls 4 - comment") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
