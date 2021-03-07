@@ -6,17 +6,6 @@
 #include "../../include/assembler.h"
 
 
-std::string tokensToString(std::vector<std::string> tokens) {
-  std::string finalString = "";
-
-  for (auto &t : tokens) {
-    finalString.append("\"" + t + "\" ");
-  }
-  
-  return finalString;
-}
-
-
 TEST_CASE("parseLine") {
   std::string line;
   std::vector<std::string> expectedTokens;
@@ -40,7 +29,7 @@ TEST_CASE("parseLine") {
     expectedTokens = lineExpectedTokens.tokens;
 
     gotTokens = as.parseLine(line);
-    INFO(i++, ": [", line, "]");
+    INFO(i, ": [", line, "]");
     INFO(i++, ": [", tokensToString(gotTokens), "]");
     CHECK_EQ(gotTokens, expectedTokens);
   }

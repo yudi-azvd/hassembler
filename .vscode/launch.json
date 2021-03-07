@@ -10,7 +10,8 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/montador",
       "args": [
-        "./asm_files/bin1.asm"
+        // "./asm_files/bin1.asm",
+        "./asm_files/soma_de_dois_numeros.asm",
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -53,7 +54,8 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/montador",
       "args": [
-        "${workspaceFolder}/asm_files/bin1.asm"
+        // "${workspaceFolder}/asm_files/bin1.asm",
+        "${workspaceFolder}/asm_files/soma_de_dois_numeros.asm",
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

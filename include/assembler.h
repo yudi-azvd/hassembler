@@ -5,27 +5,25 @@
 #include <vector>
 #include <map>
 
-/**
- * @brief Classe para facilitar testes unitários. 
- * Linha (string) e tokens esperados (vetor de strings).
- * Registro para facilitar testes unitários.
-*/
-struct LineAndItsTokens {
-  std::string line;
-  std::vector<std::string> tokens;
-
-  friend std::ostream &operator<<(std::ostream& os, const LineAndItsTokens& line);
-};
-
 
 class Assembler {
 private:
+  int positionCounter;
+
+  int lineCounter;
 
   std::map<std::string, int> symbolTable;
   
   std::map<std::string, int> opcodeTable;
+  
+  // instructionSizeTable?
+  std::map<std::string, int> operationSizeTable;
+  
+  std::map<std::string, void (Assembler::*)()> directiveTable;
 
   std::vector<std::string> sourceFileContent;
+  
+  std::vector<std::string> tokens;
 
 
 public:
@@ -57,6 +55,40 @@ public:
   );
 
   void validateLabel(std::string label);
+
+
+  // Diretivas
+
+  // Função da diretiva SPACE
+  void directiveSpace();
+
+
+  // Função da diretiva CONST
+  void directiveConst();
 };
+
+
+/////////////////////////////////////
+// Some helper functions and stuff //
+/////////////////////////////////////
+
+/**
+ * @brief Classe para facilitar testes unitários. 
+ * Linha (string) e tokens esperados (vetor de strings).
+ * Registro para facilitar testes unitários.
+*/
+struct LineAndItsTokens {
+  std::string line;
+  std::vector<std::string> tokens;
+
+  friend std::ostream &operator<<(std::ostream& os, const LineAndItsTokens& line);
+};
+
+
+std::string tokensToString(std::vector<std::string> tokens);
+
+
+std::string strToIntMapToString(std::map<std::string, int> map);
+
 
 #endif // ASSEMBLER_H_INCLUDED

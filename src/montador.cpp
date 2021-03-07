@@ -9,11 +9,7 @@
 #include "../include/assembler.h"
 
 
-void showCorrectUsage() {
-  std::cout << "Informe o nome do arquivo fonte a ser montado. Exemplo:" << std::endl;
-  std::cout << "$ ./build/montador ./caminho/relativo/pro/seu/arquivo.asm" << std::endl;
-}
-
+void showCorrectUsage();
 
 int main(int commandlineCount, char* commandlineArguments[]) {
   if (commandlineCount <= 1) {
@@ -49,3 +45,7 @@ int main(int commandlineCount, char* commandlineArguments[]) {
   return 0;
 }
 
+void showCorrectUsage() {
+  std::cout << "Informe o nome do arquivo fonte a ser montado. Exemplo:" << std::endl;
+  std::cout << "$ ./build/montador ./caminho/relativo/pro/seu/arquivo.asm" << std::endl;
+}

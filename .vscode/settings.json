@@ -7,6 +7,10 @@
       "src/*.cpp",
       "tests/*.cpp",
       "tests/**/*.cpp",
+    ],
+    "Build assembler": [
+      "src/assembler.cpp",
+      "include/assembler.h",
     ]
   },
   "clang.completion.enable": true,

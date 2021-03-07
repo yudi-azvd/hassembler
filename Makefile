@@ -21,6 +21,7 @@ TEST_OBJS := $(filter-out build/src/$(EXEC_ASSEMBLER).cpp.o, $(OBJS)) \
 
 all: assembler 
 # all: assembler simulator
+everything: all utests
 
 
 ####################################
