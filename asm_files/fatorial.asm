@@ -1,9 +1,9 @@
         INPUT N
         LOAD N
 FAT:    SUB ONE
-        JNPZ FIM
+        JMPZ FIM
         STORE AUX
-        MULT N
+        MUL N
         STORE N
         LOAD AUX
         JNP FAT

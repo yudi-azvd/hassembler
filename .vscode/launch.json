@@ -11,7 +11,8 @@
       "program": "${workspaceFolder}/build/montador",
       "args": [
         // "./asm_files/bin1.asm",
-        "./asm_files/soma_de_dois_numeros.asm",
+        // "./asm_files/soma_de_dois_numeros.asm",
+        "./asm_files/fibonacci.asm",
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

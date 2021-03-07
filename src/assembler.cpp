@@ -5,7 +5,7 @@
 
 
 Assembler::Assembler() { 
-  opcodeTable = {
+  _opcodeTable = {
     {"add", 1},
     {"sub", 2},
     {"mul", 3},
@@ -39,7 +39,7 @@ Assembler::Assembler() {
   //   {"STOP", 14},
   // };
 
-  operationSizeTable = {
+  _operationSizeTable = {
     {"add", 2},
     {"sub", 2},
     {"mul", 2},
@@ -73,7 +73,7 @@ Assembler::Assembler() {
   // };
 
   // directiveTable["space"] = &Assembler::directiveSpace;
-  directiveTable = {
+  _directiveTable = {
     {"space", &Assembler::directiveSpace},
     {"const", &Assembler::directiveConst},
   };
@@ -85,13 +85,13 @@ Assembler::~Assembler() { }
 
 
 void Assembler::assemble(std::vector<std::string> sourceFileContent) {
-  this->sourceFileContent = sourceFileContent; // tem cara de construtor
+  this->_sourceFileContent = sourceFileContent; // tem cara de construtor
 
   runFirstPass();
   // sunSecondPass();
 
-  std::cout << "\n\nsymbol table" << std::endl;
-  std::cout << strToIntMapToString(symbolTable) << std::endl;
+  // std::cout << "\n\nsymbol table" << std::endl;
+  // std::cout << strToIntMapToString(_symbolTable) << std::endl;
 }
 
 
@@ -105,18 +105,18 @@ void Assembler::runFirstPass() {
 
   LineAndItsTokens lineAndItsTokens;
 
-  for (std::string line : sourceFileContent) {
+  for (std::string line : _sourceFileContent) {
     // not necessarily length = 0
     // if line is empty: continue; lineCounter++;
-    tokens = parseLine(line);
-    if (tokens.empty())
+    _tokens = parseLine(line);
+    if (_tokens.empty())
       continue;
 
-    lineAndItsTokens = { line, tokens };
+    lineAndItsTokens = { line, _tokens };
     // std::cout << lineAndItsTokens << std::endl;
 
     // LABEL
-    if (tokens.size() >= 2) {
+    if (_tokens.size() >= 2) {
       // if tokens.size() == 0: continue; savedLabelForLater=label; lineCounter++; // linha vazia
       // if label?.size() == 0: continue; savedLabelForLater=label; lineCounter++; // linha vazia
       // if (savedLabelForLater.length() > 0) {
@@ -126,13 +126,13 @@ void Assembler::runFirstPass() {
       // else {
       //   label = tokens[0];
       // }
-      labelExists = tokens[1] == ":";
+      labelExists = _tokens[1] == ":";
       if (labelExists) {
-        label = tokens[0]; // {"some_label", ":", ...}
+        label = _tokens[0]; // {"some_label", ":", ...}
 
-        foundLabel = symbolTable.find(label) != symbolTable.end();
+        foundLabel = _symbolTable.find(label) != _symbolTable.end();
         if (!foundLabel) {
-          symbolTable[label] = positionCounter;
+          _symbolTable[label] = positionCounter;
           // std::cout << label << "<-" << std::to_string(positionCounter) << std::endl;
         }
         else {
@@ -142,25 +142,29 @@ void Assembler::runFirstPass() {
     }
 
     // OPERATION
-    if (tokens.size() >= 3 || (!labelExists && tokens.size() >= 2) || tokens.size() == 1) {
-      if (tokens.size() >= 3)
-        operation = tokens[2]; // {"some_label", ":", "ADD", ...}
+    if (_tokens.size() >= 3 || (!labelExists && _tokens.size() >= 2) || _tokens.size() == 1) {
+      if (_tokens.size() == 4 && labelExists)
+        operation = _tokens[2]; // {"some_label", ":","copy", "zero", "," "older"}
+      else if (_tokens.size() == 4)
+        operation = _tokens[0]; // {"copy", "zero", "," "older"}
+      else if (_tokens.size() == 3)
+        operation = _tokens[2]; // {"some_label", ":", "ADD", ...}
       else 
-        operation = tokens[0]; // {"input", "n2"}
+        operation = _tokens[0]; // {"input", "n2"}
 
-      operationFound = opcodeTable.find(operation) != opcodeTable.end();
+      operationFound = _opcodeTable.find(operation) != _opcodeTable.end();
       if (operationFound) {
         // std::cout 
         //   << "positionCounter += " 
         //   << std::to_string(operationSizeTable[operation]) 
         //   << std::endl;
-        positionCounter += operationSizeTable[operation];
+        positionCounter += _operationSizeTable[operation];
       }
       else {
-        directiveFound = directiveTable.find(operation) != directiveTable.end();
+        directiveFound = _directiveTable.find(operation) != _directiveTable.end();
         if (directiveFound) {
-          auto directiveFunctionPtr = directiveTable[operation];
-          (this->*directiveFunctionPtr)();
+          auto directiveFunctionPtr = _directiveTable[operation];
+          positionCounter = (this->*directiveFunctionPtr)(positionCounter);
         }
         else {
           //   Erro, operação não identificada
@@ -294,14 +298,20 @@ void Assembler::validateLabel(std::string label) {
   }
 }
 
-// To pedindo pra criar bugs dificeis de serem resolvidos
-void Assembler::directiveSpace() { 
-  positionCounter++;
+
+std::map<std::string, int> Assembler::symbolTable() { 
+  return _symbolTable;
 }
 
 
-void Assembler::directiveConst() {
-  positionCounter += 2;
+// To pedindo pra criar bugs dificeis de serem resolvidos
+int Assembler::directiveSpace(int posCounter) { 
+  return posCounter + 1;
+}
+
+
+int Assembler::directiveConst(int posCounter) {
+  return posCounter + 1;
 }
 
 
@@ -329,9 +339,9 @@ std::string tokensToString(std::vector<std::string> tokens) {
 }
 
 std::string strToIntMapToString(std::map<std::string, int> map) {
-  std::string finalString = "[\n";
+  std::string finalString = "[";
   for (auto & pair : map) {
-    finalString.append("  " + pair.first + ": " + std::to_string(pair.second) + "\n");
+    finalString.append(pair.first + ": " + std::to_string(pair.second) + ", ");
   }
   return finalString + "]";
 }

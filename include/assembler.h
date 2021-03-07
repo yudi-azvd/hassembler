@@ -12,18 +12,18 @@ private:
 
   int lineCounter;
 
-  std::map<std::string, int> symbolTable;
+  std::map<std::string, int> _symbolTable;
   
-  std::map<std::string, int> opcodeTable;
+  std::map<std::string, int> _opcodeTable;
   
   // instructionSizeTable?
-  std::map<std::string, int> operationSizeTable;
+  std::map<std::string, int> _operationSizeTable;
   
-  std::map<std::string, void (Assembler::*)()> directiveTable;
+  std::map<std::string, int (Assembler::*)(int positionCounter)> _directiveTable;
 
-  std::vector<std::string> sourceFileContent;
+  std::vector<std::string> _sourceFileContent;
   
-  std::vector<std::string> tokens;
+  std::vector<std::string> _tokens;
 
 
 public:
@@ -55,16 +55,19 @@ public:
   );
 
   void validateLabel(std::string label);
+  
+  
+  std::map<std::string, int> symbolTable();
 
 
   // Diretivas
 
   // Função da diretiva SPACE
-  void directiveSpace();
+  int directiveSpace(int posCounter);
 
 
   // Função da diretiva CONST
-  void directiveConst();
+  int directiveConst(int posCounter);
 };
 
 
