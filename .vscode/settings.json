@@ -1,5 +1,68 @@
 {
   "makefile.extensionOutputFolder": "./.vscode",
+  "testMate.cpp.test.advancedExecutables": [
+    {
+      "pattern": "{build,Build,BUILD,out,Out,OUT}/**/*{test,Test,TEST}*",
+      // "catch2": {
+      //   "testGrouping": {
+      //     "groupByExecutable": {
+      //       "label": "${filename}",
+      //       "description": "${relDirpath}/",
+      //       "groupBySource": {
+      //         "label": "Source: ${sourceRelPath[2:]}",
+      //         "groupByTags": {
+      //           "tags": [],
+      //           "label": "[${tag}]"
+      //         }
+      //       }
+      //     }
+      //   }
+      // },
+      // "gtest": {
+      //   "testGrouping": {
+      //     "groupByExecutable": {
+      //       "label": "${filename}",
+      //       "description": "${relDirpath}/",
+      //       "groupByTags": {
+      //         "tags": [],
+      //         "label": "[${tag}]",
+      //         "groupBySource": {
+      //           "label": "📝${sourceRelPath[2:]}",
+      //           "groupUngroupedTo": "📝unknown source file"
+      //         }
+      //       }
+      //     }
+      //   }
+      // },
+      // "doctest": {
+      //   "testGrouping": {
+      //     "groupByExecutable": {
+      //       "label": "${filename}",
+      //       "description": "${relDirpath}/",
+      //       "groupByRegex": {
+      //         "regexes": ["(suite..)"],
+      //         "label": "just ${match}"
+      //       }
+      //     }
+      //   }
+      // },
+      "doctest": {
+        "testGrouping": {
+          "groupByExecutable": {
+            "label": "${filename}",
+            "description": "${relDirpath}/",
+            "groupBySource": {
+              "description": "${relDirpath}",
+              "label": "${sourceRelPath[1:2]}",
+              "groupBySource": {
+                "label": "${sourceRelPath[2]}"
+              }
+            }
+          },
+        }
+      },
+    }
+  ],
   "triggerTaskOnSave.on": true,
   "triggerTaskOnSave.tasks": {
     "Build tests": [ // Nome da tarefa a ser desencadeada

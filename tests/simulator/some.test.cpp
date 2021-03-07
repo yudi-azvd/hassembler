@@ -6,7 +6,7 @@
 #include "../../include/assembler.h"
 
 
-TEST_CASE("sum of two numbers") {
+TEST_CASE("simulator:some") {
   Assembler as;
 
   std::map<std::string, int> gotSymbolTable;
@@ -38,7 +38,7 @@ TEST_CASE("sum of two numbers") {
 }
 
 
-TEST_CASE("fatorial") {
+TEST_CASE("simulator:some") {
   Assembler as;
 
   std::map<std::string, int> gotSymbolTable;
@@ -76,7 +76,7 @@ TEST_CASE("fatorial") {
 }
 
 
-TEST_CASE("fibonacci") {
+TEST_CASE("simulator:some") {
   Assembler as;
 
   std::map<std::string, int> gotSymbolTable;

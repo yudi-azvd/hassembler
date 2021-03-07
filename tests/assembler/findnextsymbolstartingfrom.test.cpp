@@ -7,7 +7,7 @@
 #include "../../include/assembler.h"
 
 
-TEST_CASE("fntsf: findNextTokenStartingFrom") {
+TEST_CASE("basic cases") {
   int tokenStartsAt = 0;
   Assembler as; 
   std::string token;
@@ -33,7 +33,7 @@ TEST_CASE("fntsf: findNextTokenStartingFrom") {
 }
 
 
-TEST_CASE("fntsf: sequential calls 1") {
+TEST_CASE("sequential calls 1") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
@@ -62,7 +62,7 @@ TEST_CASE("fntsf: sequential calls 1") {
 }
 
 
-TEST_CASE("fntsf: sequential calls 2") {
+TEST_CASE("sequential calls 2") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
@@ -85,7 +85,7 @@ TEST_CASE("fntsf: sequential calls 2") {
 }
 
 
-TEST_CASE("fntsf: sequential calls 3") {
+TEST_CASE("sequential calls 3") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as;
@@ -129,7 +129,7 @@ TEST_CASE("fntsf: sequential calls 3") {
 }
 
 
-TEST_CASE("fntsf: sequential calls 4 - comment") {
+TEST_CASE("sequential calls 4 - comment") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
@@ -155,7 +155,8 @@ TEST_CASE("fntsf: sequential calls 4 - comment") {
   CHECK_EQ(token, "");
 }
 
-TEST_CASE("fntsf: should not find tokens at the end of the line") {
+
+TEST_CASE("should not find tokens at the end of the line") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
@@ -192,7 +193,7 @@ TEST_CASE("fntsf: should not find tokens at the end of the line") {
 }
 
 
-TEST_CASE("fntsf: should work in iterative calls") {
+TEST_CASE("should work in iterative calls") {
   int newStart = 0;
   int tokenStartsAt = 0;
   Assembler as; 
