@@ -3,7 +3,6 @@
 
 #include "../../lib/doctest/doctest.h"
 
-#include "../../include/parseline.h"
 #include "../../include/assembler.h"
 
 
