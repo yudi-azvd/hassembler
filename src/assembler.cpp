@@ -2,6 +2,7 @@
 
 #include "../include/assembler.h"
 #include "../include/errors.h"
+#include "../include/util.h"
 
 
 Assembler::Assembler() { 
@@ -196,38 +197,6 @@ std::vector<std::string> Assembler::parseLine(std::string line) {
 }
 
 
-// std::string Assembler::findLabel(std::string line) {
-//   char c;
-//   bool labelFound = false;
-//   int labelIndex = 0;
-//   size_t i = 0;
-//   std::string label = "";
-
-//   for (i = 0; i < line.length(); i++) {
-//     if (line[i] == ':' && !labelFound) {
-//       labelFound = true;
-//       labelIndex = i-1; // desconsiderar ':'
-
-//       while (
-//         labelIndex >= 0 && 
-//         (line[labelIndex] != ' ' 
-//         || line[labelIndex] != '\t' 
-//         || line[labelIndex] == '_')
-//       ) {
-//         c = line[labelIndex--];
-//         label.insert(0, 1, c);
-//       }
-      
-//       validateLabel(label);
-
-//       break;
-//     }
-//   }
-  
-//   return label;
-// }
-
-
 std::string Assembler::findNextTokenStartingFrom(
   size_t start, 
   std::string line,
@@ -311,36 +280,4 @@ int Assembler::directiveSpace(int posCounter) {
 
 int Assembler::directiveConst(int posCounter) {
   return posCounter + 1;
-}
-
-
-
-
-/////////////////////////////////////
-// Some helper functions and stuff //
-/////////////////////////////////////
-std::ostream &operator<<(std::ostream& os, const LineAndItsTokens& line) {
-  std::string tokens = "";
-  for(auto token : line.tokens)
-    tokens.append("\"" + token + "\", ");
-  return os << "\"" << line.line << "\"" << ", {" << tokens << "}";
-}
-
-
-std::string tokensToString(std::vector<std::string> tokens) {
-  std::string finalString = "";
-
-  for (auto &t : tokens) {
-    finalString.append("\"" + t + "\" ");
-  }
-  
-  return finalString;
-}
-
-std::string strToIntMapToString(std::map<std::string, int> map) {
-  std::string finalString = "[";
-  for (auto & pair : map) {
-    finalString.append(pair.first + ": " + std::to_string(pair.second) + ", ");
-  }
-  return finalString + "]";
 }

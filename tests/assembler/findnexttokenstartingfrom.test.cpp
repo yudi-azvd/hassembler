@@ -2,7 +2,6 @@
 #include <vector>
 
 #include "../../lib/doctest/doctest.h"
-
 #include "../../include/errors.h"
 #include "../../include/assembler.h"
 

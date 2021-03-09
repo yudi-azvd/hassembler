@@ -4,6 +4,7 @@
 
 #include "../../lib/doctest/doctest.h"
 #include "../../include/assembler.h"
+#include "../../include/util.h"
 
 
 TEST_CASE("sum of two numbers") {

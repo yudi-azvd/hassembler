@@ -71,27 +71,4 @@ public:
 };
 
 
-/////////////////////////////////////
-// Some helper functions and stuff //
-/////////////////////////////////////
-
-/**
- * @brief Classe para facilitar testes unitários. 
- * Linha (string) e tokens esperados (vetor de strings).
- * Registro para facilitar testes unitários.
-*/
-struct LineAndItsTokens {
-  std::string line;
-  std::vector<std::string> tokens;
-
-  friend std::ostream &operator<<(std::ostream& os, const LineAndItsTokens& line);
-};
-
-
-std::string tokensToString(std::vector<std::string> tokens);
-
-
-std::string strToIntMapToString(std::map<std::string, int> map);
-
-
 #endif // ASSEMBLER_H_INCLUDED
