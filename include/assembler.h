@@ -25,6 +25,7 @@ private:
   
   std::vector<std::string> _tokens;
 
+  // std::vector<std::string> _errors;
 
 public:
   Assembler();

@@ -100,7 +100,6 @@ void Assembler::runFirstPass() {
   positionCounter = 0;
   lineCounter = 1;
   bool labelExists, foundLabel, operationFound, directiveFound;
-  // std::vector<std::string> tokens;
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
 
@@ -155,10 +154,6 @@ void Assembler::runFirstPass() {
 
       operationFound = _opcodeTable.find(operation) != _opcodeTable.end();
       if (operationFound) {
-        // std::cout 
-        //   << "positionCounter += " 
-        //   << std::to_string(operationSizeTable[operation]) 
-        //   << std::endl;
         positionCounter += _operationSizeTable[operation];
       }
       else {
@@ -169,6 +164,11 @@ void Assembler::runFirstPass() {
         }
         else {
           //   Erro, operação não identificada
+          /*
+           _errors.append("Linha " + std::to_string(lineCounter)
+              "símbolo não identificado: " + operation
+           );
+          */
         }
       }
     }

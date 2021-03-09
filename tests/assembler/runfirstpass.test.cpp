@@ -123,3 +123,39 @@ TEST_CASE("fibonacci") {
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
+
+TEST_CASE("area_triangulo") {
+
+  Assembler as;
+
+  std::map<std::string, int> gotSymbolTable;
+  std::map<std::string, int> expectedSymbolTable = {
+    {"b", 15},
+    {"h", 16},
+    {"r", 17},
+    {"dois", 18},
+  };
+
+  std::vector<std::string> sourceFileContent = {
+    "input b",
+    "input h",
+    "load b",
+    "mul h",
+    "div dois",
+    "store r",
+    "output r",
+    "stop",
+    "b: space",
+    "h: space",
+    "r: space",
+    "dois: const 2",
+  };
+
+  as.assemble(sourceFileContent);
+  gotSymbolTable = as.symbolTable();
+
+  INFO("got: ", strToIntMapToString(gotSymbolTable));
+  INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+  CHECK_EQ(gotSymbolTable, expectedSymbolTable);
+
+}
