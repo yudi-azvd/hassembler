@@ -12,7 +12,8 @@
       "args": [
         // "./asm_files/bin1.asm",
         // "./asm_files/soma_de_dois_numeros.asm",
-        "./asm_files/fibonacci.asm",
+        // "./asm_files/fibonacci.asm",
+        "./asm_files/fatorial.asm",
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

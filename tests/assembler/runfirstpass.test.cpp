@@ -8,8 +8,6 @@
 
 
 TEST_CASE("sum of two numbers") {
-  Assembler as;
-
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
     {"n1", 13},
@@ -30,7 +28,9 @@ TEST_CASE("sum of two numbers") {
     "n3: space  ",
   };
 
-  as.assemble(sourceFileContent);
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -40,8 +40,6 @@ TEST_CASE("sum of two numbers") {
 
 
 TEST_CASE("fatorial") {
-  Assembler as;
-
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
     {"fat", 4},
@@ -68,7 +66,9 @@ TEST_CASE("fatorial") {
     "one:    const 1",
   };
 
-  as.assemble(sourceFileContent);
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -77,9 +77,44 @@ TEST_CASE("fatorial") {
 }
 
 
-TEST_CASE("fibonacci") {
-  Assembler as;
+TEST_CASE("fatorial with errors") {
+  std::vector<std::string> sourceFileContent = {
+    "        input n",
+    "",
+    "        load n",
+    "fat:    sub one",
+    "        jmpz fim",
+    "        store aux",
+    "        mul n",
+    "",
+    "        store n",
+    "        load aux",
+    "        jnp fat",
+    "fim:    output n",
+    "        stop",
+    "a&ux:    space",
+    "n:      space",
+    "",
+    "one:    const 1",
+  };
 
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
+
+  std::vector<std::string> errors = as.errors();
+  std::map<std::string, int> symbolTable = as.symbolTable();
+
+  INFO("errors: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
+
+  CHECK_EQ(2, errors.size());
+  CHECK(findErrorWith("Erro Semântico, linha 11: instrução 'jnp' não identificada", errors));
+  CHECK(findErrorWith("Erro Léxico, linha 14: símbolo 'a&ux' é inválido", errors));
+}
+
+
+TEST_CASE("fibonacci") {
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
     {"front", 10},
@@ -116,7 +151,9 @@ TEST_CASE("fibonacci") {
     "limit:  space",
   };
 
-  as.assemble(sourceFileContent);
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -124,10 +161,8 @@ TEST_CASE("fibonacci") {
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
 
+
 TEST_CASE("area_triangulo") {
-
-  Assembler as;
-
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
     {"b", 15},
@@ -151,11 +186,57 @@ TEST_CASE("area_triangulo") {
     "dois: const 2",
   };
 
-  as.assemble(sourceFileContent);
+
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
+}
 
+
+TEST_CASE("area_triangulo with errors") {
+  std::vector<std::string> sourceFileContent = {
+    "input b",
+    "input h",
+    "load b",
+    "",
+    "mult h",
+    "divy dois",
+    "store r",
+    "output r",
+    "stop",
+    "1b: space",
+    "h: space",
+    "r: space",
+    "",
+    "r: space",
+    "dois: konst 2",
+  };
+
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
+
+  std::vector<std::string> errors = as.errors();
+  std::map<std::string, int> symbolTable = as.symbolTable();
+
+  INFO("errors: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
+
+  // NOTAR QUE LINHAS EM BRANCO AINDA SÃO CONTADAS COMO LINHAS
+  CHECK_EQ(5, errors.size());
+
+
+  CHECK(findErrorWith("Erro Semântico, linha 5: instrução 'mult'", errors));
+  CHECK(findErrorWith("Erro Semântico, linha 6: instrução 'divy'", errors));
+
+  CHECK(findErrorWith("Erro Léxico, linha 10: símbolo '1b' é inválido", errors));
+  CHECK_THROWS(symbolTable.at("1b")); // "1b" não deve ser incluído ta tabela de símbolos
+
+  CHECK(findErrorWith("Erro Semântico, linha 14: símbolo 'r' redefinido", errors));
+  CHECK(findErrorWith("Erro Semântico, linha 15: diretiva 'konst' não identificada", errors));
 }

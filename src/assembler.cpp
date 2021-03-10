@@ -5,7 +5,9 @@
 #include "../include/util.h"
 
 
-Assembler::Assembler() { 
+Assembler::Assembler(std::vector<std::string> sourceFileContent) { 
+  _sourceFileContent = sourceFileContent;
+
   _opcodeTable = {
     {"add", 1},
     {"sub", 2},
@@ -23,23 +25,6 @@ Assembler::Assembler() {
     {"stop", 14},
   };
 
-  // opcodeTable = {
-  //   {"ADD", 1},
-  //   {"SUB", 2},
-  //   {"MUL", 3},
-  //   {"DIV", 4},
-  //   {"JMP", 5},
-  //   {"JMPN", 6},
-  //   {"JMPP", 7},
-  //   {"JMPZ", 8},
-  //   {"COPY", 9},
-  //   {"LOAD", 10},
-  //   {"STORE", 11},
-  //   {"INPUT", 12},
-  //   {"OUTPUT", 13},
-  //   {"STOP", 14},
-  // };
-
   _operationSizeTable = {
     {"add", 2},
     {"sub", 2},
@@ -56,29 +41,12 @@ Assembler::Assembler() {
     {"output", 2},
     {"stop", 1},
   };
-  // operationSizeTable = {
-  //   {"ADD", 2},
-  //   {"SUB", 2},
-  //   {"MUL", 2},
-  //   {"DIV", 2},
-  //   {"JMP", 2},
-  //   {"JMPN", 2},
-  //   {"JMPP", 2},
-  //   {"JMPZ", 2},
-  //   {"COPY", 3},
-  //   {"LOAD", 2},
-  //   {"STORE", 2},
-  //   {"INPUT", 2},
-  //   {"OUTPUT", 2},
-  //   {"STOP", 1},
-  // };
 
   // directiveTable["space"] = &Assembler::directiveSpace;
   _directiveTable = {
     {"space", &Assembler::directiveSpace},
     {"const", &Assembler::directiveConst},
   };
-
 } 
 
 
@@ -97,22 +65,24 @@ void Assembler::assemble(std::vector<std::string> sourceFileContent) {
 
 
 void Assembler::runFirstPass() {
-  positionCounter = 0;
-  lineCounter = 1;
+  _positionCounter = 0;
+  _lineCounter = 1;
   bool labelExists, foundLabel, operationFound, directiveFound;
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
 
-  LineAndItsTokens lineAndItsTokens;
+  // LineAndItsTokens lineAndItsTokens;
 
   for (std::string line : _sourceFileContent) {
     // not necessarily length = 0
     // if line is empty: continue; lineCounter++;
     _tokens = parseLine(line);
-    if (_tokens.empty())
+    if (_tokens.empty()) {
+      _lineCounter++;
       continue;
+    }
 
-    lineAndItsTokens = { line, _tokens };
+    // lineAndItsTokens = { line, _tokens };
     // std::cout << lineAndItsTokens << std::endl;
 
     // LABEL
@@ -132,11 +102,20 @@ void Assembler::runFirstPass() {
 
         foundLabel = _symbolTable.find(label) != _symbolTable.end();
         if (!foundLabel) {
-          _symbolTable[label] = positionCounter;
-          // std::cout << label << "<-" << std::to_string(positionCounter) << std::endl;
+          if (!isValidSymbol(label)) {
+            _errors.push_back("Erro Léxico, linha " + std::to_string(_lineCounter) +
+              ": símbolo '" + label + "' é inválido."
+            );
+          }
+          else {
+            _symbolTable[label] = _positionCounter;
+          }
         }
         else {
           // adicionar erro: símbolo redefinido na linha {lineCounter}
+          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+            ": símbolo '" + label + "' redefinido."
+          );
         }
       }
     }
@@ -154,26 +133,29 @@ void Assembler::runFirstPass() {
 
       operationFound = _opcodeTable.find(operation) != _opcodeTable.end();
       if (operationFound) {
-        positionCounter += _operationSizeTable[operation];
+        _positionCounter += _operationSizeTable[operation];
       }
       else {
         directiveFound = _directiveTable.find(operation) != _directiveTable.end();
         if (directiveFound) {
           auto directiveFunctionPtr = _directiveTable[operation];
-          positionCounter = (this->*directiveFunctionPtr)(positionCounter);
+          _positionCounter = (this->*directiveFunctionPtr)(_positionCounter);
+        }
+        else if (labelExists) { // savedLabelForLaterExists?
+          // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
+          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+            ": diretiva '" + operation + "' não identificada."
+          );
         }
         else {
-          //   Erro, operação não identificada
-          /*
-           _errors.append("Linha " + std::to_string(lineCounter)
-              "símbolo não identificado: " + operation
-           );
-          */
+          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+            ": instrução '" + operation + "' não identificada."
+          );
         }
       }
     }
 
-    lineCounter++;
+    _lineCounter++;
   }
 } 
 
@@ -249,27 +231,30 @@ std::string Assembler::findNextTokenStartingFrom(
 }
 
 
-/**
- * CORRETO É CRIAR UMA LISTA PARA OS ERROS EM VEZ DE 
- * lançar uma excessão
- */
-void Assembler::validateLabel(std::string label) {
-  if (!std::isalpha(label[0]) && label[0] != '_') {
-    throw LexicalError("invalid label: " + label);
+bool Assembler::isValidSymbol(std::string symbol) {
+  if (!std::isalpha(symbol[0]) && symbol[0] != '_') {
+    return false;
   }
 
   bool isValidChar = true;
-  for (auto c : label) {
+  for (auto c : symbol) {
     isValidChar = std::isalpha(c) || std::isdigit(c) || c == '_';
     if (!isValidChar) {
-      throw LexicalError("invalid label: " + label);
+      return false;
     }
   }
+
+  return true;
 }
 
 
 std::map<std::string, int> Assembler::symbolTable() { 
   return _symbolTable;
+}
+
+
+std::vector<std::string> Assembler::errors() { 
+  return _errors;
 }
 
 

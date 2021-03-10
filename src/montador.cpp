@@ -11,6 +11,7 @@
 
 void showCorrectUsage();
 
+
 int main(int commandlineCount, char* commandlineArguments[]) {
   if (commandlineCount <= 1) {
     showCorrectUsage();
@@ -37,15 +38,22 @@ int main(int commandlineCount, char* commandlineArguments[]) {
 
   sourceFileContent.shrink_to_fit();  
 
-  // try
   assembler.assemble(sourceFileContent);
-  // catch (errors)
-  // print errors
+
+  // esse tipo de código não deveria estar dentro do assembler?
+  std::vector<std::string> errors = assembler.errors();
+  if (errors.size() > 0) {
+    for (auto error : errors) {
+      std::cout << error << std::endl;
+    }
+  }
 
   return 0;
 }
 
 void showCorrectUsage() {
-  std::cout << "Informe o nome do arquivo fonte a ser montado. Exemplo:" << std::endl;
-  std::cout << "$ ./build/montador ./caminho/relativo/pro/seu/arquivo.asm" << std::endl;
+  std::cout <<
+    "Informe o nome do arquivo fonte a ser montado. Exemplo:\n" 
+    "$ ./montador ./caminho/relativo/pro/seu/arquivo.asm" 
+  << std::endl;
 }

@@ -12,15 +12,16 @@ std::ostream &operator<<(std::ostream& os, const LineAndItsTokens& line) {
 }
 
 
-std::string tokensToString(std::vector<std::string> tokens) {
+std::string vectorToString(std::vector<std::string> tokens) {
   std::string finalString = "";
 
-  for (auto &t : tokens) {
-    finalString.append("\"" + t + "\" ");
+  for (auto &tk : tokens) {
+    finalString.append("\"" + tk + "\"\n");
   }
   
   return finalString;
 }
+
 
 std::string strToIntMapToString(std::map<std::string, int> map) {
   std::string finalString = "[";
@@ -29,3 +30,17 @@ std::string strToIntMapToString(std::map<std::string, int> map) {
   }
   return finalString + "]";
 }
+
+
+bool findErrorWith(std::string str, std::vector<std::string> errors) {
+  std::size_t foundAt;
+  for (auto &error : errors) {
+    foundAt =  error.find(str);
+    if (foundAt != std::string::npos) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+

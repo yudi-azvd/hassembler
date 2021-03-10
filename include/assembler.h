@@ -8,9 +8,9 @@
 
 class Assembler {
 private:
-  int positionCounter;
+  int _positionCounter;
 
-  int lineCounter;
+  int _lineCounter;
 
   std::map<std::string, int> _symbolTable;
   
@@ -25,12 +25,16 @@ private:
   
   std::vector<std::string> _tokens;
 
-  // std::vector<std::string> _errors;
+  std::vector<std::string> _errors;
 
 public:
-  Assembler();
+  // Assembler();
+
+  Assembler(std::vector<std::string> sourceFileContent = {});
 
   ~Assembler();
+
+  // void initTables();
 
   void assemble(std::vector<std::string> sourceFileContent);
   
@@ -55,10 +59,13 @@ public:
     int& tokenStartsAt
   );
 
-  void validateLabel(std::string label);
+  bool isValidSymbol(std::string symbol);
   
   
   std::map<std::string, int> symbolTable();
+  
+  
+  std::vector<std::string> errors();
 
 
   // Diretivas

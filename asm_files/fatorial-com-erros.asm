@@ -6,9 +6,10 @@ FAT:    SUB ONE
         MUL N
         STORE N
         LOAD AUX
-        JMP FAT
+        JNP FAT
 FIM:    OUTPUT N
-        STOP
+        STOPp
+AUX:    SPACE
 AUX:    SPACE
 N:      SPACE
 ONE:    CONST 1

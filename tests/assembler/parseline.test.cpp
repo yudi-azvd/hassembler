@@ -30,7 +30,7 @@ TEST_CASE("parseLine") {
 
     gotTokens = as.parseLine(line);
     INFO(i, ": [", line, "]");
-    INFO(i++, ": [", tokensToString(gotTokens), "]");
+    INFO(i++, ": [", vectorToString(gotTokens), "]");
     CHECK_EQ(gotTokens, expectedTokens);
   }
 }

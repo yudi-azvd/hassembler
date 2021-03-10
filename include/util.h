@@ -5,6 +5,7 @@
 // Some helper functions and stuff //
 /////////////////////////////////////
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <map>
@@ -22,10 +23,13 @@ struct LineAndItsTokens {
 };
 
 
-std::string tokensToString(std::vector<std::string> tokens);
+std::string vectorToString(std::vector<std::string> tokens);
 
 
 std::string strToIntMapToString(std::map<std::string, int> map);
+
+
+bool findErrorWith(std::string str, std::vector<std::string> errors);
 
 
 #endif // !UTIL_H_INCLUDED
