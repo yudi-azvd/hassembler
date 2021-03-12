@@ -71,33 +71,20 @@ void Assembler::runFirstPass() {
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
 
-  // LineAndItsTokens lineAndItsTokens;
-
   for (std::string line : _sourceFileContent) {
-    // not necessarily length = 0
-    // if line is empty: continue; lineCounter++;
     _tokens = parseLine(line);
     if (_tokens.empty()) {
       _lineCounter++;
       continue;
     }
 
-    // lineAndItsTokens = { line, _tokens };
-    // std::cout << lineAndItsTokens << std::endl;
-
     // LABEL
     if (_tokens.size() >= 2) {
-      // if tokens.size() == 0: continue; savedLabelForLater=label; lineCounter++; // linha vazia
-      // if label?.size() == 0: continue; savedLabelForLater=label; lineCounter++; // linha vazia
-      // if (savedLabelForLater.length() > 0) {
-      //   label = savedLabelForLater;
-      //   savedLabelForLater = "";
-      // }
-      // else {
-      //   label = tokens[0];
-      // }
       labelExists = _tokens[1] == ":";
       if (labelExists) {
+        // Se as próximas linhas do código fonte não tiverem rótulo
+        // a variável label não vai ser sobrescrita, ou seja, um label sozinho
+        // numa linha fica guardado até a próxima linha com diretiva
         label = _tokens[0]; // {"some_label", ":", ...}
 
         foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
@@ -108,11 +95,10 @@ void Assembler::runFirstPass() {
             );
           }
           else {
-            _symbolTable[label] = _positionCounter;
+            _symbolTable[toLower(label)] = _positionCounter;
           }
         }
         else {
-          // adicionar erro: símbolo redefinido na linha {lineCounter}
           _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
             ": símbolo '" + label + "' redefinido."
           );
@@ -143,7 +129,7 @@ void Assembler::runFirstPass() {
           auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
           _positionCounter = (this->*directiveFunctionPtr)(_positionCounter);
         }
-        else if (labelExists) { // savedLabelForLaterExists?
+        else if (labelExists) {
           // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
           _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
             ": diretiva '" + operation + "' não identificada."

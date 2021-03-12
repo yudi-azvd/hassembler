@@ -119,8 +119,8 @@ TEST_CASE("fibonacci") {
   std::map<std::string, int> expectedSymbolTable = {
     {"front", 10},
     {"final", 30},
-    {"ZERO", 33},
-    {"ONE", 34},
+    {"zero", 33},
+    {"one", 34},
     {"older", 35},
     {"old", 36},
     {"new", 37},
@@ -165,7 +165,7 @@ TEST_CASE("fibonacci") {
 TEST_CASE("area_triangulo") {
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
-    {"B", 15},
+    {"b", 15},
     {"h", 16},
     {"r", 17},
     {"dois", 18},
@@ -198,7 +198,7 @@ TEST_CASE("area_triangulo") {
 }
 
 
-TEST_CASE("area_triangulo with label alone in line") {
+TEST_CASE("label alone in line - 1") {
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
     {"b", 15},
@@ -217,14 +217,12 @@ TEST_CASE("area_triangulo with label alone in line") {
     "output r",
     "stop",
     "b: ",
-    // " space", // o que deveria acontecer nesse caso?
+    "",
+    " space",
     "H: SPACE",
     "R: SPACE",
     "DOIS: CONST 2",
   };
-
-  // A linha h: space tem dois rótulos. b: e h:. Professor disse que não 
-  // ia ter esse casos?.
 
   Assembler as(sourceFileContent);
 
@@ -235,6 +233,7 @@ TEST_CASE("area_triangulo with label alone in line") {
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
+
 
 
 TEST_CASE("area_triangulo with errors") {
@@ -278,4 +277,26 @@ TEST_CASE("area_triangulo with errors") {
 
   CHECK(findErrorWith("Erro Semântico, linha 14: símbolo 'r' redefinido", errors));
   CHECK(findErrorWith("Erro Semântico, linha 15: diretiva 'konst' não identificada", errors));
+}
+
+TEST_CASE("invalid label alone in line") {
+  std::vector<std::string> sourceFileContent = {
+    "input b",
+    "2b: ",
+    "",
+    " space",
+  };
+
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
+
+  std::vector<std::string> errors = as.errors();
+  std::map<std::string, int> symbolTable = as.symbolTable();
+
+  INFO("errors: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
+
+  CHECK_EQ(1, errors.size());
+  CHECK(findErrorWith("Erro Léxico, linha 2: símbolo '2b' é inválido", errors));
 }
