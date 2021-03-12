@@ -30,12 +30,16 @@ private:
 
   std::vector<std::string> _errors;
 
+  void _initialize();
+
 public:
-  Assembler(std::vector<std::string> sourceFileContent = {});
+  Assembler(std::string filename = "");
+  
+  // Assembler(std::string filename = "");
 
   ~Assembler();
 
-  void assemble(std::vector<std::string> sourceFileContent = {});
+  void assemble();
   
   void getInputFileContent(std::string filename);
 
@@ -47,8 +51,6 @@ public:
 
   std::vector<std::string> parseLine(std::string line);
 
-  // std::string findLabel(std::string line);
-  
   /**
    * @brief Encontra um token na linha separado por espaços em branco.
    * 
@@ -69,6 +71,8 @@ public:
   std::map<std::string, int> symbolTable();
 
   void setSymbolTable(std::map<std::string, int> st);
+
+  void setSourceFileContent(std::vector<std::string> content);
   
   std::vector<std::string> errors();
   

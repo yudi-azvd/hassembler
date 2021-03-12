@@ -16,7 +16,8 @@ TEST_CASE("rsp print number") {
     {"b", 4}
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {
@@ -53,7 +54,8 @@ TEST_CASE("rsp add two numbers") {
     {"n3", 14},
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {
@@ -84,7 +86,8 @@ TEST_CASE("rsp print and add number") {
     {"dois", 7},
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {
@@ -137,7 +140,8 @@ TEST_CASE("rsp fibonacci") {
     "LIMIT:  SPACE",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {
@@ -180,7 +184,8 @@ TEST_CASE("rsp fatorial") {
     "one:    const 1",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {

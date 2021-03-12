@@ -18,23 +18,8 @@ int main(int commandlineCount, char* commandlineArguments[]) {
     return 1;
   }
 
-  // std::string line, filename = commandlineArguments[1];
-  // std::vector<std::string> sourceFileContent;
-  // std::fstream infile(filename);
+  Assembler assembler(commandlineArguments[1]);
 
-  // std::map<std::string, int> symbolTable;
-
-  // while (std::getline(infile, line)) {
-  //   sourceFileContent.push_back(line);
-  // }
-
-  Assembler assembler;
-
-  assembler.getInputFileContent(commandlineArguments[1]);
-
-  // sourceFileContent.shrink_to_fit();  
-
-  // assembler.assemble(sourceFileContent);
   assembler.assemble();
 
   return 0;

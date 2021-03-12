@@ -28,7 +28,8 @@ TEST_CASE("sum of two numbers") {
     "n3: space  ",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
   gotSymbolTable = as.symbolTable();
@@ -66,7 +67,8 @@ TEST_CASE("fatorial") {
     "one:    const 1",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
   gotSymbolTable = as.symbolTable();
@@ -98,7 +100,8 @@ TEST_CASE("fatorial with errors") {
     "one:    const 1",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
 
@@ -151,7 +154,8 @@ TEST_CASE("fibonacci") {
     "limit:  space",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
   gotSymbolTable = as.symbolTable();
@@ -187,7 +191,8 @@ TEST_CASE("area_triangulo") {
   };
 
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
   gotSymbolTable = as.symbolTable();
@@ -224,7 +229,8 @@ TEST_CASE("label alone in line - 1") {
     "DOIS: CONST 2",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
   gotSymbolTable = as.symbolTable();
@@ -255,7 +261,8 @@ TEST_CASE("area_triangulo with errors") {
     "dois: konst 2",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
 
@@ -287,7 +294,8 @@ TEST_CASE("invalid label alone in line") {
     " space",
   };
 
-  Assembler as(sourceFileContent);
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass();
 

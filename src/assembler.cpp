@@ -5,8 +5,14 @@
 #include "../include/util.h"
 
 
-Assembler::Assembler(std::vector<std::string> sourceFileContent) { 
-  _sourceFileContent = sourceFileContent;
+Assembler::Assembler(std::string filename) { 
+  if (!filename.empty())
+    _filename = filename;
+  _initialize();
+}
+
+
+void Assembler::_initialize() {
   _isRunningSecondPass = false;
   _opcodeTable = {
     {"add", 1},
@@ -47,7 +53,7 @@ Assembler::Assembler(std::vector<std::string> sourceFileContent) {
     {"space", &Assembler::directiveSpace},
     {"const", &Assembler::directiveConst},
   };
-} 
+}
 
 
 Assembler::~Assembler() { }
@@ -70,13 +76,13 @@ void Assembler::getInputFileContent(std::string fn) {
   }
 
   _sourceFileContent = sourceFileContent;
+
+  infile.close();
 }
 
 
-void Assembler::assemble(std::vector<std::string> sourceFileContent) {
-  // this->_sourceFileContent = sourceFileContent; // tem cara de construtor
-
-  // getInputFile();
+void Assembler::assemble() {
+  getInputFileContent(_filename);
   runFirstPass();
   runSecondPass();
   generateOutput();
@@ -419,6 +425,11 @@ std::map<std::string, int> Assembler::symbolTable() {
 
 void Assembler::setSymbolTable(std::map<std::string, int> st) {
   _symbolTable = st;
+}
+
+
+void Assembler::setSourceFileContent(std::vector<std::string> content) {
+  _sourceFileContent = content;
 }
 
 
