@@ -18,7 +18,7 @@ cd sb-assembler-and-simulator
 ```
 
 ## Usar e executar
-Para compilar o projeto é necessário ter o Make instalado em seu computador.
+Para compilar o projeto é necessário ter o [Make](https://www.gnu.org/software/make/) instalado em seu computador.
 Foi usado **g++ 7.5.0** com **Ubuntu 18.04**.
 
 Para compilar o `montador`:
@@ -28,8 +28,15 @@ Para compilar o `montador`:
 make
 
 # execute com:
-./montador ./asm_files/bin1.asm # AINDA NÃO FAZ NADA
+./montador <caminho-relativo-do-seu-arquivo.asm>
+
+# exemplo
+./montador ./asm_files/fatorial.asm # "./" é necessário para o 
+                                    # funcionamento do programa
 ```
+Se tudo deu certo executando o comando do exemplo anterior,
+ o arquivo `fatorial.obj` está no diretório raíz do projeto.
+
 <!-- ./simulador ./caminho/para/arquivo/obj -->
 
 <!-- 
@@ -43,8 +50,8 @@ make simulator
 
 ---
 
-### Testes unitários
-Pra quem tiver interesse, para ver os testes unitários, eles também podem ser 
+### Testes
+Pra quem tiver interesse, para ver os testes, eles também podem ser 
 compilados com:
 
 ```sh

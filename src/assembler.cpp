@@ -294,7 +294,6 @@ void Assembler::generateOutput() {
     return;
   }
 
-  // tenho que guardar o nome do arquivo em algum lugar
   std::string finalString = "", newFilename = "";
 
   // o nome do arquivo está entre '/' e '.'
