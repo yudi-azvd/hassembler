@@ -23,6 +23,21 @@ std::string vectorToString(std::vector<std::string> tokens) {
 }
 
 
+std::string vectorToString(std::vector<int> v) {
+  if (v.empty())
+    return "empty!";
+    
+  std::string finalString = "[";
+  char buff[10];
+  for (auto n : v) {
+    snprintf(buff, sizeof(buff), "%2d, ", n);
+    finalString.append(buff);
+  }
+  
+  return finalString + "]";
+}
+
+
 std::string strToIntMapToString(std::map<std::string, int> map) {
   std::string finalString = "[";
   for (auto & pair : map) {

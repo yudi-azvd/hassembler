@@ -7,7 +7,7 @@
 
 Assembler::Assembler(std::vector<std::string> sourceFileContent) { 
   _sourceFileContent = sourceFileContent;
-
+  _isRunningSecondPass = false;
   _opcodeTable = {
     {"add", 1},
     {"sub", 2},
@@ -84,7 +84,7 @@ void Assembler::runFirstPass() {
       if (labelExists) {
         // Se as próximas linhas do código fonte não tiverem rótulo
         // a variável label não vai ser sobrescrita, ou seja, um label sozinho
-        // numa linha fica guardado até a próxima linha com diretiva
+        // numa linha fica guardado até a próxima linha com rótulo
         label = _tokens[0]; // {"some_label", ":", ...}
 
         foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
@@ -146,6 +146,119 @@ void Assembler::runFirstPass() {
     _lineCounter++;
   }
 } 
+
+
+void Assembler::runSecondPass() {
+  int positionCounter = 0, lineCounter = 1;
+  bool labelExists, operationFound, directiveFound, 
+    operand1Found, operand2Found;
+  std::string label, operation, operand1, operand2;
+  std::string savedLabelForLater;
+
+  _isRunningSecondPass = true;
+
+  for (std::string line : _sourceFileContent) {
+    _tokens = parseLine(line);
+    if (_tokens.empty()) {
+      _lineCounter++;
+      continue;
+    }
+
+    // LABEL
+    if (_tokens.size() >= 2) {
+      // é a única condição para label exitir?
+      labelExists = _tokens[1] == ":";
+    }
+
+    // OPERATION and OPERANDS
+    if (_tokens.size() >= 3 || (!labelExists && _tokens.size() >= 2) || _tokens.size() == 1) {
+      if (_tokens.size() == 6 && _tokens[2] == "copy") {
+        operation = _tokens[2]; // {"some_label", ":","copy", "zero", "," "older"}
+        operand1 = _tokens[3]; 
+        operand2 = _tokens[5]; 
+      }
+      else if (_tokens.size() == 4) {
+        if (labelExists) { // {"some_label", ":", "ADD", "UM"}
+                           // {"DOIS", ":", "const", "2"}
+          operation = _tokens[2]; 
+          operand1 = _tokens[3]; 
+        }
+        else { // {"copy", "zero", ",", "older"}
+          operation = _tokens[0];
+          operand1 = _tokens[1]; 
+          operand2 = _tokens[3]; 
+        }
+      }
+      else if(_tokens.size() == 3) {
+        operation = _tokens[2]; // {"b:", ":", "space"}
+      }
+      else if (_tokens.size() == 2) { // {"input", "n2"}
+        operation = _tokens[0]; 
+        operand1 = _tokens[1]; 
+      }
+      else {
+        operation = _tokens[0]; // {"stop"}
+      }
+
+      // OPERAND 1
+      operand1Found = _symbolTable.find(toLower(operand1)) != _symbolTable.end();
+      if (!operand1Found) {
+        _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+          ": operando '" + operation + "' indefinido."
+        );
+      }
+
+      // OPERAND 2
+      if (toLower(operation) == "copy") {
+        operand2Found = _symbolTable.find(toLower(operand2)) != _symbolTable.end();
+        if (!operand2Found) {
+          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+            ": operando '" + operation + "' indefinido."
+          );
+        }
+      }
+
+      // OPERATION
+      std::string lowerCasedOperation = toLower(operation);
+      operationFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
+      if (operationFound) {
+        positionCounter += _operationSizeTable[lowerCasedOperation];
+        
+        // Se número e tipo dos operandos está correto
+        _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
+        
+        // !!! Executar um função que injeta o código do operando em _objectCode !!!
+        if (lowerCasedOperation != "stop")
+          _objectCode.push_back(_symbolTable[toLower(operand1)]);
+        if (lowerCasedOperation == "copy") 
+          _objectCode.push_back(_symbolTable[toLower(operand2)]);
+        // Se não estiver correto, erro sintático
+
+      }
+      else { // DIRECTIVE
+        directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
+        if (directiveFound) {
+          auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
+          _positionCounter = (this->*directiveFunctionPtr)(_positionCounter);
+        }
+        else if (labelExists) {
+          // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
+          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+            ": diretiva '" + operation + "' não identificada."
+          );
+        }
+        else {
+          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+            ": instrução '" + operation + "' não identificada."
+          );
+        }
+      }
+    }
+
+    lineCounter++;
+  }
+  _isRunningSecondPass = false;
+}
 
 
 std::vector<std::string> Assembler::parseLine(std::string line) {
@@ -241,16 +354,38 @@ std::map<std::string, int> Assembler::symbolTable() {
 }
 
 
+void Assembler::setSymbolTable(std::map<std::string, int> st) {
+  _symbolTable = st;
+}
+
+
 std::vector<std::string> Assembler::errors() { 
   return _errors;
 }
 
 
+std::vector<int> Assembler::objectCode() { 
+  return _objectCode;
+}
+
+
 int Assembler::directiveSpace(int posCounter) { 
+  if (_isRunningSecondPass) {
+    _objectCode.push_back(0);
+  }
   return posCounter + 1;
 }
 
 
+// vai dar errado se separar a label da linha?
 int Assembler::directiveConst(int posCounter) {
+  // Assuminndo que todo caso de diretiva const vem
+  // na forma a seguir:
+  // {"DOIS", ":", "const", "2"}
+  if (_isRunningSecondPass) {
+    std::string strOperand = _tokens[3];
+    int operand = std::atoi(strOperand.c_str());
+    _objectCode.push_back(operand);
+  }
   return posCounter + 1;
 }

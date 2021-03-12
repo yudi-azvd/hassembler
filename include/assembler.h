@@ -12,6 +12,8 @@ private:
 
   int _lineCounter;
 
+  bool _isRunningSecondPass = false;
+
   std::map<std::string, int> _symbolTable;
   
   std::map<std::string, int> _opcodeTable;
@@ -24,21 +26,21 @@ private:
   std::vector<std::string> _sourceFileContent;
   
   std::vector<std::string> _tokens;
+  
+  std::vector<int> _objectCode;
 
   std::vector<std::string> _errors;
 
 public:
-  // Assembler();
-
   Assembler(std::vector<std::string> sourceFileContent = {});
 
   ~Assembler();
 
-  // void initTables();
-
   void assemble(std::vector<std::string> sourceFileContent);
   
   void runFirstPass();
+
+  void runSecondPass();
 
   std::vector<std::string> parseLine(std::string line);
 
@@ -63,9 +65,12 @@ public:
   
   
   std::map<std::string, int> symbolTable();
-  
+
+  void setSymbolTable(std::map<std::string, int> st);
   
   std::vector<std::string> errors();
+  
+  std::vector<int> objectCode();
 
 
   // Diretivas

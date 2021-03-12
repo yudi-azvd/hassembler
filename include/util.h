@@ -26,6 +26,9 @@ struct LineAndItsTokens {
 std::string vectorToString(std::vector<std::string> tokens);
 
 
+std::string vectorToString(std::vector<int> v);
+
+
 std::string strToIntMapToString(std::map<std::string, int> map);
 
 
