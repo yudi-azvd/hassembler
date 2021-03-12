@@ -31,8 +31,7 @@ make
 ./montador <caminho-relativo-do-seu-arquivo.asm>
 
 # exemplo
-./montador ./asm_files/fatorial.asm # "./" é necessário para o 
-                                    # funcionamento do programa
+./montador asm_files/fatorial.asm
 ```
 Se tudo deu certo executando o comando do exemplo anterior,
  o arquivo `fatorial.obj` está no diretório raíz do projeto.
