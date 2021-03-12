@@ -6,5 +6,6 @@
 #include "../../include/assembler.h"
 
 
-// TEST_CASE("simulator:some") {
-// }
+TEST_CASE("simulator:some") {
+  CHECK_EQ(1+1, 2);
+}

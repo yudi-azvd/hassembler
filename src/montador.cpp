@@ -40,14 +40,6 @@ int main(int commandlineCount, char* commandlineArguments[]) {
 
   assembler.assemble(sourceFileContent);
 
-  // esse tipo de código não deveria estar dentro do assembler?
-  std::vector<std::string> errors = assembler.errors();
-  if (errors.size() > 0) {
-    for (auto error : errors) {
-      std::cout << error << std::endl;
-    }
-  }
-
   return 0;
 }
 

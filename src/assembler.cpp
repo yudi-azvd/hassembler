@@ -227,7 +227,6 @@ void Assembler::runSecondPass() {
         // Se número e tipo dos operandos está correto
         _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
         
-        // !!! Executar um função que injeta o código do operando em _objectCode !!!
         if (lowerCasedOperation != "stop")
           _objectCode.push_back(_symbolTable[toLower(operand1)]);
         if (lowerCasedOperation == "copy") 

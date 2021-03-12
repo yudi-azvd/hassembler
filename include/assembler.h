@@ -63,7 +63,6 @@ public:
 
   bool isValidSymbol(std::string symbol);
   
-  
   std::map<std::string, int> symbolTable();
 
   void setSymbolTable(std::map<std::string, int> st);

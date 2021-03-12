@@ -33,6 +33,43 @@ TEST_CASE("rsp print number") {
 }
 
 
+TEST_CASE("rsp add two numbers") {
+  std::vector<std::string> sourceFileContent = {
+    "INPUT N1",
+    "INPUT N2",
+    "LOAD N1",
+    "ADD N2",
+    "STORE N3",
+    "OUTPUT N3",
+    "STOP",
+    "N1: SPACE ; SPACE eh uma diretiva. uma funcao deve ser chamada ",
+    "N2: SPACE ; e retornar uma nova posicao",
+    "N3: SPACE",
+  };
+
+  std::map<std::string, int> symbolTable = {
+    {"n1", 12},
+    {"n2", 13},
+    {"n3", 14},
+  };
+
+  Assembler as(sourceFileContent);
+
+  std::vector<int> gotObjectCode;
+  std::vector<int> expectedObjectCode = {
+    12, 12, 12, 13, 10, 12, 1, 13, 11, 14, 13, 14, 14, 0, 0, 0
+  };
+
+  as.setSymbolTable(symbolTable);
+  as.runSecondPass();
+  gotObjectCode = as.objectCode();
+
+  INFO("exp: ", vectorToString(expectedObjectCode));
+  INFO("got: ", vectorToString(gotObjectCode));
+  CHECK_EQ(gotObjectCode, expectedObjectCode);
+}
+
+
 TEST_CASE("rsp print and add number") {
   std::vector<std::string> sourceFileContent = {
     "input b",
