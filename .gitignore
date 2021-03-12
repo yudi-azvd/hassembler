@@ -3,6 +3,7 @@ build/**
 .vscode/*.log
 
 *.o
+*.obj
 *.out
 
 montador

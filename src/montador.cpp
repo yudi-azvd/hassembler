@@ -18,30 +18,28 @@ int main(int commandlineCount, char* commandlineArguments[]) {
     return 1;
   }
 
-  std::string line, filename = commandlineArguments[1];
-  std::vector<std::string> sourceFileContent;
-  std::ifstream infile(filename);
+  // std::string line, filename = commandlineArguments[1];
+  // std::vector<std::string> sourceFileContent;
+  // std::fstream infile(filename);
 
-  std::map<std::string, int> symbolTable;
+  // std::map<std::string, int> symbolTable;
 
-  while (std::getline(infile, line)) {
-    // std::for_each(
-    //   line.begin(), 
-    //   line.end(), 
-    //   [](char& c) { c = ::tolower(c); }
-    // );
-
-    sourceFileContent.push_back(line);
-  }
+  // while (std::getline(infile, line)) {
+  //   sourceFileContent.push_back(line);
+  // }
 
   Assembler assembler;
 
-  sourceFileContent.shrink_to_fit();  
+  assembler.getInputFileContent(commandlineArguments[1]);
 
-  assembler.assemble(sourceFileContent);
+  // sourceFileContent.shrink_to_fit();  
+
+  // assembler.assemble(sourceFileContent);
+  assembler.assemble();
 
   return 0;
 }
+
 
 void showCorrectUsage() {
   std::cout <<

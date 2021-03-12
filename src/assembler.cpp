@@ -53,20 +53,38 @@ Assembler::Assembler(std::vector<std::string> sourceFileContent) {
 Assembler::~Assembler() { }
 
 
+void Assembler::getInputFileContent(std::string fn) { 
+  std::string line;
+  _filename = fn;
+  std::vector<std::string> sourceFileContent;
+  std::fstream infile(_filename);
+
+  if (!infile.is_open()) {
+    _errors.push_back("Arquivo não encontrado: " + _filename);
+  }
+
+  std::map<std::string, int> symbolTable;
+
+  while (std::getline(infile, line)) {
+    sourceFileContent.push_back(line);
+  }
+
+  _sourceFileContent = sourceFileContent;
+}
+
+
 void Assembler::assemble(std::vector<std::string> sourceFileContent) {
-  this->_sourceFileContent = sourceFileContent; // tem cara de construtor
+  // this->_sourceFileContent = sourceFileContent; // tem cara de construtor
 
+  // getInputFile();
   runFirstPass();
-  // sunSecondPass();
-
-  // std::cout << "\n\nsymbol table" << std::endl;
-  // std::cout << strToIntMapToString(_symbolTable) << std::endl;
+  runSecondPass();
+  generateOutput();
 }
 
 
 void Assembler::runFirstPass() {
-  _positionCounter = 0;
-  _lineCounter = 1;
+  int positionCounter = 0, lineCounter = 1;
   bool labelExists, foundLabel, operationFound, directiveFound;
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
@@ -74,7 +92,7 @@ void Assembler::runFirstPass() {
   for (std::string line : _sourceFileContent) {
     _tokens = parseLine(line);
     if (_tokens.empty()) {
-      _lineCounter++;
+      lineCounter++;
       continue;
     }
 
@@ -90,16 +108,16 @@ void Assembler::runFirstPass() {
         foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
         if (!foundLabel) {
           if (!isValidSymbol(label)) {
-            _errors.push_back("Erro Léxico, linha " + std::to_string(_lineCounter) +
+            _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) +
               ": símbolo '" + label + "' é inválido."
             );
           }
           else {
-            _symbolTable[toLower(label)] = _positionCounter;
+            _symbolTable[toLower(label)] = positionCounter;
           }
         }
         else {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": símbolo '" + label + "' redefinido."
           );
         }
@@ -121,29 +139,29 @@ void Assembler::runFirstPass() {
 
       operationFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
       if (operationFound) {
-        _positionCounter += _operationSizeTable[lowerCasedOperation];
+        positionCounter += _operationSizeTable[lowerCasedOperation];
       }
       else {
         directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
         if (directiveFound) {
           auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
-          _positionCounter = (this->*directiveFunctionPtr)(_positionCounter);
+          positionCounter = (this->*directiveFunctionPtr)(positionCounter);
         }
         else if (labelExists) {
           // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
-          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": diretiva '" + operation + "' não identificada."
           );
         }
         else {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": instrução '" + operation + "' não identificada."
           );
         }
       }
     }
 
-    _lineCounter++;
+    lineCounter++;
   }
 } 
 
@@ -160,7 +178,7 @@ void Assembler::runSecondPass() {
   for (std::string line : _sourceFileContent) {
     _tokens = parseLine(line);
     if (_tokens.empty()) {
-      _lineCounter++;
+      lineCounter++;
       continue;
     }
 
@@ -200,21 +218,23 @@ void Assembler::runSecondPass() {
         operation = _tokens[0]; // {"stop"}
       }
 
-      // OPERAND 1
-      operand1Found = _symbolTable.find(toLower(operand1)) != _symbolTable.end();
-      if (!operand1Found) {
-        _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
-          ": operando '" + operation + "' indefinido."
-        );
-      }
-
-      // OPERAND 2
-      if (toLower(operation) == "copy") {
-        operand2Found = _symbolTable.find(toLower(operand2)) != _symbolTable.end();
-        if (!operand2Found) {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+      if (!labelExists) { // GAMBIARRA, tenho que corrigir ainda
+        // OPERAND 1
+        operand1Found = _symbolTable.find(toLower(operand1)) != _symbolTable.end();
+        if (!operand1Found) {
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": operando '" + operation + "' indefinido."
           );
+        }
+
+        // OPERAND 2
+        if (toLower(operation) == "copy") {
+          operand2Found = _symbolTable.find(toLower(operand2)) != _symbolTable.end();
+          if (!operand2Found) {
+            _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
+              ": operando '" + operation + "' indefinido."
+            );
+          }
         }
       }
 
@@ -238,16 +258,16 @@ void Assembler::runSecondPass() {
         directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
         if (directiveFound) {
           auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
-          _positionCounter = (this->*directiveFunctionPtr)(_positionCounter);
+          positionCounter = (this->*directiveFunctionPtr)(positionCounter);
         }
         else if (labelExists) {
           // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
-          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": diretiva '" + operation + "' não identificada."
           );
         }
         else {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(_lineCounter) +
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": instrução '" + operation + "' não identificada."
           );
         }
@@ -257,6 +277,50 @@ void Assembler::runSecondPass() {
     lineCounter++;
   }
   _isRunningSecondPass = false;
+}
+
+
+void Assembler::generateOutput() {
+  if (_errors.size() > 0) {
+    for (auto err : _errors) {
+      std::cout << err << std::endl;
+    }
+    return;
+  }
+
+  // tenho que guardar o nome do arquivo em algum lugar
+  std::string finalString = "", newFilename = "";
+
+  // o nome do arquivo está entre '/' e '.'
+  bool insertMode = false;
+  for (size_t i = _filename.size() - 1; i >= 0; --i) {
+    if (insertMode) {
+      newFilename.insert(0, 1,  _filename[i]);
+    }
+
+    if (_filename[i] == '/') {
+      break;
+    }
+
+    if (_filename[i] == '.') {
+      insertMode = true;
+      continue;
+    }
+  }
+
+  newFilename.insert(0, "."); // "/nome" => "./nome"
+  
+  std::fstream outputFile;
+
+  newFilename.append(".obj"); // "./nome.obj"
+  outputFile.open(newFilename, std::ios::out);
+
+  for (auto n : _objectCode) {
+    finalString.append(std::to_string(n) + " ");
+  }
+  
+  outputFile << finalString;
+  outputFile.close();
 }
 
 

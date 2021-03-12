@@ -2,17 +2,16 @@
 #define ASSEMBLER_H_INCLUDED
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <map>
 
 
 class Assembler {
 private:
-  int _positionCounter;
-
-  int _lineCounter;
-
   bool _isRunningSecondPass = false;
+
+  std::string _filename;
 
   std::map<std::string, int> _symbolTable;
   
@@ -36,11 +35,15 @@ public:
 
   ~Assembler();
 
-  void assemble(std::vector<std::string> sourceFileContent);
+  void assemble(std::vector<std::string> sourceFileContent = {});
   
+  void getInputFileContent(std::string filename);
+
   void runFirstPass();
 
   void runSecondPass();
+  
+  void generateOutput();
 
   std::vector<std::string> parseLine(std::string line);
 
