@@ -1,5 +1,5 @@
 # Software Básico: Montador e Simulador
-Montador simluador desenvolvidos durante a disciplina de 
+Montador e simluador desenvolvidos durante a disciplina de 
 Software Básico da Universidade de Brasília.
 
 ## Baixar
