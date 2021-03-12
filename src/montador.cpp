@@ -25,11 +25,11 @@ int main(int commandlineCount, char* commandlineArguments[]) {
   std::map<std::string, int> symbolTable;
 
   while (std::getline(infile, line)) {
-    std::for_each(
-      line.begin(), 
-      line.end(), 
-      [](char& c) { c = ::tolower(c); }
-    );
+    // std::for_each(
+    //   line.begin(), 
+    //   line.end(), 
+    //   [](char& c) { c = ::tolower(c); }
+    // );
 
     sourceFileContent.push_back(line);
   }

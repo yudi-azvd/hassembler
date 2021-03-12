@@ -41,6 +41,7 @@ make assembler
 make simulator
 ``` -->
 
+---
 
 ### Testes unitários
 Pra quem tiver interesse, para ver os testes unitários, eles também podem ser 

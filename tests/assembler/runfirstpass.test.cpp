@@ -92,7 +92,7 @@ TEST_CASE("fatorial with errors") {
     "        jnp fat",
     "fim:    output n",
     "        stop",
-    "a&ux:    space",
+    "a&uX:    space",
     "n:      space",
     "",
     "one:    const 1",
@@ -110,7 +110,7 @@ TEST_CASE("fatorial with errors") {
 
   CHECK_EQ(2, errors.size());
   CHECK(findErrorWith("Erro Semântico, linha 11: instrução 'jnp' não identificada", errors));
-  CHECK(findErrorWith("Erro Léxico, linha 14: símbolo 'a&ux' é inválido", errors));
+  CHECK(findErrorWith("Erro Léxico, linha 14: símbolo 'a&uX' é inválido", errors));
 }
 
 
@@ -119,8 +119,8 @@ TEST_CASE("fibonacci") {
   std::map<std::string, int> expectedSymbolTable = {
     {"front", 10},
     {"final", 30},
-    {"zero", 33},
-    {"one", 34},
+    {"ZERO", 33},
+    {"ONE", 34},
     {"older", 35},
     {"old", 36},
     {"new", 37},
@@ -143,8 +143,8 @@ TEST_CASE("fibonacci") {
     "        jmp front",
     "final:  output limit",
     "        stop",
-    "zero:   const 0",
-    "one:    const 1",
+    "ZERO:   const 0",
+    "ONE:    const 1",
     "older:  space",
     "old:    space",
     "new:    space",
@@ -165,6 +165,42 @@ TEST_CASE("fibonacci") {
 TEST_CASE("area_triangulo") {
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
+    {"B", 15},
+    {"h", 16},
+    {"r", 17},
+    {"dois", 18},
+  };
+
+  std::vector<std::string> sourceFileContent = {
+    "INPUT b",
+    "INPUT H",
+    "LOAD B",
+    "MUL H",
+    "DIV DOIS",
+    "store r",
+    "output r",
+    "stop",
+    "B: space",
+    "h: space",
+    "r: space",
+    "dois: const 2",
+  };
+
+
+  Assembler as(sourceFileContent);
+
+  as.runFirstPass();
+  gotSymbolTable = as.symbolTable();
+
+  INFO("got: ", strToIntMapToString(gotSymbolTable));
+  INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+  CHECK_EQ(gotSymbolTable, expectedSymbolTable);
+}
+
+
+TEST_CASE("area_triangulo with label alone in line") {
+  std::map<std::string, int> gotSymbolTable;
+  std::map<std::string, int> expectedSymbolTable = {
     {"b", 15},
     {"h", 16},
     {"r", 17},
@@ -180,12 +216,15 @@ TEST_CASE("area_triangulo") {
     "store r",
     "output r",
     "stop",
-    "b: space",
-    "h: space",
-    "r: space",
-    "dois: const 2",
+    "b: ",
+    // " space", // o que deveria acontecer nesse caso?
+    "H: SPACE",
+    "R: SPACE",
+    "DOIS: CONST 2",
   };
 
+  // A linha h: space tem dois rótulos. b: e h:. Professor disse que não 
+  // ia ter esse casos?.
 
   Assembler as(sourceFileContent);
 

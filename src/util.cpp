@@ -44,3 +44,15 @@ bool findErrorWith(std::string str, std::vector<std::string> errors) {
   return false;
 }
 
+
+std::string toLower(std::string str) {
+  std::for_each(
+    str.begin(), 
+    str.end(), 
+    [](char& c) { c = ::tolower(c); }
+  );
+
+  return str;
+}
+
+

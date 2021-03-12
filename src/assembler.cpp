@@ -100,7 +100,7 @@ void Assembler::runFirstPass() {
       if (labelExists) {
         label = _tokens[0]; // {"some_label", ":", ...}
 
-        foundLabel = _symbolTable.find(label) != _symbolTable.end();
+        foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
         if (!foundLabel) {
           if (!isValidSymbol(label)) {
             _errors.push_back("Erro Léxico, linha " + std::to_string(_lineCounter) +
@@ -131,14 +131,16 @@ void Assembler::runFirstPass() {
       else 
         operation = _tokens[0]; // {"input", "n2"}
 
-      operationFound = _opcodeTable.find(operation) != _opcodeTable.end();
+      std::string lowerCasedOperation = toLower(operation);
+
+      operationFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
       if (operationFound) {
-        _positionCounter += _operationSizeTable[operation];
+        _positionCounter += _operationSizeTable[lowerCasedOperation];
       }
       else {
-        directiveFound = _directiveTable.find(operation) != _directiveTable.end();
+        directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
         if (directiveFound) {
-          auto directiveFunctionPtr = _directiveTable[operation];
+          auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
           _positionCounter = (this->*directiveFunctionPtr)(_positionCounter);
         }
         else if (labelExists) { // savedLabelForLaterExists?

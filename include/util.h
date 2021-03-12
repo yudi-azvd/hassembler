@@ -32,4 +32,7 @@ std::string strToIntMapToString(std::map<std::string, int> map);
 bool findErrorWith(std::string str, std::vector<std::string> errors);
 
 
+std::string toLower(std::string str);
+  
+
 #endif // !UTIL_H_INCLUDED
