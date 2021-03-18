@@ -264,6 +264,7 @@ void Assembler::runSecondPass() {
         directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
         if (directiveFound) {
           auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
+          // SPACE NÃO PODE RECEBER OPERANDOS
           positionCounter = (this->*directiveFunctionPtr)(positionCounter);
         }
         else if (labelExists) {

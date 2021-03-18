@@ -189,7 +189,8 @@ TEST_CASE("rsp fatorial") {
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {
-    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3, 22, 11, 22, 10, 21, 5, 4, 13, 22, 14, 0, 0, 1
+    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3, 
+    22, 11, 22, 10, 21, 5, 4, 13, 22, 14, 0, 0, 1
   };
 
   as.setSymbolTable(symbolTable);
@@ -199,4 +200,47 @@ TEST_CASE("rsp fatorial") {
   INFO("exp: ", vectorToString(expectedObjectCode));
   INFO("got: ", vectorToString(gotObjectCode));
   CHECK_EQ(gotObjectCode, expectedObjectCode);
+}
+
+
+TEST_CASE("rsp should add errors with wrong number of operands") {
+  std::map<std::string, int> symbolTable = {
+    {"fat", 4},
+    {"fim", 18},
+    {"aux", 21},
+    {"n", 22},
+    {"one", 23},
+  };
+
+  std::vector<std::string> sourceFileContent = {
+    "        input n",
+    "        load n",
+    "fat:    sub one",
+    "        jmpz fim",
+    "        store aux",
+    "        mul n",
+    "        store n n", // Quantidade de operandos errada!
+    "        load aux",
+    "        jmp fat",
+    "fim:    output n",
+    "        stop",
+    "aux:    space",
+    "n:      space",
+    "one:    const 1",
+  };
+
+  Assembler as;
+
+  as.setSymbolTable(symbolTable);
+  as.setSourceFileContent(sourceFileContent);
+  as.setSymbolTable(symbolTable);
+  as.runSecondPass();
+
+  std::vector<std::string> errors = as.errors();
+
+  INFO("errors: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
+
+
+  CHECK(findErrorWith("Ero", errors));
 }

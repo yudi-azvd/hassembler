@@ -19,8 +19,8 @@
   ],
   "triggerTaskOnSave.on": true,
   "triggerTaskOnSave.tasks": {
-    "Build tests": [ // Nome da tarefa a ser desencadeada
-      "src/!main.cpp",
+    "Build utests": [ // Nome da tarefa a ser desencadeada
+      "src/!montador.cpp",
       "src/*.cpp",
       "tests/*.cpp",
       "tests/**/*.cpp",
@@ -28,6 +28,8 @@
     "Build assembler": [
       "src/assembler.cpp",
       "include/assembler.h",
+      "src/utl.cpp",
+      "include/util.h",
     ]
   },
   "clang.completion.enable": true,
