@@ -1,12 +1,9 @@
 #include <iostream>
-#include <sstream>
-#include <string>
-#include <algorithm>
-#include <fstream>
-#include <vector>
-#include <map>
 
-#include "../include/assembler.h"
+
+class Simulator {
+
+};
 
 
 void showCorrectUsage();
@@ -18,9 +15,9 @@ int main(int commandlineCount, char* commandlineArguments[]) {
     return 1;
   }
 
-  Assembler assembler(commandlineArguments[1]);
+  // Simulator simulator(commandlineArguments[1]);
 
-  assembler.assemble();
+  // simulator.run();
 
   return 0;
 }
@@ -32,3 +29,4 @@ void showCorrectUsage() {
     "$ ./montador ./caminho/relativo/pro/seu/arquivo.asm" 
   << std::endl;
 }
+

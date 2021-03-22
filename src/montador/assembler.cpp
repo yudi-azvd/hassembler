@@ -1,8 +1,8 @@
 #include <vector>
 
-#include "../include/assembler.h"
-#include "../include/errors.h"
-#include "../include/util.h"
+#include "../../include/assembler.h"
+#include "../../include/errors.h"
+#include "../../include/util.h"
 
 
 Assembler::Assembler(std::string filename) { 
