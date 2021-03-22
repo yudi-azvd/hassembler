@@ -1,10 +1,10 @@
 # Software Básico: Montador e Simulador
-Montador e simluador desenvolvidos durante a disciplina de 
+Montador e simulador desenvolvidos durante a disciplina de 
 Software Básico da Universidade de Brasília.
 
 ## Baixar
-Baixe esse repositório por esse [link](https://github.com/yudi-azvd/sb-assembler-and-simulator) clicando no botão verde. Ou baixe pela linha de 
-comando.
+Baixe esse repositório por esse [link](https://github.com/yudi-azvd/sb-assembler-and-simulator) 
+clicando no botão verde. Ou baixe pela linha de comando.
 
 ```sh
 git clone https://github.com/yudi-azvd/sb-assembler-and-simulator
@@ -18,8 +18,8 @@ cd sb-assembler-and-simulator
 ```
 
 ## Usar e executar
-Para compilar o projeto é necessário ter o [Make](https://www.gnu.org/software/make/) instalado em seu computador.
-Foi usado **g++ 7.5.0** com **Ubuntu 18.04**.
+Para compilar o projeto é necessário ter o [Make](https://www.gnu.org/software/make/) 
+instalado em seu computador. Foi usado **g++ 7.5.0** com **Ubuntu 18.04**.
 
 Para compilar o `montador`:
 <!-- e o `simulador`: -->
