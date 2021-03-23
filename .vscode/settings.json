@@ -20,17 +20,21 @@
   "triggerTaskOnSave.on": true,
   "triggerTaskOnSave.tasks": {
     "Build utests": [ // Nome da tarefa a ser desencadeada
-      "src/!montador.cpp",
-      "src/*.cpp",
+      "src/montador/!montador.cpp",
+      "src/montador/*.cpp",
       "tests/*.cpp",
       "tests/**/*.cpp",
     ],
     "Build assembler": [
-      "src/assembler.cpp",
+      "src/montador/*.cpp",
       "include/assembler.h",
       "src/utl.cpp",
       "include/util.h",
-    ]
+    ],
+    "Build simulator": [
+      "src/simulador/*.cpp",
+      "include/simulador.h",
+    ],
   },
   "clang.completion.enable": true,
   "clang.diagnostic.enable": true,
@@ -93,10 +97,4 @@
     "set": "cpp",
     "string": "cpp"
   },
-  "makefile.launchConfigurations": [
-    {
-      "cwd": "/home/yudi/Documents/programming/estudos/unb/sb/sb-assembler/build",
-      "binaryPath": "/home/yudi/Documents/programming/estudos/unb/sb/sb-assembler/build/montador",
-    }
-  ],
 }

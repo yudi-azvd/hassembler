@@ -7,6 +7,8 @@ build/**
 *.out
 
 montador
+!montador/
 simulador
+!simulador/
 
 *.pdf

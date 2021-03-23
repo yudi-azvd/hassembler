@@ -42,14 +42,24 @@
       "presentation": {
         "echo": false,
         "reveal": "silent",
-        // "focus": true,
         "panel": "dedicated",
-        // "showReuseMessage": false,
         "clear": true
       },
       "command": "make assembler",
       "problemMatcher": []
-    }
+    },
+    {
+      "label": "Build simulator",
+      "type": "shell",
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "command": "make simulator",
+      "problemMatcher": []
+    },
   ],
   "version": "2.0.0"
 }

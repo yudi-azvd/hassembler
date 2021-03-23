@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 
-#include "../include/assembler.h"
+#include "../../include/assembler.h"
 
 
 void showCorrectUsage();
