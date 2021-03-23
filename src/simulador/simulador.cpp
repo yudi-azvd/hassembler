@@ -1,9 +1,7 @@
 #include <iostream>
+#include <vector>
 
-
-class Simulator {
-
-};
+#include "../../include/simulador.h"
 
 
 void showCorrectUsage();
@@ -15,9 +13,9 @@ int main(int commandlineCount, char* commandlineArguments[]) {
     return 1;
   }
 
-  // Simulator simulator(commandlineArguments[1]);
+  Simulator simulator(commandlineArguments[1]);
 
-  // simulator.run();
+  simulator.run();
 
   return 0;
 }
@@ -26,7 +24,6 @@ int main(int commandlineCount, char* commandlineArguments[]) {
 void showCorrectUsage() {
   std::cout <<
     "Informe o nome do arquivo fonte a ser montado. Exemplo:\n" 
-    "$ ./montador ./caminho/relativo/pro/seu/arquivo.asm" 
+    "$ ./simulador ./caminho/relativo/pro/seu/arquivo.obj" 
   << std::endl;
 }
-
