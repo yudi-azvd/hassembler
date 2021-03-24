@@ -3,8 +3,9 @@ build/**
 .vscode/*.log
 
 *.o
-*.obj
-*.out
+/*.out
+/*.obj
+/*.asm
 
 montador
 !montador/
@@ -12,3 +13,5 @@ simulador
 !simulador/
 
 *.pdf
+
+*.zip

@@ -8,9 +8,11 @@
 
 class Simulator {
 private:
+  static const int MEM_MAX_SIZE = 216;
+
   int _pc, _acc;
 
-  static const int MEM_MAX_SIZE = 216;
+  std::vector<int> _outputs;
 
   std::map<int, std::string> _reversedOpcodeTable;
 
@@ -26,6 +28,8 @@ public:
   ~Simulator();
 
   void run();
+
+  void simulate();
 
   void generateOutput();
 };
