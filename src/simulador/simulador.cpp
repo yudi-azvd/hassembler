@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "../../include/simulador.h"
+#include "../../include/simulator.h"
 
 
 void showCorrectUsage();

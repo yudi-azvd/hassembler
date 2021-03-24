@@ -295,13 +295,13 @@ void Assembler::generateOutput() {
     return;
   }
 
-  std::string finalString = "", newFilename = "";
+  std::string finalString = "", outFilename = "";
 
   // o nome do arquivo está entre '/' e '.'
   bool insertMode = false;
-  for (size_t i = _filename.size() - 1; i >= 0; --i) {
+  for (int i = _filename.size() - 1; i >= 0; --i) {
     if (insertMode) {
-      newFilename.insert(0, 1,  _filename[i]);
+      outFilename.insert(0, 1,  _filename[i]);
     }
 
     if (_filename[i] == '/') {
@@ -314,12 +314,15 @@ void Assembler::generateOutput() {
     }
   }
 
-  newFilename.insert(0, "."); // "/nome" => "./nome"
-  
-  std::fstream outputFile;
+  if (outFilename[0] != '/') { // "nome" => "/nome"
+    outFilename.insert(0, 1, '/');
+  }
 
-  newFilename.append(".obj"); // "./nome.obj"
-  outputFile.open(newFilename, std::ios::out);
+  outFilename.insert(0, "."); // "/nome" => "./nome"
+  outFilename.append(".obj"); // "./nome.obj"
+
+  std::fstream outputFile;
+  outputFile.open(outFilename, std::ios::out);
 
   for (auto n : _objectCode) {
     finalString.append(std::to_string(n) + " ");

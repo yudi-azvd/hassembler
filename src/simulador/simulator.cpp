@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../../include/simulador.h"
+#include "../../include/simulator.h"
 
 Simulator::Simulator(std::string filename) {
   _filename = filename;
@@ -26,9 +26,23 @@ Simulator::Simulator(std::string filename) {
 Simulator::~Simulator() {}
 
 
+void Simulator::run() {
+  bool ok = getInputFileContent();
+
+  if (!ok) {
+    return;
+  }
+ 
+  simulate();
+
+  generateOutput();
+}
+
+
 bool Simulator::getInputFileContent() { 
   int number;
-  std::vector<int16_t> numbers;
+  std::vector<int16_t> numbers(MEM_MAX_SIZE);
+  // std::vector<int16_t> numbers;
   std::fstream infile(_filename);
 
   if (!infile.is_open()) {
@@ -36,8 +50,9 @@ bool Simulator::getInputFileContent() {
     return false;
   }
 
+  int i = 0;
   while (infile >> number) {
-    numbers.push_back(number);
+    numbers[i++] = number;
   }
 
   numbers.shrink_to_fit();
@@ -49,16 +64,10 @@ bool Simulator::getInputFileContent() {
 
 // Eu posso assumir que a seção de dados vem DEPOIS
 // da seção de código.
-void Simulator::run() {
-  bool ok = getInputFileContent();
-
-  if (!ok) {
-    return;
-  }
-
+void Simulator::simulate() {
   _pc = 0;
   _acc = 0;
-  int address, operand, inputNumber, addrContent;
+  int address1, address2, operand1, inputNumber, addrContent1{};
   bool instructionFound;
   std::string instruction;
 
@@ -77,54 +86,93 @@ void Simulator::run() {
       // else if (instruction == "stop") {
       //   _pc += 1;
       // }
+      // else if instrucion.contains("jmp") { // faz nada }
       // else { // add, sub, mul, output, ...
       //   _pc += 2;
       // }
 
       if (instruction == "add") {
-        address = _memory[_pc+1];
-        operand = _memory[address];
-        _acc += operand;
+        address1 = _memory[_pc+1];
+        operand1 = _memory[address1];
+        _acc += operand1;
         _pc += 2;
       }
       else if (instruction == "sub") {
-        address = _memory[_pc+1];
-        operand = _memory[address];
-        _acc -= operand;
+        address1 = _memory[_pc+1];
+        operand1 = _memory[address1];
+        _acc -= operand1;
         _pc += 2;
       }
       else if (instruction == "mul") {
-        address = _memory[_pc+1];
-        operand = _memory[address];
-        _acc *= operand;
+        address1 = _memory[_pc+1];
+        operand1 = _memory[address1];
+        _acc *= operand1;
         _pc += 2;
       }
       else if (instruction == "div") {
-        address = _memory[_pc+1];
-        operand = _memory[address];
-        _acc /= operand;
+        address1 = _memory[_pc+1];
+        operand1 = _memory[address1];
+        _acc /= operand1;
         _pc += 2;
       }
+      else if (instruction == "jmp") {
+        address1 = _memory[_pc+1];
+        _pc = address1;
+      }
+      else if (instruction == "jmpn") {
+        if (_acc < 0) {
+          address1 = _memory[_pc+1];
+          _pc = address1;
+        }
+        else {
+          _pc += 2;
+        }
+      }
+      else if (instruction == "jmpp") {
+        if (_acc > 0) {
+          address1 = _memory[_pc+1];
+          _pc = address1;
+        }
+        else {
+          _pc += 2;
+        }
+      }
+      else if (instruction == "jmpz") {
+        if (_acc == 0) {
+          address1 = _memory[_pc+1];
+          _pc = address1;
+        }
+        else {
+          _pc += 2;
+        }
+      }
+      else if (instruction == "copy") {
+        address1 = _memory[_pc+1];
+        address2 = _memory[_pc+2];
+        addrContent1 = _memory[address1];
+        _memory[address2] = addrContent1;
+        _pc += 3;
+      }
       else if (instruction == "load") {
-        address = _memory[_pc+1];
-        _acc = _memory[address];
+        address1 = _memory[_pc+1];
+        _acc = _memory[address1];
         _pc += 2;
       }
       else if (instruction == "store") {
-        address = _memory[_pc+1];
-        _memory[address] = _acc;
+        address1 = _memory[_pc+1];
+        _memory[address1] = _acc;
         _pc += 2;
       }
       else if (instruction == "input") {
         std::cin >> inputNumber;
-        address = _memory[_pc+1];
-        _memory[address] = inputNumber;
+        address1 = _memory[_pc+1];
+        _memory[address1] = inputNumber;
         _pc += 2;
       }
       else if (instruction == "output") {
-        address = _memory[_pc+1];
-        addrContent = _memory[address];
-        // std::cout << "OUTPUT: " << addrContent << std::endl;
+        address1 = _memory[_pc+1];
+        addrContent1 = _memory[address1];
+        // std::cout << "OUTPUT: " << addrContent1 << std::endl;
         _pc += 2;
       }
       else {
@@ -134,12 +182,55 @@ void Simulator::run() {
       }
     }
 
+    // _logs.push_back(essas strings aí)
     std::cout << "PC <- " << _pc << std::endl;
     std::cout << "ACC <- " << _acc << std::endl;
     if (instruction == "output") {
-      std::cout << "OUTPUT: " << addrContent << std::endl;
+      std::cout << "OUTPUT: " << addrContent1 << std::endl;
+      _outputs.push_back(addrContent1);
     }
   }
 
   // std::cout << "programa chegou em STOP" << std::endl;
+}
+
+
+void Simulator::generateOutput() {
+  if (_outputs.size() == 0) {
+    return;
+  }
+
+  std::string finalString = "", outFilename = "";
+  bool insertMode = false;
+  for (int i = _filename.size() - 1; i >= 0; --i) {
+    if (insertMode) {
+      outFilename.insert(0, 1, _filename[i]);
+    }
+
+    if (_filename[i] == '/') {
+      break;
+    }
+
+    if (_filename[i] == '.') {
+      insertMode = true;
+      continue;
+    }
+  }
+
+  if (outFilename[0] != '/') { // "nome" => "/nome"
+    outFilename.insert(0, 1, '/');
+  }
+
+  outFilename.insert(0, "."); // "/nome" => "./nome"
+  outFilename.append(".out"); // "./nome.out"
+
+  std::fstream outputFile;
+  outputFile.open(outFilename, std::ios::out);
+
+  for (auto number : _outputs) {
+    finalString.append(std::to_string(number) + "\n");
+  }
+
+  outputFile << finalString;
+  outputFile.close();
 }
