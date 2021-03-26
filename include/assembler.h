@@ -35,8 +35,6 @@ private:
 public:
   Assembler(std::string filename = "");
   
-  // Assembler(std::string filename = "");
-
   ~Assembler();
 
   void assemble();
@@ -46,6 +44,12 @@ public:
   void runFirstPass();
 
   void runSecondPass();
+
+  std::string findLabel(int& labelPosition, int& colonPosition);
+
+  std::string findOperation(int labelPosition, int& operationPosition);
+
+  std::vector<std::string> findOperands(int operationPosition);
   
   void generateOutput();
 
@@ -87,6 +91,10 @@ public:
 
   // Função da diretiva CONST
   int directiveConst(int posCounter);
+
+
+  // Função da diretiva SECTION
+  int directiveSection(int posCounter);
 };
 
 

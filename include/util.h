@@ -32,7 +32,7 @@ std::string vectorToString(std::vector<int> v);
 std::string strToIntMapToString(std::map<std::string, int> map);
 
 
-bool findErrorWith(std::string str, std::vector<std::string> errors);
+bool findErrorWith(std::string str, std::vector<std::string>& errors);
 
 
 std::string toLower(std::string str);

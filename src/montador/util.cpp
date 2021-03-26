@@ -47,11 +47,12 @@ std::string strToIntMapToString(std::map<std::string, int> map) {
 }
 
 
-bool findErrorWith(std::string str, std::vector<std::string> errors) {
+bool findErrorWith(std::string str, std::vector<std::string>& errors) {
   std::size_t foundAt;
   for (auto &error : errors) {
     foundAt =  error.find(str);
     if (foundAt != std::string::npos) {
+      errors.erase(errors.begin() + foundAt);
       return true;
     }
   }

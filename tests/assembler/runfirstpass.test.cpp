@@ -75,6 +75,7 @@ TEST_CASE("fatorial") {
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
 
@@ -162,6 +163,7 @@ TEST_CASE("fibonacci") {
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
 
@@ -199,6 +201,7 @@ TEST_CASE("area_triangulo") {
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
 
@@ -237,6 +240,7 @@ TEST_CASE("label alone in line - 1") {
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
 
@@ -269,12 +273,11 @@ TEST_CASE("area_triangulo with errors") {
   std::vector<std::string> errors = as.errors();
   std::map<std::string, int> symbolTable = as.symbolTable();
 
-  INFO("errors: ", vectorToString(errors));
-  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
-
   // NOTAR QUE LINHAS EM BRANCO AINDA SÃO CONTADAS COMO LINHAS
   CHECK_EQ(5, errors.size());
 
+  INFO("errors: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
 
   CHECK(findErrorWith("Erro Semântico, linha 5: instrução 'mult'", errors));
   CHECK(findErrorWith("Erro Semântico, linha 6: instrução 'divy'", errors));
@@ -302,9 +305,65 @@ TEST_CASE("invalid label alone in line") {
   std::vector<std::string> errors = as.errors();
   std::map<std::string, int> symbolTable = as.symbolTable();
 
-  INFO("errors: ", vectorToString(errors));
-  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
 
   CHECK_EQ(1, errors.size());
   CHECK(findErrorWith("Erro Léxico, linha 2: símbolo '2b' é inválido", errors));
+
+  INFO("errors: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
+}
+
+
+TEST_CASE("label alone in line should work for space directive") {
+  std::vector<std::string> sourceFileContent = {
+    "input b",
+    "VALID_LABEL: ",
+    "",
+    " space",
+  };
+
+  Assembler as;
+  as.setSourceFileContent(sourceFileContent);
+
+  as.runFirstPass();
+
+  std::map<std::string, int> gotSymbolTable = as.symbolTable();
+  std::map<std::string, int> expectedSymbolTable = {
+    {"valid_label", 2},
+  };
+
+  INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+  INFO("got: ", strToIntMapToString(gotSymbolTable));
+
+  CHECK_EQ(0, as.errors().size());
+  CHECK_EQ(gotSymbolTable, expectedSymbolTable);
+}
+
+
+TEST_CASE("label alone in line should work for instructions") {
+  std::vector<std::string> sourceFileContent = {
+    "input b",
+    "VALID_LABEL: ",
+    "",
+    "store N",
+    "jmpz VALID_LABEL",
+    "N: space",
+  };
+
+  Assembler as;
+  
+  as.setSourceFileContent(sourceFileContent);
+  as.runFirstPass();
+
+  std::map<std::string, int> gotSymbolTable = as.symbolTable();
+  std::map<std::string, int> expectedSymbolTable = {
+    {"valid_label", 2},
+    {"n", 6},
+  };
+
+  INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+  INFO("got: ", strToIntMapToString(gotSymbolTable));
+
+  CHECK_EQ(0, as.errors().size());
+  CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }

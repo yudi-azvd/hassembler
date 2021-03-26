@@ -13,7 +13,6 @@ Assembler::Assembler(std::string filename) {
 
 
 void Assembler::_initialize() {
-  _isRunningSecondPass = false;
   _opcodeTable = {
     {"add", 1},
     {"sub", 2},
@@ -52,6 +51,7 @@ void Assembler::_initialize() {
   _directiveTable = {
     {"space", &Assembler::directiveSpace},
     {"const", &Assembler::directiveConst},
+    {"section", &Assembler::directiveSection},
   };
 }
 
@@ -114,8 +114,8 @@ void Assembler::runFirstPass() {
         foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
         if (!foundLabel) {
           if (!isValidSymbol(label)) {
-            _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) +
-              ": símbolo '" + label + "' é inválido."
+            _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) 
+              + ": símbolo '" + label + "' é inválido."
             );
           }
           else {
@@ -123,8 +123,8 @@ void Assembler::runFirstPass() {
           }
         }
         else {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-            ": símbolo '" + label + "' redefinido."
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
+            + ": símbolo '" + label + "' redefinido."
           );
         }
       }
@@ -188,102 +188,165 @@ void Assembler::runSecondPass() {
       continue;
     }
 
-    // LABEL
-    if (_tokens.size() >= 2) {
-      // é a única condição para label exitir?
-      labelExists = _tokens[1] == ":";
+    int labelPosition = -1;
+    int colonPosition = -1;
+    label = findLabel(labelPosition, colonPosition);
+    labelExists = !label.empty();
+
+    int operationPosition = -1;
+    operation = findOperation(labelPosition, operationPosition);
+
+    std::vector<std::string> operands = findOperands(operationPosition);
+    operand1 = operands.size() >= 1 ? operands[0] : "";
+    int numberOfOperands = operands.size();
+
+    if (toLower(operation) == "copy") { 
+      // 0        1   2
+      // "label1" "," "label2"
+      operand2 = operands.size() >= 2 ? operands[2] : "";
+      numberOfOperands--; // descontar a "," presente em operands.
     }
 
-    // OPERATION and OPERANDS
-    if (_tokens.size() >= 3 || (!labelExists && _tokens.size() >= 2) || _tokens.size() == 1) {
-      if (_tokens.size() == 6 && _tokens[2] == "copy") {
-        operation = _tokens[2]; // {"some_label", ":","copy", "zero", "," "older"}
-        operand1 = _tokens[3]; 
-        operand2 = _tokens[5]; 
-      }
-      else if (_tokens.size() == 4) {
-        if (labelExists) { // {"some_label", ":", "ADD", "UM"}
-                           // {"DOIS", ":", "const", "2"}
-          operation = _tokens[2]; 
-          operand1 = _tokens[3]; 
-        }
-        else { // {"copy", "zero", ",", "older"}
-          operation = _tokens[0];
-          operand1 = _tokens[1]; 
-          operand2 = _tokens[3]; 
-        }
-      }
-      else if(_tokens.size() == 3) {
-        operation = _tokens[2]; // {"b:", ":", "space"}
-      }
-      else if (_tokens.size() == 2) { // {"input", "n2"}
-        operation = _tokens[0]; 
-        operand1 = _tokens[1]; 
+    std::string lowerCasedOperation = toLower(operation);
+    directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
+
+    if (!directiveFound) { // GAMBIARRA, tenho que corrigir ainda
+      // OPERAND 1
+      if (std::isdigit(operand1[0])) {
+        _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter) 
+          + ": operando '" + operand1 + "' deveria ser um rótulo."
+        );
       }
       else {
-        operation = _tokens[0]; // {"stop"}
-      }
-
-      if (!labelExists) { // GAMBIARRA, tenho que corrigir ainda
-        // OPERAND 1
         operand1Found = _symbolTable.find(toLower(operand1)) != _symbolTable.end();
-        if (!operand1Found) {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-            ": operando '" + operation + "' indefinido."
+        if (!operand1Found && operand1 != "") {
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
+            + ": operando '" + operand1 + "' indefinido."
           );
         }
 
-        // OPERAND 2
-        if (toLower(operation) == "copy") {
+      }
+
+      // OPERAND 2
+      if (toLower(operation) == "copy") {
+        if (std::isdigit(operand2[0])) {
+          _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter) 
+            + ": operando '" + operand2 + "' deveria ser um rótulo."
+          );
+        }
+        else {
           operand2Found = _symbolTable.find(toLower(operand2)) != _symbolTable.end();
           if (!operand2Found) {
-            _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-              ": operando '" + operation + "' indefinido."
+            _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
+              + ": operando '" + operand2 + "' indefinido."
             );
           }
         }
       }
+    }
 
-      // OPERATION
-      std::string lowerCasedOperation = toLower(operation);
-      operationFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
-      if (operationFound) {
-        positionCounter += _operationSizeTable[lowerCasedOperation];
-        
-        // Se número e tipo dos operandos está correto
-        _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
-        
-        if (lowerCasedOperation != "stop")
-          _objectCode.push_back(_symbolTable[toLower(operand1)]);
-        if (lowerCasedOperation == "copy") 
-          _objectCode.push_back(_symbolTable[toLower(operand2)]);
-        // Se não estiver correto, erro sintático
-
+    // OPERATION
+    operationFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
+    if (operationFound) {
+      int operationSize = _operationSizeTable[lowerCasedOperation];
+      positionCounter += operationSize;
+      
+      // O número de operandos de uma operação é o tamanho da operação
+      // menos 1 por causa do símbolo da própria operação, o que sobra 
+      // é operando.
+      if (numberOfOperands != (operationSize-1)) {
+        _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter)
+          + ": instrução '" + operation + "' com número de operandos errado."
+        );
       }
-      else { // DIRECTIVE
-        directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
-        if (directiveFound) {
-          auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
-          // SPACE NÃO PODE RECEBER OPERANDOS
-          positionCounter = (this->*directiveFunctionPtr)(positionCounter);
-        }
-        else if (labelExists) {
-          // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-            ": diretiva '" + operation + "' não identificada."
+      
+      _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
+      
+      if (lowerCasedOperation != "stop")
+        _objectCode.push_back(_symbolTable[toLower(operand1)]);
+      if (lowerCasedOperation == "copy") 
+        _objectCode.push_back(_symbolTable[toLower(operand2)]);
+      // Se não estiver correto, erro sintático
+
+    }
+    else { // DIRECTIVE
+      if (directiveFound) {
+        auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
+        positionCounter = (this->*directiveFunctionPtr)(positionCounter);
+
+        // SPACE NÃO PODE RECEBER OPERANDOS
+        if (lowerCasedOperation == "space" && operands.size() != 0) {
+          _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter)
+            + ": diretiva '" + operation + "' com número de operandos errado."
           );
         }
-        else {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-            ": instrução '" + operation + "' não identificada."
-          );
-        }
+      }
+      else if (labelExists) {
+        // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
+        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
+          ": diretiva '" + operation + "' não identificada."
+        );
+      }
+      else {
+        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
+          ": instrução '" + operation + "' não identificada."
+        );
       }
     }
 
     lineCounter++;
   }
   _isRunningSecondPass = false;
+}
+
+
+std::string Assembler::findLabel(int& labelPosition, int& colonPosition) {
+  std::string tk, label;
+  // : ADD LABEL1  ;; ??? 
+  for (size_t i = 0; i < _tokens.size(); i++) {
+    // Considero como label, mesmo que esteja na posição errada.
+    if (_tokens[i] == ":" && i >= 1) {
+      colonPosition = i;
+      labelPosition = i-1;
+      label = _tokens[i-1];
+    }
+  }
+
+  return label;
+}
+
+
+std::string Assembler::findOperation(int labelPosition, int& operationPosition) {
+  // _tokens[labelPostion] => "label"
+  // _tokens[labelPostion+1] => ":"
+  size_t start = labelPosition >= 0 ? labelPosition+2 : 0;
+
+  for (size_t i = start; i < _tokens.size(); i++) {
+    auto lowerCasedToken = toLower(_tokens[i]);
+
+    auto foundInstruction = _opcodeTable.find(lowerCasedToken) != _opcodeTable.end();
+    auto foundDirective = _directiveTable.find(lowerCasedToken) != _directiveTable.end();
+
+    if (foundInstruction || foundDirective) {
+      operationPosition = i;
+      return _tokens[i];
+    }
+  }
+  
+  return "";
+}
+
+
+std::vector<std::string> Assembler::findOperands(int operationPosition) {
+  std::vector<std::string> operands;
+
+  size_t start = operationPosition >= 0 ? operationPosition+1 : 0;
+
+  for (size_t i = start; i < _tokens.size(); i++) {
+    operands.push_back(_tokens[i]);
+  }
+
+  return operands;
 }
 
 
@@ -409,6 +472,10 @@ bool Assembler::isValidSymbol(std::string symbol) {
     return false;
   }
 
+  if (symbol.length() >= 50) {
+    return false;
+  }
+
   bool isValidChar = true;
   for (auto c : symbol) {
     isValidChar = std::isalpha(c) || std::isdigit(c) || c == '_';
@@ -465,4 +532,9 @@ int Assembler::directiveConst(int posCounter) {
     _objectCode.push_back(operand);
   }
   return posCounter + 1;
+}
+
+
+int Assembler::directiveSection(int posCounter) {
+  return posCounter;
 }

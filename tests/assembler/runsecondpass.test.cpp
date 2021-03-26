@@ -30,6 +30,8 @@ TEST_CASE("rsp print number") {
 
   INFO("exp: ", vectorToString(expectedObjectCode));
   INFO("got: ", vectorToString(gotObjectCode));
+  INFO("errors: ", vectorToString(as.errors()));
+
   CHECK_EQ(gotObjectCode, expectedObjectCode);
 }
 
@@ -68,6 +70,8 @@ TEST_CASE("rsp add two numbers") {
 
   INFO("exp: ", vectorToString(expectedObjectCode));
   INFO("got: ", vectorToString(gotObjectCode));
+  INFO("err: ", vectorToString(as.errors()));
+
   CHECK_EQ(gotObjectCode, expectedObjectCode);
 }
 
@@ -100,6 +104,7 @@ TEST_CASE("rsp print and add number") {
 
   INFO("exp: ", vectorToString(expectedObjectCode));
   INFO("got: ", vectorToString(gotObjectCode));
+
   CHECK_EQ(gotObjectCode, expectedObjectCode);
 }
 
@@ -154,6 +159,7 @@ TEST_CASE("rsp fibonacci") {
 
   INFO("exp: ", vectorToString(expectedObjectCode));
   INFO("got: ", vectorToString(gotObjectCode));
+
   CHECK_EQ(gotObjectCode, expectedObjectCode);
 }
 
@@ -199,7 +205,42 @@ TEST_CASE("rsp fatorial") {
 
   INFO("exp: ", vectorToString(expectedObjectCode));
   INFO("got: ", vectorToString(gotObjectCode));
+
   CHECK_EQ(gotObjectCode, expectedObjectCode);
+}
+
+
+TEST_CASE("rsp should add errors undefined operands") {
+  std::map<std::string, int> symbolTable = {
+    {"label", 7},
+  };
+
+
+  std::vector<std::string> sourceFileContent = {
+    "input n1",
+    "store n2", // Quantidade de operandos errada!
+    "load LABEL",
+    "jmp FAT",
+    "LABEL: space",
+  };
+  
+  Assembler as;
+
+  as.setSymbolTable(symbolTable);
+  as.setSourceFileContent(sourceFileContent);
+  as.runSecondPass();
+
+  std::vector<std::string> errors = as.errors();
+
+  INFO("err: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
+
+  CHECK_EQ(3, errors.size());
+  CHECK(findErrorWith("Erro Semântico, linha 1: operando 'n1' indefinido", errors));
+  CHECK(findErrorWith("Erro Semântico, linha 2: operando 'n2' indefinido", errors));
+  CHECK(findErrorWith("Erro Semântico, linha 4: operando 'FAT' indefinido", errors));
+
+  CHECK_FALSE(findErrorWith("Erro Semântico, linha 3: operando 'LABEL' indefinido.", errors));
 }
 
 
@@ -216,15 +257,15 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
     "        input n",
     "        load n",
     "fat:    sub one",
-    "        jmpz fim",
+    "        jmpz", // ERRO
     "        store aux",
     "        mul n",
-    "        store n n", // Quantidade de operandos errada!
+    "        store n n", //ERRO
     "        load aux",
     "        jmp fat",
     "fim:    output n",
     "        stop",
-    "aux:    space",
+    "aux:    space 1", // ERRO
     "n:      space",
     "one:    const 1",
   };
@@ -233,14 +274,49 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
 
   as.setSymbolTable(symbolTable);
   as.setSourceFileContent(sourceFileContent);
-  as.setSymbolTable(symbolTable);
   as.runSecondPass();
 
   std::vector<std::string> errors = as.errors();
 
   INFO("errors: ", vectorToString(errors));
-  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
+
+  REQUIRE_EQ(3, errors.size());
+
+  CHECK_EQ(errors[0], "Erro Sintático, linha 4: instrução 'jmpz' com número de operandos errado.");
+  CHECK_EQ(errors[1], "Erro Sintático, linha 7: instrução 'store' com número de operandos errado.");
+  CHECK_EQ(errors[2], "Erro Sintático, linha 12: diretiva 'space' com número de operandos errado.");
+}
 
 
-  CHECK(findErrorWith("Ero", errors));
+TEST_CASE("should give errors saying operand should be a label") {
+  std::map<std::string, int> symbolTable = {
+    {"label1", 0}, // não faz diferença o valor do rótulo para esses testes
+  };
+
+  std::vector<std::string> sourceFileContent = {
+    "fat:    sub 1", // erro
+    "        mul 5", // erro
+    "fim:    output 4", // erro
+    "o:      copy 10,label1", // erro
+    "o2:      copy label1 , 13", // erro
+    "label1: space",
+  };
+
+  Assembler as;
+
+  as.setSymbolTable(symbolTable);
+  as.setSourceFileContent(sourceFileContent);
+  as.runSecondPass();
+
+  std::vector<std::string> errors = as.errors();
+
+  INFO("errors: ", vectorToString(errors));
+
+  REQUIRE_EQ(5, errors.size());
+
+  CHECK_EQ(errors[0], "Erro Sintático, linha 1: operando '1' deveria ser um rótulo.");
+  CHECK_EQ(errors[1], "Erro Sintático, linha 2: operando '5' deveria ser um rótulo.");
+  CHECK_EQ(errors[2], "Erro Sintático, linha 3: operando '4' deveria ser um rótulo.");
+  CHECK_EQ(errors[3], "Erro Sintático, linha 4: operando '10' deveria ser um rótulo.");
+  CHECK_EQ(errors[4], "Erro Sintático, linha 5: operando '13' deveria ser um rótulo.");
 }
