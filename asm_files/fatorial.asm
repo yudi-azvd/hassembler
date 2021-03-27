@@ -1,4 +1,9 @@
 ; Apenas para N > 0
+section data
+AUX:    SPACE          ; 21
+N:      SPACE          ; 22
+ONE:    CONST 1        ; 23
+section text
         INPUT N        ; 00
         LOAD N         ; 02
 FAT:    SUB ONE        ; 04
@@ -10,6 +15,3 @@ FAT:    SUB ONE        ; 04
         JMP FAT        ; 16
 FIM:    OUTPUT N       ; 18
         STOP           ; 20
-AUX:    SPACE          ; 21
-N:      SPACE          ; 22
-ONE:    CONST 1        ; 23

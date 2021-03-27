@@ -4,13 +4,17 @@
 #include "../../lib/doctest/doctest.h"
 #include "../../include/util.h"
 
-TEST_CASE("should not modify original string") {
-  std::string str = "Hello WOrld";
+TEST_CASE("section should") {
+  std::vector<int> vec1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  auto vec2 = std::vector<int>(vec1.begin()+5, vec1.end());
+  vec2.insert(vec2.end(), vec1.begin(), vec1.end()-5);
 
-  CHECK_EQ("hello world", toLower(str));
-  CHECK_EQ("Hello WOrld", str);
+  for (auto i : vec2) {
+    std::cout << i << " ";
+  }
+  std::cout << std::endl;
 
-  str = "N&1";
-  CHECK_EQ("n&1", toLower(str));
-  CHECK_EQ("N&1", str);
+  // std::vector<int> vec2 = vec1;
+  // std::cout << &vec1 << std::endl;
+  // std::cout << &vec2 << std::endl;
 }

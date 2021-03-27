@@ -122,6 +122,7 @@ TEST_CASE("rsp fibonacci") {
   };
 
   std::vector<std::string> sourceFileContent = {
+    "section TEXT",
     "        COPY ZERO,OLDER",
     "        COPY ONE,OLD",
     "        INPUT LIMIT",
@@ -137,6 +138,7 @@ TEST_CASE("rsp fibonacci") {
     "        JMP FRONT",
     "FINAL:  OUTPUT LIMIT",
     "        STOP",
+    "section data",
     "ZERO:   CONST 0",
     "ONE:    CONST 1",
     "OLDER:  SPACE",

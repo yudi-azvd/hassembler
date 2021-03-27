@@ -9,7 +9,13 @@
 
 class Assembler {
 private:
+  int _textSectionSize;
+  
+  int _dataSectionSize;
+
   bool _isRunningSecondPass = false;
+  
+  bool _dataSectionComesFirst = true; // os exemplos do professor.
 
   std::string _filename;
 
@@ -41,9 +47,20 @@ public:
   
   void getInputFileContent(std::string filename);
 
+  /**
+   * Determina se secão de dados vem antes ou depois
+   * o resultado é guardado em _dataSectionComesFirst.
+   */
+  void runZerothPass();
+
   void runFirstPass();
 
   void runSecondPass();
+
+  // void adjustForDataSection(std::map<std::string, int>& symbolTable, int offset);
+  void adjustForDataSection();
+
+  void adjustObjectCode();
 
   std::string findLabel(int& labelPosition, int& colonPosition);
 

@@ -83,13 +83,60 @@ void Assembler::getInputFileContent(std::string fn) {
 
 void Assembler::assemble() {
   getInputFileContent(_filename);
+  runZerothPass();
   runFirstPass();
+
+  if (_dataSectionComesFirst) {
+    adjustForDataSection();
+  }
+
   runSecondPass();
+
+  if (_dataSectionComesFirst) {
+    adjustObjectCode();
+  }
+
   generateOutput();
 }
 
 
+void Assembler::runZerothPass() {
+  int lineCounter = 1;
+  int dataSectionAtLine = 0;
+  int textSectionAtLine = 0;
+
+  for (std::string line: _sourceFileContent) {
+    _tokens = parseLine(line);
+    if (_tokens.empty()) {
+      lineCounter++;
+      continue;
+    }
+
+    if (toLower(_tokens[0]) != "section") {
+      continue;
+    }
+
+    if (toLower(_tokens[1]) == "data") {
+      dataSectionAtLine = lineCounter;
+    }
+    else if (toLower(_tokens[1]) == "text") {
+      textSectionAtLine = lineCounter;
+    }
+
+    if (dataSectionAtLine > 0 && textSectionAtLine > 0) {
+      break;
+    }
+
+    lineCounter++;
+  }
+
+  _dataSectionComesFirst = dataSectionAtLine < textSectionAtLine;
+}
+
+
 void Assembler::runFirstPass() {
+  _textSectionSize = 0;
+  _dataSectionSize = 0;
   int positionCounter = 0, lineCounter = 1;
   bool labelExists, foundLabel, operationFound, directiveFound;
   std::string label, operation, operand1, operand2;
@@ -145,13 +192,17 @@ void Assembler::runFirstPass() {
 
       operationFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
       if (operationFound) {
-        positionCounter += _operationSizeTable[lowerCasedOperation];
+        int operationSize = _operationSizeTable[lowerCasedOperation];
+        positionCounter += operationSize;
+        _textSectionSize += operationSize;
       }
       else {
         directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
         if (directiveFound) {
           auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
           positionCounter = (this->*directiveFunctionPtr)(positionCounter);
+          // assumindo que todas as diretivas alocam UM espaço de memória.
+          if (lowerCasedOperation != "section") _dataSectionSize++;
         }
         else if (labelExists) {
           // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
@@ -297,6 +348,46 @@ void Assembler::runSecondPass() {
     lineCounter++;
   }
   _isRunningSecondPass = false;
+}
+
+
+void Assembler::adjustForDataSection() {
+  std::map<std::string, int>::iterator it;
+
+  for (auto const& pair : _symbolTable) {
+    auto key = pair.first;
+    int positionCounter = _symbolTable[key];
+    bool isLabelInTextSection = positionCounter >= _dataSectionSize;
+
+    if (isLabelInTextSection) {
+      _symbolTable[key] -= _dataSectionSize;
+    }
+    else {
+      _symbolTable[key] += _textSectionSize;
+    }
+  }
+}
+
+
+void Assembler::adjustObjectCode() {
+  // Se tenho que ajustar o código objeto, SECTION DATA
+  // ctz vem primeiro
+  // dataSectionSize + _textSectionSize == _objectCode.size() => True
+  int textSectionStart = _objectCode.size() - _textSectionSize;
+
+  // começar por SECTION TEXT
+  auto adjustedObjectCode = std::vector<int>(
+    _objectCode.begin() + textSectionStart, _objectCode.end()
+  );
+
+  // acrescentar SECTION DATA no final
+  adjustedObjectCode.insert(
+    adjustedObjectCode.end(), 
+    _objectCode.begin(), 
+    _objectCode.end()-_textSectionSize
+  );
+
+  _objectCode = adjustedObjectCode;
 }
 
 

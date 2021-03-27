@@ -1,3 +1,4 @@
+section TEXT
 INPUT B
 INPUT H
 LOAD B
@@ -7,6 +8,7 @@ STORE R
 OUTPUT R
 STOP
 
+section DATA
 B: SPACE
 H: SPACE
 R: SPACE

@@ -289,6 +289,7 @@ TEST_CASE("area_triangulo with errors") {
   CHECK(findErrorWith("Erro Semântico, linha 15: diretiva 'konst' não identificada", errors));
 }
 
+
 TEST_CASE("invalid label alone in line") {
   std::vector<std::string> sourceFileContent = {
     "input b",
@@ -342,11 +343,13 @@ TEST_CASE("label alone in line should work for space directive") {
 
 TEST_CASE("label alone in line should work for instructions") {
   std::vector<std::string> sourceFileContent = {
+    "section text",
     "input b",
     "VALID_LABEL: ",
     "",
     "store N",
     "jmpz VALID_LABEL",
+    "section data",
     "N: space",
   };
 

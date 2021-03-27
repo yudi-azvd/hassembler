@@ -1,3 +1,11 @@
+SECTION data
+ZERO:   CONST 0            ; 33
+ONE:    CONST 1            ; 34
+OLDER:  SPACE              ; 35
+OLD:    SPACE              ; 36
+NEW:    SPACE              ; 37
+LIMIT:  SPACE              ; 38
+
 SECTION text
         COPY ZERO,OLDER    ; 0
         COPY ONE,OLD       ; 3
@@ -14,10 +22,3 @@ FRONT:  LOAD OLDER         ; 10
         JMP FRONT          ; 28
 FINAL:  OUTPUT LIMIT       ; 30
         STOP               ; 32
-SECTION data
-ZERO:   CONST 0            ; 33
-ONE:    CONST 1            ; 34
-OLDER:  SPACE              ; 35
-OLD:    SPACE              ; 36
-NEW:    SPACE              ; 37
-LIMIT:  SPACE              ; 38
