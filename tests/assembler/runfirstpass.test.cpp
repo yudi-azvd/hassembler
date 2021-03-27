@@ -317,7 +317,9 @@ TEST_CASE("invalid label alone in line") {
 
 TEST_CASE("label alone in line should work for space directive") {
   std::vector<std::string> sourceFileContent = {
+    "section text",
     "input b",
+    "section data",
     "VALID_LABEL: ",
     "",
     " space",
@@ -341,7 +343,7 @@ TEST_CASE("label alone in line should work for space directive") {
 }
 
 
-TEST_CASE("label alone in line should work for instructions") {
+TEST_CASE("rfp label alone in line should work for instructions") {
   std::vector<std::string> sourceFileContent = {
     "section text",
     "input b",

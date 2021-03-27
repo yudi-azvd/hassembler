@@ -51,9 +51,9 @@ TEST_CASE("rsp add two numbers") {
   };
 
   std::map<std::string, int> symbolTable = {
-    {"n1", 12},
-    {"n2", 13},
-    {"n3", 14},
+    {"n1", 13}, 
+    {"n2", 14}, 
+    {"n3", 15},
   };
 
   Assembler as;
@@ -61,7 +61,7 @@ TEST_CASE("rsp add two numbers") {
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {
-    12, 12, 12, 13, 10, 12, 1, 13, 11, 14, 13, 14, 14, 0, 0, 0
+    12, 13, 12, 14, 10, 13, 1, 14, 11, 15, 13, 15, 14, 0, 0, 0
   };
 
   as.setSymbolTable(symbolTable);
@@ -321,4 +321,38 @@ TEST_CASE("should give errors saying operand should be a label") {
   CHECK_EQ(errors[2], "Erro Sintático, linha 3: operando '4' deveria ser um rótulo.");
   CHECK_EQ(errors[3], "Erro Sintático, linha 4: operando '10' deveria ser um rótulo.");
   CHECK_EQ(errors[4], "Erro Sintático, linha 5: operando '13' deveria ser um rótulo.");
+}
+
+
+TEST_CASE("rsp label alone in line should work for instructions") {
+  std::vector<std::string> sourceFileContent = {
+    "section text",
+    "input b",
+    "VALID_LABEL: ",
+    "",
+    "store N",
+    "jmpz VALID_LABEL",
+    "section data",
+    "N: space",
+  };
+
+  Assembler as;
+  
+  as.setSourceFileContent(sourceFileContent);
+  as.runZerothPass();
+  as.runFirstPass();
+  as.adjustForDataSection();
+  as.runSecondPass();
+
+  std::map<std::string, int> gotSymbolTable = as.symbolTable();
+  std::map<std::string, int> expectedSymbolTable = {
+    {"valid_label", 2},
+    {"n", 6},
+  };
+
+  INFO("exp: ", strToIntMapToString(expectedSymbolTable));
+  INFO("got: ", strToIntMapToString(gotSymbolTable));
+
+  CHECK_EQ(0, as.errors().size());
+  CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }

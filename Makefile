@@ -6,7 +6,7 @@ EXEC_TESTS ?= utests
 
 CXX = g++
 
-CXXFLAGS = -g -Wall -pedantic
+CXXFLAGS = -g -Wall -Wpedantic
 
 BUILD_DIR ?= build
 SRC_DIR ?= src
@@ -27,13 +27,6 @@ TEST_OBJS := $(filter-out build/m/src/$(EXEC_ASSEMBLER)/$(EXEC_ASSEMBLER).cpp.o,
 all: assembler simulator
 
 everything: all utests
-
-debug:
-	@echo $(BUILD_DIR)/$(EXEC_ASSEMBLER)
-	@echo $(BUILD_DIR)/$(EXEC_SIMULATOR)
-	@echo
-	@echo $(OBJS_ASSEMBLER)
-	@echo $(OBJS_SIMULATOR)
 
 
 ####################################

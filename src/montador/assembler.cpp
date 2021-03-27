@@ -141,6 +141,7 @@ void Assembler::runFirstPass() {
   bool labelExists, foundLabel, operationFound, directiveFound;
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
+  int zzz;
 
   for (std::string line : _sourceFileContent) {
     _tokens = parseLine(line);
@@ -150,43 +151,47 @@ void Assembler::runFirstPass() {
     }
 
     // LABEL
-    if (_tokens.size() >= 2) {
-      labelExists = _tokens[1] == ":";
-      if (labelExists) {
-        // Se as próximas linhas do código fonte não tiverem rótulo
-        // a variável label não vai ser sobrescrita, ou seja, um label sozinho
-        // numa linha fica guardado até a próxima linha com rótulo
-        label = _tokens[0]; // {"some_label", ":", ...}
+    int labelPosition = -1;
+    int colonPosition = -1;
+    label = findLabel(labelPosition, colonPosition);
+    labelExists = !label.empty();
 
-        foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
-        if (!foundLabel) {
-          if (!isValidSymbol(label)) {
-            _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) 
-              + ": símbolo '" + label + "' é inválido."
-            );
-          }
-          else {
-            _symbolTable[toLower(label)] = positionCounter;
-          }
-        }
-        else {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
-            + ": símbolo '" + label + "' redefinido."
+    if (labelExists) {
+      // Se as próximas linhas do código fonte não tiverem rótulo
+      // a variável label não vai ser sobrescrita, ou seja, um label sozinho
+      // numa linha fica guardado até a próxima linha com rótulo
+      // label = _tokens[0]; // {"some_label", ":", ...}
+      foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
+      if (!foundLabel) {
+        if (!isValidSymbol(label)) {
+          _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) 
+            + ": símbolo '" + label + "' é inválido."
           );
         }
+        else {
+          _symbolTable[toLower(label)] = positionCounter;
+        }
+      }
+      else {
+        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
+          + ": símbolo '" + label + "' redefinido."
+        );
       }
     }
 
+    int operationPosition = -1;
+    operation = findOperation(labelPosition, operationPosition);
+
     // OPERATION
-    if (_tokens.size() >= 3 || (!labelExists && _tokens.size() >= 2) || _tokens.size() == 1) {
-      if (_tokens.size() == 4 && labelExists)
-        operation = _tokens[2]; // {"some_label", ":","copy", "zero", "," "older"}
-      else if (_tokens.size() == 4)
-        operation = _tokens[0]; // {"copy", "zero", "," "older"}
-      else if (_tokens.size() == 3)
-        operation = _tokens[2]; // {"some_label", ":", "ADD", ...}
-      else 
-        operation = _tokens[0]; // {"input", "n2"}
+    // if (_tokens.size() >= 3 || (!labelExists && _tokens.size() >= 2) || _tokens.size() == 1) {
+    //   if (_tokens.size() == 4 && labelExists)
+    //     operation = _tokens[2]; // {"some_label", ":","copy", "zero", "," "older"}
+    //   else if (_tokens.size() == 4)
+    //     operation = _tokens[0]; // {"copy", "zero", "," "older"}
+    //   else if (_tokens.size() == 3)
+    //     operation = _tokens[2]; // {"some_label", ":", "ADD", ...}
+    //   else 
+    //     operation = _tokens[0]; // {"input", "n2"}
 
       std::string lowerCasedOperation = toLower(operation);
 
@@ -204,19 +209,21 @@ void Assembler::runFirstPass() {
           // assumindo que todas as diretivas alocam UM espaço de memória.
           if (lowerCasedOperation != "section") _dataSectionSize++;
         }
-        else if (labelExists) {
-          // assumindo que diretivas sempre aparecem _associadas_ a um rótulo
+        else if (labelExists) { // || savedLabelForLater
+          // Assumindo que diretivas sempre aparecem diretamente _associadas_ a 
+          // um rótulo
           _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": diretiva '" + operation + "' não identificada."
           );
         }
+        // else if (savedLabelForLater)
         else {
           _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
             ": instrução '" + operation + "' não identificada."
           );
         }
       }
-    }
+    // }
 
     lineCounter++;
   }
@@ -275,7 +282,6 @@ void Assembler::runSecondPass() {
             + ": operando '" + operand1 + "' indefinido."
           );
         }
-
       }
 
       // OPERAND 2
