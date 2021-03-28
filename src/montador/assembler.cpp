@@ -189,15 +189,7 @@ void Assembler::runFirstPass() {
 
     bool labelIsAloneInLine = labelExists && operation.empty() && operands.size() == 0;
     if (labelIsAloneInLine) {
-      // savedLabelForLater = label;
       continue;
-    }
-
-    if (labelExists) {
-      // savedLabelForLater = label;
-    }
-    else {
-      // savedLabelForLater.clear();
     }
 
     std::string lowerCasedOperation = toLower(operation);
