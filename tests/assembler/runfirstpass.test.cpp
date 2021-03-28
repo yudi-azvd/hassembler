@@ -306,12 +306,12 @@ TEST_CASE("invalid label alone in line") {
   std::vector<std::string> errors = as.errors();
   std::map<std::string, int> symbolTable = as.symbolTable();
 
+  INFO("errors: ", vectorToString(errors));
+  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
 
   CHECK_EQ(1, errors.size());
   CHECK(findErrorWith("Erro Léxico, linha 2: símbolo '2b' é inválido", errors));
 
-  INFO("errors: ", vectorToString(errors));
-  INFO("symbolTable: ", strToIntMapToString(as.symbolTable()));
 }
 
 
@@ -368,6 +368,7 @@ TEST_CASE("rfp label alone in line should work for instructions") {
 
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
   INFO("got: ", strToIntMapToString(gotSymbolTable));
+  INFO("err: ", vectorToString(as.errors()));
 
   CHECK_EQ(0, as.errors().size());
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);

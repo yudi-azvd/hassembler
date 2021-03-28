@@ -138,10 +138,9 @@ void Assembler::runFirstPass() {
   _textSectionSize = 0;
   _dataSectionSize = 0;
   int positionCounter = 0, lineCounter = 1;
-  bool labelExists, foundLabel, operationFound, directiveFound;
+  bool labelExists, labelWasFound, instructionWasFound, directiveWasFound;
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
-  int zzz;
 
   for (std::string line : _sourceFileContent) {
     _tokens = parseLine(line);
@@ -161,8 +160,8 @@ void Assembler::runFirstPass() {
       // a variável label não vai ser sobrescrita, ou seja, um label sozinho
       // numa linha fica guardado até a próxima linha com rótulo
       // label = _tokens[0]; // {"some_label", ":", ...}
-      foundLabel = _symbolTable.find(toLower(label)) != _symbolTable.end();
-      if (!foundLabel) {
+      labelWasFound = _symbolTable.find(toLower(label)) != _symbolTable.end();
+      if (!labelWasFound) {
         if (!isValidSymbol(label)) {
           _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) 
             + ": símbolo '" + label + "' é inválido."
@@ -181,49 +180,54 @@ void Assembler::runFirstPass() {
 
     int operationPosition = -1;
     operation = findOperation(labelPosition, operationPosition);
+    // é um chute pra determinar a operação
+    if (!labelExists && savedLabelForLater.empty())
+      operation = _tokens[0];
 
-    // OPERATION
-    // if (_tokens.size() >= 3 || (!labelExists && _tokens.size() >= 2) || _tokens.size() == 1) {
-    //   if (_tokens.size() == 4 && labelExists)
-    //     operation = _tokens[2]; // {"some_label", ":","copy", "zero", "," "older"}
-    //   else if (_tokens.size() == 4)
-    //     operation = _tokens[0]; // {"copy", "zero", "," "older"}
-    //   else if (_tokens.size() == 3)
-    //     operation = _tokens[2]; // {"some_label", ":", "ADD", ...}
-    //   else 
-    //     operation = _tokens[0]; // {"input", "n2"}
+    std::vector<std::string> operands = findOperands(labelPosition, operationPosition);
+    operand1 = operands.size() >= 1 ? operands[0] : "";
 
-      std::string lowerCasedOperation = toLower(operation);
+    bool labelIsAloneInLine = labelExists && operation.empty() && operands.size() == 0;
+    if (labelIsAloneInLine) {
+      // savedLabelForLater = label;
+      continue;
+    }
 
-      operationFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
-      if (operationFound) {
-        int operationSize = _operationSizeTable[lowerCasedOperation];
-        positionCounter += operationSize;
-        _textSectionSize += operationSize;
+    if (labelExists) {
+      // savedLabelForLater = label;
+    }
+    else {
+      // savedLabelForLater.clear();
+    }
+
+    std::string lowerCasedOperation = toLower(operation);
+    instructionWasFound = _opcodeTable.find(lowerCasedOperation) != _opcodeTable.end();
+    if (instructionWasFound) {
+      int operationSize = _operationSizeTable[lowerCasedOperation];
+      positionCounter += operationSize;
+      _textSectionSize += operationSize;
+    }
+    else {
+      directiveWasFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
+      if (directiveWasFound) {
+        auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
+        positionCounter = (this->*directiveFunctionPtr)(positionCounter);
+        // assumindo que todas as diretivas alocam UM espaço de memória.
+        if (lowerCasedOperation != "section") _dataSectionSize++;
+      }
+      else if (labelExists) { // || savedLabelForLater
+        // Assumindo que diretivas sempre aparecem diretamente _associadas_ a 
+        // um rótulo
+        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
+          ": diretiva '" + operation + "' não identificada."
+        );
       }
       else {
-        directiveFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
-        if (directiveFound) {
-          auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
-          positionCounter = (this->*directiveFunctionPtr)(positionCounter);
-          // assumindo que todas as diretivas alocam UM espaço de memória.
-          if (lowerCasedOperation != "section") _dataSectionSize++;
-        }
-        else if (labelExists) { // || savedLabelForLater
-          // Assumindo que diretivas sempre aparecem diretamente _associadas_ a 
-          // um rótulo
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-            ": diretiva '" + operation + "' não identificada."
-          );
-        }
-        // else if (savedLabelForLater)
-        else {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-            ": instrução '" + operation + "' não identificada."
-          );
-        }
+        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
+          ": instrução '" + operation + "' não identificada."
+        );
       }
-    // }
+    }
 
     lineCounter++;
   }
@@ -254,9 +258,15 @@ void Assembler::runSecondPass() {
     int operationPosition = -1;
     operation = findOperation(labelPosition, operationPosition);
 
-    std::vector<std::string> operands = findOperands(operationPosition);
+    std::vector<std::string> operands = findOperands(labelPosition, operationPosition);
     operand1 = operands.size() >= 1 ? operands[0] : "";
     int numberOfOperands = operands.size();
+
+    bool labelIsAloneInLine = labelExists && operation.empty() && operands.size() == 0;
+    if (labelIsAloneInLine) {
+      savedLabelForLater = label;
+      continue;
+    }
 
     if (toLower(operation) == "copy") { 
       // 0        1   2
@@ -414,28 +424,40 @@ std::string Assembler::findLabel(int& labelPosition, int& colonPosition) {
 
 
 std::string Assembler::findOperation(int labelPosition, int& operationPosition) {
-  // _tokens[labelPostion] => "label"
+  //       : INSTRUCTION [OP1, [OP2]]
+  // LABEL : INSTRUCTION [OP1, [OP2]]
+  // LABEL : DIRECTIVE   [OP1]
+  // LABEL : 
+  // _tokens[labelPostion+0] => "label"
   // _tokens[labelPostion+1] => ":"
-  size_t start = labelPosition >= 0 ? labelPosition+2 : 0;
+  // _tokens[labelPostion+2] => potencial operação
+  auto labelExists = labelPosition >= 0;
+  auto labelIsAloneInLine = _tokens.size() == 2; // {"label", ":"}
 
-  for (size_t i = start; i < _tokens.size(); i++) {
-    auto lowerCasedToken = toLower(_tokens[i]);
-
-    auto foundInstruction = _opcodeTable.find(lowerCasedToken) != _opcodeTable.end();
-    auto foundDirective = _directiveTable.find(lowerCasedToken) != _directiveTable.end();
-
-    if (foundInstruction || foundDirective) {
-      operationPosition = i;
-      return _tokens[i];
-    }
+  if (labelExists && labelIsAloneInLine) {
+    return "";
   }
-  
-  return "";
+
+  if (labelExists) {
+    operationPosition = 2;
+    return _tokens[2];
+  }
+  else {
+    operationPosition = 0;
+    return _tokens[0];
+  }
 }
 
 
-std::vector<std::string> Assembler::findOperands(int operationPosition) {
+std::vector<std::string> Assembler::findOperands(int labelPosition, int operationPosition) {
   std::vector<std::string> operands;
+
+  auto labelExists = labelPosition >= 0;
+  auto labelIsAloneInLine = _tokens.size() == 2; // {"label", ":"}
+
+  if (labelExists && labelIsAloneInLine) {
+    return operands;
+  }
 
   size_t start = operationPosition >= 0 ? operationPosition+1 : 0;
 

@@ -64,9 +64,13 @@ public:
 
   std::string findLabel(int& labelPosition, int& colonPosition);
 
+  /**
+   * Tenta (quase um chute educado) encontrar uma operação (instrução ou 
+   * diretiva) segundo a sintaxe do assembly hipotético.
+   */
   std::string findOperation(int labelPosition, int& operationPosition);
 
-  std::vector<std::string> findOperands(int operationPosition);
+  std::vector<std::string> findOperands(int labelPosition, int operationPosition);
   
   void generateOutput();
 

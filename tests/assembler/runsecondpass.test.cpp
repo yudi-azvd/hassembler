@@ -42,6 +42,7 @@ TEST_CASE("rsp add two numbers") {
     "INPUT N2",
     "LOAD N1",
     "ADD N2",
+    "",
     "STORE N3",
     "OUTPUT N3",
     "STOP",
@@ -262,6 +263,7 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
     "        jmpz", // ERRO
     "        store aux",
     "        mul n",
+    "",
     "        store n n", //ERRO
     "        load aux",
     "        jmp fat",
@@ -285,8 +287,8 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
   REQUIRE_EQ(3, errors.size());
 
   CHECK_EQ(errors[0], "Erro Sintático, linha 4: instrução 'jmpz' com número de operandos errado.");
-  CHECK_EQ(errors[1], "Erro Sintático, linha 7: instrução 'store' com número de operandos errado.");
-  CHECK_EQ(errors[2], "Erro Sintático, linha 12: diretiva 'space' com número de operandos errado.");
+  CHECK_EQ(errors[1], "Erro Sintático, linha 8: instrução 'store' com número de operandos errado.");
+  CHECK_EQ(errors[2], "Erro Sintático, linha 13: diretiva 'space' com número de operandos errado.");
 }
 
 
@@ -327,7 +329,7 @@ TEST_CASE("should give errors saying operand should be a label") {
 TEST_CASE("rsp label alone in line should work for instructions") {
   std::vector<std::string> sourceFileContent = {
     "section text",
-    "input b",
+    "input N",
     "VALID_LABEL: ",
     "",
     "store N",
@@ -341,7 +343,8 @@ TEST_CASE("rsp label alone in line should work for instructions") {
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
   as.runFirstPass();
-  as.adjustForDataSection();
+  // Não precisa ajustar porque SECTIONS estão na ordem correta
+  // as.adjustForDataSection();
   as.runSecondPass();
 
   std::map<std::string, int> gotSymbolTable = as.symbolTable();
@@ -352,6 +355,7 @@ TEST_CASE("rsp label alone in line should work for instructions") {
 
   INFO("exp: ", strToIntMapToString(expectedSymbolTable));
   INFO("got: ", strToIntMapToString(gotSymbolTable));
+  // INFO("got: ", vectorToString(as.errors()));
 
   CHECK_EQ(0, as.errors().size());
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
