@@ -2,7 +2,8 @@
 section data
 AUX:    SPACE          ; 21
 N:      SPACE          ; 22
-ONE:    CONST 1        ; 23
+ONE:    
+  CONST 1        ; 23
 section text
         INPUT N        ; 00
         LOAD N         ; 02

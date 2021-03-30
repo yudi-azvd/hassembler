@@ -1,10 +1,11 @@
 # Software Básico: Montador e Simulador
-Montador e simulador desenvolvidos durante a disciplina de 
+Montador e simulador desenvolvidos por Yudi Yamane (16/0149410) durante a disciplina de 
 Software Básico da Universidade de Brasília.
 
 ## Baixar
-Baixe esse repositório por esse [link](https://github.com/yudi-azvd/sb-assembler-and-simulator) clicando no botão verde. Ou baixe pela linha de 
-comando e entre no repositório baixado.
+Baixe esse repositório por esse [link](https://github.com/yudi-azvd/sb-assembler-and-simulator) 
+clicando no botão verde. Ou baixe pela linha de comando e entre no repositório 
+baixado.
 
 ```sh
 # baixar
@@ -48,7 +49,7 @@ make simulator
 ---
 
 ### Testes
-Pra quem tiver interesse, para ver os testes, eles também podem ser 
+Pra quem tiver interesse e quiser ver os testes, eles também podem ser 
 compilados com:
 
 ```sh

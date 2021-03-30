@@ -254,6 +254,7 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
     {"aux", 21},
     {"n", 22},
     {"one", 23},
+    {"random", 24},
   };
 
   std::vector<std::string> sourceFileContent = {
@@ -272,6 +273,7 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
     "aux:    space 1", // ERRO
     "n:      space",
     "one:    const 1",
+    "random:    const ", // ERRO
   };
 
   Assembler as;
@@ -284,15 +286,16 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
 
   INFO("errors: ", vectorToString(errors));
 
-  REQUIRE_EQ(3, errors.size());
+  REQUIRE_EQ(4, errors.size());
 
   CHECK_EQ(errors[0], "Erro Sintático, linha 4: instrução 'jmpz' com número de operandos errado.");
   CHECK_EQ(errors[1], "Erro Sintático, linha 8: instrução 'store' com número de operandos errado.");
   CHECK_EQ(errors[2], "Erro Sintático, linha 13: diretiva 'space' com número de operandos errado.");
+  CHECK_EQ(errors[3], "Erro Sintático, linha 16: diretiva 'const' com número de operandos errado.");
 }
 
 
-TEST_CASE("should give errors saying operand should be a label") {
+TEST_CASE("should give errors saying operand should be another type") {
   std::map<std::string, int> symbolTable = {
     {"label1", 0}, // não faz diferença o valor do rótulo para esses testes
   };
@@ -304,6 +307,7 @@ TEST_CASE("should give errors saying operand should be a label") {
     "o:      copy 10,label1", // erro
     "o2:      copy label1 , 13", // erro
     "label1: space",
+    "label2: const trinta", // erro
   };
 
   Assembler as;
@@ -316,13 +320,14 @@ TEST_CASE("should give errors saying operand should be a label") {
 
   INFO("errors: ", vectorToString(errors));
 
-  REQUIRE_EQ(5, errors.size());
+  REQUIRE_EQ(6, errors.size());
 
-  CHECK_EQ(errors[0], "Erro Sintático, linha 1: operando '1' deveria ser um rótulo.");
-  CHECK_EQ(errors[1], "Erro Sintático, linha 2: operando '5' deveria ser um rótulo.");
-  CHECK_EQ(errors[2], "Erro Sintático, linha 3: operando '4' deveria ser um rótulo.");
-  CHECK_EQ(errors[3], "Erro Sintático, linha 4: operando '10' deveria ser um rótulo.");
-  CHECK_EQ(errors[4], "Erro Sintático, linha 5: operando '13' deveria ser um rótulo.");
+  CHECK_EQ(errors[0], "Erro Sintático, linha 1: operando '1' deve ser um rótulo.");
+  CHECK_EQ(errors[1], "Erro Sintático, linha 2: operando '5' deve ser um rótulo.");
+  CHECK_EQ(errors[2], "Erro Sintático, linha 3: operando '4' deve ser um rótulo.");
+  CHECK_EQ(errors[3], "Erro Sintático, linha 4: operando '10' deve ser um rótulo.");
+  CHECK_EQ(errors[4], "Erro Sintático, linha 5: operando '13' deve ser um rótulo.");
+  CHECK_EQ(errors[5], "Erro Sintático, linha 7: operando 'trinta' deve ser um inteiro.");
 }
 
 

@@ -26,7 +26,7 @@ private:
   // instructionSizeTable?
   std::map<std::string, int> _operationSizeTable;
   
-  std::map<std::string, int (Assembler::*)(int positionCounter)> _directiveTable;
+  std::map<std::string, int (Assembler::*)(int positionCounter, std::vector<std::string> operands)> _directiveTable;
 
   std::vector<std::string> _sourceFileContent;
   
@@ -107,15 +107,15 @@ public:
   // Diretivas
 
   // Função da diretiva SPACE
-  int directiveSpace(int posCounter);
+  int directiveSpace(int posCounter, std::vector<std::string> operands);
 
 
   // Função da diretiva CONST
-  int directiveConst(int posCounter);
+  int directiveConst(int posCounter, std::vector<std::string> operands);
 
 
   // Função da diretiva SECTION
-  int directiveSection(int posCounter);
+  int directiveSection(int posCounter, std::vector<std::string> operands);
 };
 
 

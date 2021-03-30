@@ -203,7 +203,7 @@ void Assembler::runFirstPass() {
       directiveWasFound = _directiveTable.find(lowerCasedOperation) != _directiveTable.end();
       if (directiveWasFound) {
         auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
-        positionCounter = (this->*directiveFunctionPtr)(positionCounter);
+        positionCounter = (this->*directiveFunctionPtr)(positionCounter, operands);
         // assumindo que todas as diretivas alocam UM espaço de memória.
         if (lowerCasedOperation != "section") _dataSectionSize++;
       }
@@ -274,7 +274,7 @@ void Assembler::runSecondPass() {
       // OPERAND 1
       if (std::isdigit(operand1[0])) {
         _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter) 
-          + ": operando '" + operand1 + "' deveria ser um rótulo."
+          + ": operando '" + operand1 + "' deve ser um rótulo."
         );
       }
       else {
@@ -290,7 +290,7 @@ void Assembler::runSecondPass() {
       if (toLower(operation) == "copy") {
         if (std::isdigit(operand2[0])) {
           _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter) 
-            + ": operando '" + operand2 + "' deveria ser um rótulo."
+            + ": operando '" + operand2 + "' deve ser um rótulo."
           );
         }
         else {
@@ -331,13 +331,24 @@ void Assembler::runSecondPass() {
     else { // DIRECTIVE
       if (directiveFound) {
         auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
-        positionCounter = (this->*directiveFunctionPtr)(positionCounter);
 
         // SPACE NÃO PODE RECEBER OPERANDOS
-        if (lowerCasedOperation == "space" && operands.size() != 0) {
+        // Essa checagem deveria acontecer dentro da função da diretiva(?)
+        bool constHasWrongNumberOfOperands = lowerCasedOperation == "const" && operands.size() != 1;
+        bool spaceHasWrongNumberOfOperands = lowerCasedOperation == "space" && operands.size() != 0;
+        std::string strOperand = operands.size() > 0 ? operands[0] : "";
+        if (constHasWrongNumberOfOperands || spaceHasWrongNumberOfOperands) {
           _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter)
             + ": diretiva '" + operation + "' com número de operandos errado."
           );
+        }
+        else if (lowerCasedOperation == "const" && !isNumber(strOperand)) {
+          _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter)
+            + ": operando '" + strOperand + "' deve ser um inteiro."
+          );
+        }
+        else {
+          positionCounter = (this->*directiveFunctionPtr)(positionCounter, operands);
         }
       }
       else if (labelExists) {
@@ -346,11 +357,11 @@ void Assembler::runSecondPass() {
           ": diretiva '" + operation + "' não identificada."
         );
       }
-      else {
-        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-          ": instrução '" + operation + "' não identificada."
-        );
-      }
+      // else {
+      //   _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
+      //     ": instrução '" + operation + "' não identificada."
+      //   );
+      // }
     }
 
     lineCounter++;
@@ -624,7 +635,7 @@ std::vector<int> Assembler::objectCode() {
 }
 
 
-int Assembler::directiveSpace(int posCounter) { 
+int Assembler::directiveSpace(int posCounter, std::vector<std::string> operands) { 
   if (_isRunningSecondPass) {
     _objectCode.push_back(0);
   }
@@ -633,19 +644,25 @@ int Assembler::directiveSpace(int posCounter) {
 
 
 // vai dar errado se separar a label da linha?
-int Assembler::directiveConst(int posCounter) {
-  // Assuminndo que todo caso de diretiva const vem
-  // na forma a seguir:
+int Assembler::directiveConst(int posCounter, std::vector<std::string> operands) {
+  // Assumindo que todo caso correto
+  // de diretiva const vem na forma a seguir:
   // {"DOIS", ":", "const", "2"}
-  if (_isRunningSecondPass) {
-    std::string strOperand = _tokens[3];
-    int operand = std::atoi(strOperand.c_str());
-    _objectCode.push_back(operand);
+  // E se vier assim em duas linhas?
+  // {"DOIS", ":"}
+  // { "const", "2"}
+
+  if (!_isRunningSecondPass) {
+    return posCounter+1;
   }
+  
+  std::string strOperand = operands.size() > 0 ? operands[0] : "";
+  int operand = std::atoi(strOperand.c_str());
+  _objectCode.push_back(operand);
   return posCounter + 1;
 }
 
 
-int Assembler::directiveSection(int posCounter) {
+int Assembler::directiveSection(int posCounter, std::vector<std::string> operands) {
   return posCounter;
 }

@@ -15,7 +15,8 @@
         // "./asm_files/fibonacci.asm",
         // "fibonacci.asm",
         // "./asm_files/fatorial.asm",
-        "./asm_files/area_triangulo.asm",
+        // "./asm_files/area_triangulo.asm",
+        "./asm_files/area_triangulo_com_erros.asm"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

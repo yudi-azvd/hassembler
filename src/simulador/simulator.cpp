@@ -79,18 +79,6 @@ void Simulator::simulate() {
     if (instructionFound) {
       instruction = _reversedOpcodeTable[number];
 
-      // e se houver pulo?
-      // if (instruction == "copy") {
-      //   _pc += 3;
-      // }
-      // else if (instruction == "stop") {
-      //   _pc += 1;
-      // }
-      // else if instrucion.contains("jmp") { // faz nada }
-      // else { // add, sub, mul, output, ...
-      //   _pc += 2;
-      // }
-
       if (instruction == "add") {
         address1 = _memory[_pc+1];
         operand1 = _memory[address1];

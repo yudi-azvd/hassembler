@@ -72,3 +72,17 @@ std::string toLower(std::string str) {
 }
 
 
+bool isNumber(std::string str) {
+  if (str[0] != '-' && str[0] != '+' && !std::isdigit(str[0])) {
+    return false;
+  }
+
+  for (size_t i = 1; i < str.length(); ++i) {
+    if (!std::isdigit(str[i])) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+

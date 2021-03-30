@@ -36,6 +36,9 @@ bool findErrorWith(std::string str, std::vector<std::string>& errors);
 
 
 std::string toLower(std::string str);
+
+
+bool isNumber(std::string str);
   
 
 #endif // !UTIL_H_INCLUDED
