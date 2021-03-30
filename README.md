@@ -2,6 +2,9 @@
 Montador e simulador desenvolvidos por Yudi Yamane (16/0149410) durante a disciplina de 
 Software Básico da Universidade de Brasília.
 
+## Funcionamento
+Para entender melhor como eles funcionam leia sobre isso [aqui](./explicação.md).
+
 ## Baixar
 Baixe esse repositório por esse [link](https://github.com/yudi-azvd/sb-assembler-and-simulator) 
 clicando no botão verde. Ou baixe pela linha de comando e entre no repositório 
