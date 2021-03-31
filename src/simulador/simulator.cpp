@@ -180,6 +180,8 @@ void Simulator::simulate() {
   }
 
   // std::cout << "programa chegou em STOP" << std::endl;
+  std::cout << "PC <- " << _pc << std::endl;
+  std::cout << "ACC <- " << _acc << std::endl;
 }
 
 
