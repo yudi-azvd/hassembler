@@ -39,6 +39,12 @@ std::string toLower(std::string str);
 
 
 bool isNumber(std::string str);
+
+
+std::vector<std::string> stringVectorLowerCased(const std::vector<std::string> strs);
+
+
+bool findInVector(std::vector<std::string> vec, std::string value);
   
 
 #endif // !UTIL_H_INCLUDED

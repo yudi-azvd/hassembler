@@ -1,0 +1,39 @@
+; Soma e subtração 
+MUL_DIV: BEGIN
+
+
+SECTION TEXT
+X: EXTERN
+Y: EXTERN
+OP: EXTERN
+RESULT: EXTERN
+FINAL: EXTERN
+PUBLIC MUL_DIV
+
+; Decide operação
+LOAD OP
+SUB QUATRO
+JMPZ DIVISAO
+
+; Realiza multiplicação
+LOAD X
+MUL Y
+STORE RESULT
+JMP FINAL
+
+; Realiza subtração
+DIVISAO: 
+LOAD Y 
+JMPZ FINAL ; Verifica se denominador é nulo
+
+LOAD X
+DIV Y
+STORE RESULT
+JMP FINAL
+
+
+SECTION DATA
+QUATRO: CONST 4
+
+
+END

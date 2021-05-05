@@ -18,8 +18,6 @@ private:
   bool _dataSectionComesFirst = true; // os exemplos do professor.
 
   std::string _filename;
-
-  std::map<std::string, int> _symbolTable;
   
   std::map<std::string, int> _opcodeTable;
   
@@ -28,10 +26,21 @@ private:
   
   std::map<std::string, int (Assembler::*)(int positionCounter, std::vector<std::string> operands)> _directiveTable;
 
-  std::vector<std::string> _sourceFileContent;
+  std::vector<std::vector<std::string>> _fileContents;
+  std::vector<std::string> _fileContent;
   
   std::vector<std::string> _tokens;
+ 
+  std::vector<std::map<std::string, int>> _symbolsTables;
+  std::map<std::string, int> _symbolsTable;
+
+  std::vector<std::map<std::string, int>> _definitionsTables;
+  std::map<std::string, int> _definitionsTable;
+
+  std::vector<std::map<std::string, int>> _usageTables;
+  std::map<std::string, int> _usageTable;
   
+  std::vector<std::vector<int>> _objectCodes;
   std::vector<int> _objectCode;
 
   std::vector<std::string> _errors;
@@ -48,11 +57,13 @@ public:
   void getInputFileContent(std::string filename);
 
   /**
-   * Determina se secão de dados vem antes ou depois
+   * Determina se seção de dados vem antes ou depois
    * o resultado é guardado em _dataSectionComesFirst.
    */
   void runZerothPass();
 
+  void runZeroth2Pass();
+  
   void runFirstPass();
 
   void runSecondPass();
@@ -112,6 +123,13 @@ public:
 
   // Função da diretiva CONST
   int directiveConst(int posCounter, std::vector<std::string> operands);
+
+
+  // Função da diretiva BEGIN
+  int directiveBegin(int posCounter, std::vector<std::string> operands);
+  
+  
+  int directiveExtern(int posCounter, std::vector<std::string> operands);
 
 
   // Função da diretiva SECTION

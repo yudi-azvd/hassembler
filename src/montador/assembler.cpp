@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 
 #include "../../include/assembler.h"
 #include "../../include/errors.h"
@@ -52,6 +53,7 @@ void Assembler::_initialize() {
     {"space", &Assembler::directiveSpace},
     {"const", &Assembler::directiveConst},
     {"section", &Assembler::directiveSection},
+    {"begin", &Assembler::directiveBegin},
   };
 }
 
@@ -75,7 +77,7 @@ void Assembler::getInputFileContent(std::string fn) {
     sourceFileContent.push_back(line);
   }
 
-  _sourceFileContent = sourceFileContent;
+  _fileContent = sourceFileContent;
 
   infile.close();
 }
@@ -105,7 +107,7 @@ void Assembler::runZerothPass() {
   int dataSectionAtLine = 0;
   int textSectionAtLine = 0;
 
-  for (std::string line: _sourceFileContent) {
+  for (std::string line: _fileContent) {
     _tokens = parseLine(line);
     if (_tokens.empty()) {
       lineCounter++;
@@ -134,6 +136,50 @@ void Assembler::runZerothPass() {
 }
 
 
+void Assembler::runZeroth2Pass() {
+  int lineCounter = 1;
+  bool lineHasExtern, lineHasPublic, lineHasBegin, lineHasEnd;
+  std::vector<int> linesToBeCommetendOut;
+  std::vector<std::string> loweredTokens;
+
+  for (std::string line: _fileContent) {
+    _tokens = parseLine(line);
+    if (_tokens.empty()) {
+      lineCounter++;
+      continue;
+    }
+    
+    loweredTokens = stringVectorLowerCased(_tokens);
+
+    lineHasExtern = findInVector(loweredTokens, "extern");
+    lineHasPublic = findInVector(loweredTokens, "public");
+    lineHasBegin = findInVector(loweredTokens, "begin");
+    lineHasEnd = findInVector(loweredTokens, "end");
+
+    // assumindo que apenas uma delas é verdadeira em uma linha
+    if (lineHasExtern) {
+      // adicionar simbolo na tabela de uso
+      // marcar linha para ser comentada fora
+    }
+    else if (lineHasPublic) {
+      // adicionar simbolo na tabela de definições
+      // marcar linha para ser comentada fora      
+    }
+    else if (lineHasBegin) {
+      // salvar nome do módulo em algum lugar
+      // marcar linha para ser comentada fora
+    }
+    else if (lineHasEnd) {
+      // precisa fazer algo?
+      // marcar linha para ser comentada fora
+    }
+    else {
+      // faz nada
+    }
+  }
+}
+
+
 void Assembler::runFirstPass() {
   _textSectionSize = 0;
   _dataSectionSize = 0;
@@ -142,7 +188,7 @@ void Assembler::runFirstPass() {
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
 
-  for (std::string line : _sourceFileContent) {
+  for (std::string line : _fileContent) {
     _tokens = parseLine(line);
     if (_tokens.empty()) {
       lineCounter++;
@@ -160,7 +206,7 @@ void Assembler::runFirstPass() {
       // a variável label não vai ser sobrescrita, ou seja, um label sozinho
       // numa linha fica guardado até a próxima linha com rótulo
       // label = _tokens[0]; // {"some_label", ":", ...}
-      labelWasFound = _symbolTable.find(toLower(label)) != _symbolTable.end();
+      labelWasFound = _symbolsTable.find(toLower(label)) != _symbolsTable.end();
       if (!labelWasFound) {
         if (!isValidSymbol(label)) {
           _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) 
@@ -168,7 +214,7 @@ void Assembler::runFirstPass() {
           );
         }
         else {
-          _symbolTable[toLower(label)] = positionCounter;
+          _symbolsTable[toLower(label)] = positionCounter;
         }
       }
       else {
@@ -235,7 +281,7 @@ void Assembler::runSecondPass() {
 
   _isRunningSecondPass = true;
 
-  for (std::string line : _sourceFileContent) {
+  for (std::string line : _fileContent) {
     _tokens = parseLine(line);
     if (_tokens.empty()) {
       lineCounter++;
@@ -278,7 +324,7 @@ void Assembler::runSecondPass() {
         );
       }
       else {
-        operand1Found = _symbolTable.find(toLower(operand1)) != _symbolTable.end();
+        operand1Found = _symbolsTable.find(toLower(operand1)) != _symbolsTable.end();
         if (!operand1Found && operand1 != "") {
           _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
             + ": operando '" + operand1 + "' indefinido."
@@ -294,7 +340,7 @@ void Assembler::runSecondPass() {
           );
         }
         else {
-          operand2Found = _symbolTable.find(toLower(operand2)) != _symbolTable.end();
+          operand2Found = _symbolsTable.find(toLower(operand2)) != _symbolsTable.end();
           if (!operand2Found) {
             _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
               + ": operando '" + operand2 + "' indefinido."
@@ -322,9 +368,9 @@ void Assembler::runSecondPass() {
       _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
       
       if (lowerCasedOperation != "stop")
-        _objectCode.push_back(_symbolTable[toLower(operand1)]);
+        _objectCode.push_back(_symbolsTable[toLower(operand1)]);
       if (lowerCasedOperation == "copy") 
-        _objectCode.push_back(_symbolTable[toLower(operand2)]);
+        _objectCode.push_back(_symbolsTable[toLower(operand2)]);
       // Se não estiver correto, erro sintático
 
     }
@@ -373,16 +419,16 @@ void Assembler::runSecondPass() {
 void Assembler::adjustForDataSection() {
   std::map<std::string, int>::iterator it;
 
-  for (auto const& pair : _symbolTable) {
+  for (auto const& pair : _symbolsTable) {
     auto key = pair.first;
-    int positionCounter = _symbolTable[key];
+    int positionCounter = _symbolsTable[key];
     bool isLabelInTextSection = positionCounter >= _dataSectionSize;
 
     if (isLabelInTextSection) {
-      _symbolTable[key] -= _dataSectionSize;
+      _symbolsTable[key] -= _dataSectionSize;
     }
     else {
-      _symbolTable[key] += _textSectionSize;
+      _symbolsTable[key] += _textSectionSize;
     }
   }
 }
@@ -611,17 +657,17 @@ bool Assembler::isValidSymbol(std::string symbol) {
 
 
 std::map<std::string, int> Assembler::symbolTable() { 
-  return _symbolTable;
+  return _symbolsTable;
 }
 
 
 void Assembler::setSymbolTable(std::map<std::string, int> st) {
-  _symbolTable = st;
+  _symbolsTable = st;
 }
 
 
 void Assembler::setSourceFileContent(std::vector<std::string> content) {
-  _sourceFileContent = content;
+  _fileContent = content;
 }
 
 
@@ -660,6 +706,16 @@ int Assembler::directiveConst(int posCounter, std::vector<std::string> operands)
   int operand = std::atoi(strOperand.c_str());
   _objectCode.push_back(operand);
   return posCounter + 1;
+}
+
+
+int Assembler::directiveBegin(int posCounter, std::vector<std::string> operands) {
+  return posCounter;
+}
+
+
+int Assembler::directiveExtern(int posCounter, std::vector<std::string> operands) {
+  return posCounter;
 }
 
 

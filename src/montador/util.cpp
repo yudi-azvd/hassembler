@@ -1,3 +1,4 @@
+#include <algorithm>
 
 #include "../../include/util.h"
 
@@ -86,3 +87,32 @@ bool isNumber(std::string str) {
   return true;
 }
 
+
+std::vector<std::string> stringVectorLowerCased(const std::vector<std::string> strs) {
+  std::vector<std::string> lowered;
+  lowered.reserve(strs.size());
+
+  std::transform(
+    strs.begin(),
+    strs.end(),
+    std::back_inserter(lowered),
+    [](const std::string& in) {
+      std::string out;
+      out.reserve(in.size());
+      std::transform(in.begin(), in.end(), std::back_inserter(out), ::tolower);
+      return out;
+    }
+  );
+  
+  return lowered;
+}
+
+
+bool findInVector(std::vector<std::string> vec, std::string value) {
+  for (auto item : vec) {
+    if (item == value)
+      return true;
+  }
+  
+  return false;
+}
