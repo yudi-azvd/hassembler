@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "../../include/util.h"
+#include "util.h"
 
 /////////////////////////////////////
 // Some helper functions and stuff //

@@ -1,24 +1,26 @@
 #include <iostream>
-#include <sstream>
-#include <string>
-#include <algorithm>
-#include <fstream>
-#include <vector>
-#include <map>
 
-#include "../../include/assembler.h"
+#include "assembler.h"
 
 
 void showCorrectUsage();
 
 
 int main(int commandlineCount, char* commandlineArguments[]) {
-  if (commandlineCount <= 1) {
+  std::vector<std::string> filenames;
+
+  bool correctCommandlineArgumentsCount = 
+    1 <= commandlineCount && commandlineCount <= 4;
+  if (!correctCommandlineArgumentsCount) {
     showCorrectUsage();
     return 1;
   }
 
-  Assembler assembler(commandlineArguments[1]);
+  for (int i = 1; i < commandlineCount; i++) {
+    filenames.push_back(commandlineArguments[i]);
+  }
+
+  Assembler assembler(filenames);
 
   assembler.assemble();
 

@@ -2,8 +2,8 @@
 // #include <vector>
 
 // #include "../../lib/doctest/doctest.h"
-// #include "../../include/assembler.h"
-// #include "../../include/util.h"
+// #include "../../src/montador/assembler.h"
+// #include "../../src/montador/util.h"
 
 
 // struct TokenizedLine {

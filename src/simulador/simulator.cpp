@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../../include/simulator.h"
+#include "simulator.h"
 
 Simulator::Simulator(std::string filename) {
   _filename = filename;

@@ -26,7 +26,9 @@ private:
   
   std::map<std::string, int (Assembler::*)(int positionCounter, std::vector<std::string> operands)> _directiveTable;
 
-  std::vector<std::vector<std::string>> _fileContents;
+  std::vector<std::string> _filenames;
+
+  std::vector<std::vector<std::string>> _filesContents;
   std::vector<std::string> _fileContent;
   
   std::vector<std::string> _tokens;
@@ -48,13 +50,17 @@ private:
   void _initialize();
 
 public:
+  Assembler(std::vector<std::string> filename);
+  
   Assembler(std::string filename = "");
   
   ~Assembler();
 
   void assemble();
+
+  void getMultipleFileContents();
   
-  void getInputFileContent(std::string filename);
+  void getFileContent(std::string filename);
 
   /**
    * Determina se seção de dados vem antes ou depois
@@ -62,7 +68,7 @@ public:
    */
   void runZerothPass();
 
-  void runZeroth2Pass();
+  void runZeroth2Pass(int lineContentCounter);
   
   void runFirstPass();
 

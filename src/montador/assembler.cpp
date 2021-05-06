@@ -1,9 +1,15 @@
 #include <vector>
 #include <algorithm>
 
-#include "../../include/assembler.h"
-#include "../../include/errors.h"
-#include "../../include/util.h"
+#include "assembler.h"
+#include "errors.h"
+#include "util.h"
+
+Assembler::Assembler(std::vector<std::string> filenames) { 
+  if (!filenames.empty())
+    _filenames = filenames;
+  _initialize();
+}
 
 
 Assembler::Assembler(std::string filename) { 
@@ -61,44 +67,65 @@ void Assembler::_initialize() {
 Assembler::~Assembler() { }
 
 
-void Assembler::getInputFileContent(std::string fn) { 
+void Assembler::getMultipleFileContents() {
+  for (auto filename : _filenames) {
+    getFileContent(filename);
+  }
+}
+
+
+void Assembler::getFileContent(std::string filename) { 
   std::string line;
-  _filename = fn;
-  std::vector<std::string> sourceFileContent;
-  std::fstream infile(_filename);
+  _filename = filename;
+  std::vector<std::string> fileContent;
+  std::fstream infile(filename);
 
   if (!infile.is_open()) {
-    _errors.push_back("Arquivo não encontrado: " + _filename);
+    _errors.push_back("Arquivo não encontrado: " + filename);
   }
-
-  std::map<std::string, int> symbolTable;
 
   while (std::getline(infile, line)) {
-    sourceFileContent.push_back(line);
+    fileContent.push_back(line);
   }
 
-  _fileContent = sourceFileContent;
-
   infile.close();
+
+  _filesContents.push_back(fileContent);
 }
 
 
 void Assembler::assemble() {
-  getInputFileContent(_filename);
-  runZerothPass();
-  runFirstPass();
+  getMultipleFileContents();
 
-  if (_dataSectionComesFirst) {
-    adjustForDataSection();
+  int fileContentCounter = 0;
+  for (auto fileContent : _filesContents) {
+    _fileContent = fileContent;
+
+    runZerothPass();
+    runZeroth2Pass(fileContentCounter++);
+    // runFirstPass();
+
+    // if (_dataSectionComesFirst) {
+    //   adjustForDataSection();
+    // }
+
+    // runSecondPass();
+
+    // if (_dataSectionComesFirst) {
+    //   adjustObjectCode();
+    // }
+
+    // generateOutput();
   }
 
-  runSecondPass();
-
-  if (_dataSectionComesFirst) {
-    adjustObjectCode();
+  // std::cout << "usage table" << std::endl;
+  // for (auto table : _usageTables) {
+  //   std::cout << strToIntMapToString(table) << std::endl;
+  // }
+  std::cout << "\nfile contents" << std::endl;
+  for (auto content : _filesContents) {
+    std::cout << vectorToString(content) << std::endl;
   }
-
-  generateOutput();
 }
 
 
@@ -136,10 +163,10 @@ void Assembler::runZerothPass() {
 }
 
 
-void Assembler::runZeroth2Pass() {
+void Assembler::runZeroth2Pass(int fileContentCounter) {
   int lineCounter = 1;
   bool lineHasExtern, lineHasPublic, lineHasBegin, lineHasEnd;
-  std::vector<int> linesToBeCommetendOut;
+  std::string label, programName;
   std::vector<std::string> loweredTokens;
 
   for (std::string line: _fileContent) {
@@ -158,25 +185,41 @@ void Assembler::runZeroth2Pass() {
 
     // assumindo que apenas uma delas é verdadeira em uma linha
     if (lineHasExtern) {
-      // adicionar simbolo na tabela de uso
-      // marcar linha para ser comentada fora
+      label = _tokens[0]; // {"label", ":", "extern"}
+      _usageTable[label] = 0;
+      _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasPublic) {
+      label = _tokens[1]; // {"public", "label"}
       // adicionar simbolo na tabela de definições
       // marcar linha para ser comentada fora      
+      _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasBegin) {
+      programName = _tokens[0]; // {"main", ":", "begin"}
+      // checar se pode ter begin/end; lançar exceção
       // salvar nome do módulo em algum lugar
       // marcar linha para ser comentada fora
+      _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasEnd) {
+      // checar se pode ter begin/end; lançar exceção
       // precisa fazer algo?
       // marcar linha para ser comentada fora
+      _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else {
       // faz nada
     }
+
+    lineCounter++;
   }
+
+  // _definitionsTables.push_back(_definitionsTable);
+  // _definitionsTable.clear();
+
+  _usageTables.push_back(_usageTable);
+  _usageTable.clear();
 }
 
 

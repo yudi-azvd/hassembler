@@ -2,8 +2,8 @@
 #include <vector>
 
 #include "../../lib/doctest/doctest.h"
-#include "../../include/errors.h"
-#include "../../include/assembler.h"
+#include "../../src/montador/errors.h"
+#include "../../src/montador/assembler.h"
 
 
 TEST_CASE("basic cases") {
