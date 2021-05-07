@@ -47,9 +47,9 @@ TEST_CASE("adjust object code - fibonacci") {
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   as.adjustForDataSection();
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   as.adjustObjectCode(); // isso que é o texto de verdade.
 
   auto gotObjectCode = as.objectCode();
@@ -100,9 +100,9 @@ TEST_CASE("adjust object code - fatorial") {
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   as.adjustForDataSection();
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   as.adjustObjectCode(); // isso que é o texto de verdade.
 
   auto gotObjectCode = as.objectCode();
@@ -153,8 +153,8 @@ TEST_CASE("not adjusting fatorial object code should work as well") {
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
-  as.runFirstPass();
-  as.runSecondPass();
+  as.runFirstPass(sourceFileContent);
+  as.runSecondPass(sourceFileContent);
 
   auto gotObjectCode = as.objectCode();
   std::vector<int> expectedObjectCode = {
@@ -199,9 +199,9 @@ TEST_CASE("adjust object code - sumof2numbers") {
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   as.adjustForDataSection();
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   as.adjustObjectCode(); // isso que é o teste de verdade.
 
   auto gotObjectCode = as.objectCode();

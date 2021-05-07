@@ -25,7 +25,7 @@ TEST_CASE("rsp print number") {
   };
 
   as.setSymbolTable(symbolTable);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   gotObjectCode = as.objectCode();
 
   INFO("exp: ", vectorToString(expectedObjectCode));
@@ -66,7 +66,7 @@ TEST_CASE("rsp add two numbers") {
   };
 
   as.setSymbolTable(symbolTable);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   gotObjectCode = as.objectCode();
 
   INFO("exp: ", vectorToString(expectedObjectCode));
@@ -100,7 +100,7 @@ TEST_CASE("rsp print and add number") {
   };
 
   as.setSymbolTable(symbolTable);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   gotObjectCode = as.objectCode();
 
   INFO("exp: ", vectorToString(expectedObjectCode));
@@ -157,7 +157,7 @@ TEST_CASE("rsp fibonacci") {
   };
 
   as.setSymbolTable(symbolTable);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   gotObjectCode = as.objectCode();
 
   INFO("exp: ", vectorToString(expectedObjectCode));
@@ -203,7 +203,7 @@ TEST_CASE("rsp fatorial") {
   };
 
   as.setSymbolTable(symbolTable);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
   gotObjectCode = as.objectCode();
 
   INFO("exp: ", vectorToString(expectedObjectCode));
@@ -231,7 +231,7 @@ TEST_CASE("rsp should add errors undefined operands") {
 
   as.setSymbolTable(symbolTable);
   as.setSourceFileContent(sourceFileContent);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
 
   std::vector<std::string> errors = as.errors();
 
@@ -280,7 +280,7 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
 
   as.setSymbolTable(symbolTable);
   as.setSourceFileContent(sourceFileContent);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
 
   std::vector<std::string> errors = as.errors();
 
@@ -314,7 +314,7 @@ TEST_CASE("should give errors saying operand should be another type") {
 
   as.setSymbolTable(symbolTable);
   as.setSourceFileContent(sourceFileContent);
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
 
   std::vector<std::string> errors = as.errors();
 
@@ -347,10 +347,10 @@ TEST_CASE("rsp label alone in line should work for instructions") {
   
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   // Não precisa ajustar porque SECTIONS estão na ordem correta
   // as.adjustForDataSection();
-  as.runSecondPass();
+  as.runSecondPass(sourceFileContent);
 
   std::map<std::string, int> gotSymbolTable = as.symbolTable();
   std::map<std::string, int> expectedSymbolTable = {

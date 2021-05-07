@@ -9,6 +9,7 @@ Assembler::Assembler(std::vector<std::string> filenames) {
   if (!filenames.empty())
     _filenames = filenames;
   _initialize();
+  _fileContent = {};
 }
 
 
@@ -16,6 +17,7 @@ Assembler::Assembler(std::string filename) {
   if (!filename.empty())
     _filename = filename;
   _initialize();
+  _fileContent = {};
 }
 
 
@@ -97,35 +99,47 @@ void Assembler::getFileContent(std::string filename) {
 void Assembler::assemble() {
   getMultipleFileContents();
 
-  int fileContentCounter = 0;
-  for (auto fileContent : _filesContents) {
-    _fileContent = fileContent;
+  size_t fileContentCounter = 0;
+  for (; fileContentCounter < _filesContents.size(); fileContentCounter++) {
+    _fileContent = _filesContents[fileContentCounter];
 
     runZerothPass();
-    runZeroth2Pass(fileContentCounter++);
-    // runFirstPass();
+    runZerothPass2(fileContentCounter);
+    runFirstPass(_filesContents[fileContentCounter]);
 
-    // if (_dataSectionComesFirst) {
-    //   adjustForDataSection();
-    // }
+    extractDefinitionsTableFromSymbolsTable();
 
-    // runSecondPass();
+    if (_dataSectionComesFirst) {
+      adjustForDataSection();
+    }
 
-    // if (_dataSectionComesFirst) {
-    //   adjustObjectCode();
-    // }
+    runSecondPass(_filesContents[fileContentCounter]);
+
+    if (_dataSectionComesFirst) {
+      adjustObjectCode();
+    }
+
+    _symbolsTables.push_back(_symbolsTable);
+    _symbolsTable.clear();
+
+    _definitionsTables.push_back(_definitionsTable);
+    _definitionsTable.clear();
+
+    _usageTables.push_back(_usageTable);
+    _usageTable.clear();
+    _externalSymbolsTables.push_back(_externalSymbolsTable);
+    _externalSymbolsTable.clear();
+
+    _relocations.push_back(_relocation);
+    _relocation.clear();
+
+    _objectCodes.push_back(_objectCode);
+    _objectCode.clear();
 
     // generateOutput();
-  }
+  } 
 
-  // std::cout << "usage table" << std::endl;
-  // for (auto table : _usageTables) {
-  //   std::cout << strToIntMapToString(table) << std::endl;
-  // }
-  std::cout << "\nfile contents" << std::endl;
-  for (auto content : _filesContents) {
-    std::cout << vectorToString(content) << std::endl;
-  }
+  outputData();
 }
 
 
@@ -163,7 +177,7 @@ void Assembler::runZerothPass() {
 }
 
 
-void Assembler::runZeroth2Pass(int fileContentCounter) {
+void Assembler::runZerothPass2(int fileContentCounter) {
   int lineCounter = 1;
   bool lineHasExtern, lineHasPublic, lineHasBegin, lineHasEnd;
   std::string label, programName;
@@ -186,12 +200,13 @@ void Assembler::runZeroth2Pass(int fileContentCounter) {
     // assumindo que apenas uma delas é verdadeira em uma linha
     if (lineHasExtern) {
       label = _tokens[0]; // {"label", ":", "extern"}
-      _usageTable[label] = 0;
+      _externalSymbolsTable[toLower(label)] = 0;
+      // _usageTable.push_back(std::make_pair(toLower(label), -1));
       _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasPublic) {
       label = _tokens[1]; // {"public", "label"}
-      // adicionar simbolo na tabela de definições
+      _definitionsTable[toLower(label)] = -1;
       // marcar linha para ser comentada fora      
       _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
@@ -199,8 +214,6 @@ void Assembler::runZeroth2Pass(int fileContentCounter) {
       programName = _tokens[0]; // {"main", ":", "begin"}
       // checar se pode ter begin/end; lançar exceção
       // salvar nome do módulo em algum lugar
-      // marcar linha para ser comentada fora
-      _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasEnd) {
       // checar se pode ter begin/end; lançar exceção
@@ -214,16 +227,10 @@ void Assembler::runZeroth2Pass(int fileContentCounter) {
 
     lineCounter++;
   }
-
-  // _definitionsTables.push_back(_definitionsTable);
-  // _definitionsTable.clear();
-
-  _usageTables.push_back(_usageTable);
-  _usageTable.clear();
 }
 
 
-void Assembler::runFirstPass() {
+void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
   _textSectionSize = 0;
   _dataSectionSize = 0;
   int positionCounter = 0, lineCounter = 1;
@@ -231,7 +238,7 @@ void Assembler::runFirstPass() {
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
 
-  for (std::string line : _fileContent) {
+  for (std::string line : fileContent) {
     _tokens = parseLine(line);
     if (_tokens.empty()) {
       lineCounter++;
@@ -257,7 +264,9 @@ void Assembler::runFirstPass() {
           );
         }
         else {
-          _symbolsTable[toLower(label)] = positionCounter;
+          bool labelFoundInUsageTable = _externalSymbolsTable.find(toLower(label)) != _externalSymbolsTable.end();
+          if (!labelFoundInUsageTable)
+            _symbolsTable[toLower(label)] = positionCounter;
         }
       }
       else {
@@ -315,16 +324,17 @@ void Assembler::runFirstPass() {
 } 
 
 
-void Assembler::runSecondPass() {
+void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
   int positionCounter = 0, lineCounter = 1;
   bool labelExists, operationFound, directiveFound, 
-    operand1Found, operand2Found;
+    operand1FoundInInternSymTable, operand2FoundInInternSymTab,
+    operand1FoundInExternSymTab, operand2FoundInExternSymTab;
   std::string label, operation, operand1, operand2;
   std::string savedLabelForLater;
 
   _isRunningSecondPass = true;
 
-  for (std::string line : _fileContent) {
+  for (std::string line : fileContent) {
     _tokens = parseLine(line);
     if (_tokens.empty()) {
       lineCounter++;
@@ -367,8 +377,11 @@ void Assembler::runSecondPass() {
         );
       }
       else {
-        operand1Found = _symbolsTable.find(toLower(operand1)) != _symbolsTable.end();
-        if (!operand1Found && operand1 != "") {
+        operand1FoundInInternSymTable = _symbolsTable.find(toLower(operand1)) != _symbolsTable.end();
+        operand1FoundInExternSymTab = _externalSymbolsTable.find(toLower(operand1)) != _externalSymbolsTable.end();
+        bool operand1NotFound = !operand1FoundInExternSymTab && !operand1FoundInInternSymTable;
+        // aqui que adiciona o operand1
+        if (operand1NotFound && !operand1.empty()) {
           _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
             + ": operando '" + operand1 + "' indefinido."
           );
@@ -383,8 +396,12 @@ void Assembler::runSecondPass() {
           );
         }
         else {
-          operand2Found = _symbolsTable.find(toLower(operand2)) != _symbolsTable.end();
-          if (!operand2Found) {
+          operand2FoundInInternSymTab = _symbolsTable.find(toLower(operand2)) != _symbolsTable.end();
+          operand2FoundInExternSymTab = _externalSymbolsTable.find(toLower(operand1)) != _externalSymbolsTable.end();
+          bool operand2NotFound = !operand2FoundInExternSymTab && !operand2FoundInInternSymTab;
+
+          // aqui que adiciona o operand1
+          if (operand2NotFound && !operand2.empty()) {
             _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
               + ": operando '" + operand2 + "' indefinido."
             );
@@ -410,12 +427,34 @@ void Assembler::runSecondPass() {
       
       _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
       
-      if (lowerCasedOperation != "stop")
-        _objectCode.push_back(_symbolsTable[toLower(operand1)]);
-      if (lowerCasedOperation == "copy") 
-        _objectCode.push_back(_symbolsTable[toLower(operand2)]);
-      // Se não estiver correto, erro sintático
-
+      if (lowerCasedOperation != "stop") {
+        int discount = lowerCasedOperation == "copy" ? 2 : 1;
+        int position = positionCounter-discount;
+        if (operand1FoundInExternSymTab) {
+          _objectCode.push_back(position);
+          _externalSymbolsTable[toLower(operand1)] = position;
+          _usageTable.push_back(std::make_pair(toLower(operand1), position));
+        }
+        else if (operand1FoundInInternSymTable) {
+          _objectCode.push_back(_symbolsTable[toLower(operand1)]);
+          _relocation.push_back(position);
+        }
+      }
+      if (lowerCasedOperation == "copy") {
+        int position = positionCounter-1;
+        if (operand2FoundInInternSymTab) {
+          _objectCode.push_back(_symbolsTable[toLower(operand2)]);
+          _relocation.push_back(position);
+        }
+        if (!operand2FoundInInternSymTab && !operand2.empty()) {
+          operand2FoundInExternSymTab = _externalSymbolsTable.find(toLower(operand2)) != _externalSymbolsTable.end();
+          if (operand2FoundInExternSymTab) {
+            _objectCode.push_back(position);
+            _externalSymbolsTable[toLower(operand2)] = position;
+            _usageTable.push_back(std::make_pair(toLower(operand2), position));
+          }
+        }
+      }
     }
     else { // DIRECTIVE
       if (directiveFound) {
@@ -446,11 +485,6 @@ void Assembler::runSecondPass() {
           ": diretiva '" + operation + "' não identificada."
         );
       }
-      // else {
-      //   _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
-      //     ": instrução '" + operation + "' não identificada."
-      //   );
-      // }
     }
 
     lineCounter++;
@@ -496,6 +530,18 @@ void Assembler::adjustObjectCode() {
   );
 
   _objectCode = adjustedObjectCode;
+}
+
+
+void Assembler::extractDefinitionsTableFromSymbolsTable() {
+  for (auto const& pair : _definitionsTable) {
+    auto keyFromDefsTable = pair.first;
+    bool foundInST = _symbolsTable.find(keyFromDefsTable) != _symbolsTable.end();
+    if (!foundInST) {
+      std::cout << "!!! não encontrado em TS: " << keyFromDefsTable << std::endl;
+    }
+    _definitionsTable[keyFromDefsTable] = _symbolsTable[keyFromDefsTable];
+  }
 }
 
 
@@ -604,6 +650,36 @@ void Assembler::generateOutput() {
   
   outputFile << finalString;
   outputFile.close();
+}
+
+
+void Assembler::outputData() {
+  for (size_t i = 0; i < _filenames.size(); i++) {
+    std::cout << "\n### " << _filenames[i] << " ####"<< std::endl;
+
+    std::cout << "\n>> USAGE table\n[";
+    for (auto pair : _usageTables[i]) {
+      std::cout << pair.first << " : " << pair.second << ", ";
+    }
+    std::cout << "]"<< std::endl;
+
+    std::cout << "\n>> SYMBOLS table" << std::endl;
+    std::cout << strToIntMapToString(_symbolsTables[i]) << std::endl;
+
+    std::cout << "\n>> DEFINITIONS table" << std::endl;
+    std::cout << strToIntMapToString(_definitionsTables[i]) << std::endl;
+
+    std::cout << "\n>> OBJECT code" << std::endl;
+    std::cout << vectorToString(_objectCodes[i]) << std::endl;
+
+    std::cout << "\n>> RELOCATION" << std::endl;
+    std::cout << vectorToString(_relocations[i]) << std::endl;
+  }
+
+  if (_errors.size() > 1) {
+    std::cout << "\n>> ERRORS:" << std::endl;
+    std::cout << vectorToString(_errors) << std::endl;
+  }
 }
 
 

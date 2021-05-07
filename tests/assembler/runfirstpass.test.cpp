@@ -31,7 +31,7 @@ TEST_CASE("sum of two numbers") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -70,7 +70,7 @@ TEST_CASE("fatorial") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -104,7 +104,7 @@ TEST_CASE("fatorial with errors") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
 
   std::vector<std::string> errors = as.errors();
   std::map<std::string, int> symbolTable = as.symbolTable();
@@ -158,7 +158,7 @@ TEST_CASE("fibonacci") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -196,7 +196,7 @@ TEST_CASE("area_triangulo") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -235,7 +235,7 @@ TEST_CASE("label alone in line - 1") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
   gotSymbolTable = as.symbolTable();
 
   INFO("got: ", strToIntMapToString(gotSymbolTable));
@@ -268,7 +268,7 @@ TEST_CASE("area_triangulo with errors") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
 
   std::vector<std::string> errors = as.errors();
   std::map<std::string, int> symbolTable = as.symbolTable();
@@ -301,7 +301,7 @@ TEST_CASE("invalid label alone in line") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
 
   std::vector<std::string> errors = as.errors();
   std::map<std::string, int> symbolTable = as.symbolTable();
@@ -328,7 +328,7 @@ TEST_CASE("label alone in line should work for space directive") {
   Assembler as;
   as.setSourceFileContent(sourceFileContent);
 
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
 
   std::map<std::string, int> gotSymbolTable = as.symbolTable();
   std::map<std::string, int> expectedSymbolTable = {
@@ -358,7 +358,7 @@ TEST_CASE("rfp label alone in line should work for instructions") {
   Assembler as;
   
   as.setSourceFileContent(sourceFileContent);
-  as.runFirstPass();
+  as.runFirstPass(sourceFileContent);
 
   std::map<std::string, int> gotSymbolTable = as.symbolTable();
   std::map<std::string, int> expectedSymbolTable = {

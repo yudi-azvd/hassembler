@@ -8,7 +8,7 @@
 
 TEST_CASE("basic cases") {
   int tokenStartsAt = 0;
-  Assembler as; 
+  Assembler as;
   std::string token;
 
   //                                                !           

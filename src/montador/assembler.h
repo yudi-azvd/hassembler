@@ -17,8 +17,6 @@ private:
   
   bool _dataSectionComesFirst = true; // os exemplos do professor.
 
-  std::string _filename;
-  
   std::map<std::string, int> _opcodeTable;
   
   // instructionSizeTable?
@@ -27,6 +25,7 @@ private:
   std::map<std::string, int (Assembler::*)(int positionCounter, std::vector<std::string> operands)> _directiveTable;
 
   std::vector<std::string> _filenames;
+  std::string _filename;
 
   std::vector<std::vector<std::string>> _filesContents;
   std::vector<std::string> _fileContent;
@@ -39,11 +38,17 @@ private:
   std::vector<std::map<std::string, int>> _definitionsTables;
   std::map<std::string, int> _definitionsTable;
 
-  std::vector<std::map<std::string, int>> _usageTables;
-  std::map<std::string, int> _usageTable;
+  std::vector<std::map<std::string, int>> _externalSymbolsTables;
+  std::map<std::string, int> _externalSymbolsTable;
+  
+  std::vector<std::vector<std::pair< std::string, int>>> _usageTables;
+  std::vector<std::pair< std::string, int>> _usageTable;
   
   std::vector<std::vector<int>> _objectCodes;
   std::vector<int> _objectCode;
+
+  std::vector<std::vector<int>> _relocations;
+  std::vector<int> _relocation;
 
   std::vector<std::string> _errors;
 
@@ -68,16 +73,18 @@ public:
    */
   void runZerothPass();
 
-  void runZeroth2Pass(int lineContentCounter);
+  void runZerothPass2(int lineContentCounter);
   
-  void runFirstPass();
+  void runFirstPass(std::vector<std::string>& fileContent);
 
-  void runSecondPass();
+  void runSecondPass(std::vector<std::string>& fileContent);
 
   // void adjustForDataSection(std::map<std::string, int>& symbolTable, int offset);
   void adjustForDataSection();
 
   void adjustObjectCode();
+
+  void extractDefinitionsTableFromSymbolsTable();
 
   std::string findLabel(int& labelPosition, int& colonPosition);
 
@@ -90,6 +97,8 @@ public:
   std::vector<std::string> findOperands(int labelPosition, int operationPosition);
   
   void generateOutput();
+
+  void outputData();
 
   std::vector<std::string> parseLine(std::string line);
 
