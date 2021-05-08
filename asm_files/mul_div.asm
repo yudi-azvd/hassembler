@@ -1,4 +1,4 @@
-; Soma e subtração 
+; Multiplicacao e Divisao
 MUL_DIV: BEGIN
 SECTION DATA
 QUATRO: CONST 4

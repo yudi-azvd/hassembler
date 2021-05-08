@@ -24,6 +24,9 @@ private:
   
   std::map<std::string, int (Assembler::*)(int positionCounter, std::vector<std::string> operands)> _directiveTable;
 
+  std::vector<std::string> _modulenames;
+  std::string _modulename;
+
   std::vector<std::string> _filenames;
   std::string _filename;
 

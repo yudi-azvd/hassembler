@@ -124,6 +124,9 @@ void Assembler::assemble() {
       adjustObjectCode();
     }
 
+    _modulenames.push_back(_modulename);
+    _modulename.clear();
+
     _symbolsTables.push_back(_symbolsTable);
     _symbolsTable.clear();
 
@@ -188,7 +191,7 @@ void Assembler::runZerothPass2(int fileContentCounter) {
   int lineCounter = 1;
   bool lineHasExtern, lineHasPublic, lineHasBegin, lineHasEnd;
   std::string label, programName;
-  std::vector<std::string> loweredTokens;
+  std::vector<std::string> lowerCasedTokens;
 
   for (std::string line: _fileContent) {
     _tokens = parseLine(line);
@@ -197,12 +200,12 @@ void Assembler::runZerothPass2(int fileContentCounter) {
       continue;
     }
     
-    loweredTokens = stringVectorLowerCased(_tokens);
+    lowerCasedTokens = stringVectorLowerCased(_tokens);
 
-    lineHasExtern = findInVector(loweredTokens, "extern");
-    lineHasPublic = findInVector(loweredTokens, "public");
-    lineHasBegin = findInVector(loweredTokens, "begin");
-    lineHasEnd = findInVector(loweredTokens, "end");
+    lineHasExtern = findInVector(lowerCasedTokens, "extern");
+    lineHasPublic = findInVector(lowerCasedTokens, "public");
+    lineHasBegin = findInVector(lowerCasedTokens, "begin");
+    lineHasEnd = findInVector(lowerCasedTokens, "end");
 
     // assumindo que apenas uma delas é verdadeira em uma linha
     if (lineHasExtern) {
@@ -219,6 +222,7 @@ void Assembler::runZerothPass2(int fileContentCounter) {
     }
     else if (lineHasBegin) {
       programName = _tokens[0]; // {"main", ":", "begin"}
+      _modulename = _tokens[0];
       // checar se pode ter begin/end; lançar exceção
       // salvar nome do módulo em algum lugar
     }
@@ -440,8 +444,8 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
         int discount = lowerCasedOperation == "copy" ? 2 : 1;
         int position = positionCounter-discount;
         if (operand1FoundInExternSymTab) {
-          _objectCode.push_back(position);
-          _externalSymbolsTable[toLower(operand1)] = position;
+          _objectCode.push_back(0);
+          _externalSymbolsTable[toLower(operand1)] = 0;
           _usageTable.push_back(std::make_pair(toLower(operand1), position));
           _relocationBitMap.push_back(0);
         }
@@ -453,8 +457,8 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
       if (lowerCasedOperation == "copy") {
         int position = positionCounter-1;
         if (operand2FoundInExternSymTab) {
-          _objectCode.push_back(position);
-          _externalSymbolsTable[toLower(operand2)] = position;
+          _objectCode.push_back(0);
+          _externalSymbolsTable[toLower(operand2)] = 0;
           _usageTable.push_back(std::make_pair(toLower(operand2), position));
           _relocationBitMap.push_back(0);
         }
@@ -504,9 +508,13 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
 void Assembler::adjustInternalSymbolsTable() {
   for (auto const& pair : _symbolsTable) {
     auto key = pair.first;
+    bool isLabelModulename = key == toLower(_modulename);
+    if (isLabelModulename) {
+      continue;
+    }
+
     int positionCounter = _symbolsTable[key];
     bool isLabelInTextSection = positionCounter >= _dataSectionSize;
-
     if (isLabelInTextSection) {
       _symbolsTable[key] -= _dataSectionSize;
     }
@@ -518,16 +526,14 @@ void Assembler::adjustInternalSymbolsTable() {
 
 
 void Assembler::adjustDefinitionsTable() {
-  // Tenho que me atentar à origem dos labels
   for (auto& pair : _definitionsTable) {
     auto key = pair.first;
-    int positionCounter = _definitionsTable[key];
-
-    bool labelMustBeModuleName = positionCounter == 0;
-    if (labelMustBeModuleName) {
+    bool isLabelModulename = key == toLower(_modulename);
+    if (isLabelModulename) {
       continue;
     }
 
+    int positionCounter = _definitionsTable[key];
     bool isLabelInTextSection = positionCounter >= _dataSectionSize;
     if (isLabelInTextSection) {
       _definitionsTable[key] -= _dataSectionSize;
@@ -587,7 +593,6 @@ void Assembler::adjustRelocationBitMap() {
   _relocationBitMap = adjustedRelocationBitMap;
 
 }
-
 
 
 void Assembler::extractDefinitionsTableFromSymbolsTable() {
