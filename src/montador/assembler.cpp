@@ -107,11 +107,11 @@ void Assembler::assemble() {
     runZerothPass();
     runZerothPass2(fileContentCounter);
     runFirstPass(_filesContents[fileContentCounter]);
+    extractDefinitionsTableFromSymbolsTable();
 
     if (_dataSectionComesFirst) {
       adjustInternalSymbolsTable();
-      // adjustExternalSymbolsTable();
-      adjustDefinitionsTable(); // faz diferença???
+      adjustDefinitionsTable();
     }
 
     runSecondPass(_filesContents[fileContentCounter]);
@@ -144,7 +144,16 @@ void Assembler::assemble() {
   } 
 
   checkIfAllFilesHaveModules();
-  generateMultipleOutputs();
+
+  bool thereAreMultipleFiles = _filenames.size() > 1;
+  if (thereAreMultipleFiles) {
+    generateMultipleOutputs();
+  }
+  else {
+    // Só tem um arquivo, então ele deve ser o primeiro.
+    generateSimpleOutput(_filenames[0]);
+  }
+
   // outputData();
 }
 
@@ -212,7 +221,7 @@ void Assembler::runZerothPass2(int fileContentCounter) {
     }
     else if (lineHasPublic) {
       label = _tokens[1]; // {"public", "label"}
-      _definitionsTable[toLower(label)] = -1;
+      _definitionsTable[toLower(label)] = 0;
       _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasBegin) {
@@ -236,8 +245,9 @@ void Assembler::runZerothPass2(int fileContentCounter) {
 
 
 void Assembler::checkIfAllFilesHaveModules() {
-  bool allFilesHaveModules = _modulenames.size() != _filenames.size();
-  if (!allFilesHaveModules && _filenames.size() > 1) {
+  bool eachFileShouldHaveAModule = _filenames.size() > 1;
+  bool allFilesHaveModules = _modulenames.size() == _filenames.size();
+  if (eachFileShouldHaveAModule && !allFilesHaveModules) {
     _errors.push_back("Para montar mais de um arquivo, é necessário que cada um"
       " deles tenham um módulo");
   }
@@ -592,7 +602,6 @@ void Assembler::adjustRelocationBitMap() {
   );
 
   _relocationBitMap = adjustedRelocationBitMap;
-
 }
 
 
@@ -680,13 +689,56 @@ void Assembler::generateMultipleOutputs() {
 
   int counter = 0;
   for (auto filename : _filenames) {
-    generateOutput(counter, filename);
+    generateOutputForLinker(counter, filename);
     counter++;
   }
 }
 
 
-void Assembler::generateOutput(int counter, std::string filename) {
+void Assembler::generateSimpleOutput(std::string filename) {
+  std::string finalString = "", outFilename = "";
+  std::stringstream ss;
+
+  // o nome do arquivo está entre '/' e '.'
+  bool insertMode = false;
+  for (int i = filename.size() - 1; i >= 0; --i) {
+    if (insertMode) {
+      outFilename.insert(0, 1,  filename[i]);
+    }
+
+    if (filename[i] == '/') {
+      break;
+    }
+
+    if (filename[i] == '.') {
+      insertMode = true;
+      continue;
+    }
+  }
+
+  if (outFilename[0] != '/') { 
+    outFilename.insert(0, 1, '/'); // "nome" => "/nome"
+  }
+
+  outFilename.insert(0, "."); // "/nome" => "./nome"
+  outFilename.append(".obj"); // "./nome.obj"
+
+  std::fstream outputFile;
+  outputFile.open(outFilename, std::ios::out);
+
+  // Só tem um arquivo, então ele deve ser o primeiro.
+  _objectCode = _objectCodes[0];
+  for (auto n : _objectCode) {
+    ss << n << " ";
+  }
+  
+  outputFile << ss.str();
+  outputFile.close();
+}
+
+
+
+void Assembler::generateOutputForLinker(int counter, std::string filename) {
   std::string finalString = "", outFilename = "";
   std::stringstream ss;
 

@@ -108,7 +108,9 @@ public:
   
   void generateMultipleOutputs();
   
-  void generateOutput(int counter, std::string filename);
+  void generateOutputForLinker(int counter, std::string filename);
+  
+  void generateSimpleOutput(std::string filename);
 
   void outputData();
 
