@@ -40,7 +40,7 @@ private:
 
   std::vector<std::map<std::string, int>> _externalSymbolsTables;
   std::map<std::string, int> _externalSymbolsTable;
-  
+
   std::vector<std::vector<std::pair< std::string, int>>> _usageTables;
   std::vector<std::pair< std::string, int>> _usageTable;
   
@@ -48,7 +48,7 @@ private:
   std::vector<int> _objectCode;
 
   std::vector<std::vector<int>> _relocations;
-  std::vector<int> _relocation;
+  std::vector<int> _relocationBitMap;
 
   std::vector<std::string> _errors;
 
@@ -79,10 +79,15 @@ public:
 
   void runSecondPass(std::vector<std::string>& fileContent);
 
-  // void adjustForDataSection(std::map<std::string, int>& symbolTable, int offset);
-  void adjustForDataSection();
+  void adjustInternalSymbolsTable();
+  
+  void adjustDefinitionsTable();
+  
+  void adjustUsageTable();
 
   void adjustObjectCode();
+  
+  void adjustRelocationBitMap();
 
   void extractDefinitionsTableFromSymbolsTable();
 
@@ -96,7 +101,9 @@ public:
 
   std::vector<std::string> findOperands(int labelPosition, int operationPosition);
   
-  void generateOutput();
+  void generateMultipleOutputs();
+  
+  void generateOutput(int counter, std::string filename);
 
   void outputData();
 

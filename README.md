@@ -1,21 +1,21 @@
-# Software Básico: Montador e Simulador
-Montador e simulador desenvolvidos por Yudi Yamane (16/0149410) durante a disciplina de 
-Software Básico da Universidade de Brasília.
+# Software Básico: Montador e Ligador
+Montador e ligador desenvolvidos por Yudi Yamane (16/0149410) para o trabalho 2
+da disciplina de Software Básico.
 
 ## Funcionamento
 Para entender melhor como eles funcionam leia sobre isso [aqui](./explicação.md).
 
 ## Baixar
-Baixe esse repositório por esse [link](https://github.com/yudi-azvd/sb-assembler-and-simulator) 
+Baixe esse repositório por esse [link](https://github.com/yudi-azvd/hassembler) 
 clicando no botão verde. Ou baixe pela linha de comando e entre no repositório 
 baixado.
 
 ```sh
 # baixar
-git clone https://github.com/yudi-azvd/sb-assembler-and-simulator
+git clone https://github.com/yudi-azvd/hassembler
 
 # entrar
-cd sb-assembler-and-simulator
+cd hassembler
 ```
 
 ## Usar e executar

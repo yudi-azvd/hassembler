@@ -48,7 +48,7 @@ TEST_CASE("adjust object code - fibonacci") {
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
   as.runFirstPass(sourceFileContent);
-  as.adjustForDataSection();
+  as.adjustInternalSymbolsTable();
   as.runSecondPass(sourceFileContent);
   as.adjustObjectCode(); // isso que é o texto de verdade.
 
@@ -101,7 +101,7 @@ TEST_CASE("adjust object code - fatorial") {
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
   as.runFirstPass(sourceFileContent);
-  as.adjustForDataSection();
+  as.adjustInternalSymbolsTable();
   as.runSecondPass(sourceFileContent);
   as.adjustObjectCode(); // isso que é o texto de verdade.
 
@@ -200,7 +200,7 @@ TEST_CASE("adjust object code - sumof2numbers") {
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
   as.runFirstPass(sourceFileContent);
-  as.adjustForDataSection();
+  as.adjustInternalSymbolsTable();
   as.runSecondPass(sourceFileContent);
   as.adjustObjectCode(); // isso que é o teste de verdade.
 

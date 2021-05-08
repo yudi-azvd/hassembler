@@ -1,5 +1,6 @@
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 #include "assembler.h"
 #include "errors.h"
@@ -107,15 +108,19 @@ void Assembler::assemble() {
     runZerothPass2(fileContentCounter);
     runFirstPass(_filesContents[fileContentCounter]);
 
-    extractDefinitionsTableFromSymbolsTable();
-
     if (_dataSectionComesFirst) {
-      adjustForDataSection();
+      adjustInternalSymbolsTable();
+      // adjustExternalSymbolsTable();
+      adjustDefinitionsTable(); // faz diferença???
     }
+
+    extractDefinitionsTableFromSymbolsTable();
 
     runSecondPass(_filesContents[fileContentCounter]);
 
     if (_dataSectionComesFirst) {
+      adjustUsageTable();
+      adjustRelocationBitMap();
       adjustObjectCode();
     }
 
@@ -130,8 +135,8 @@ void Assembler::assemble() {
     _externalSymbolsTables.push_back(_externalSymbolsTable);
     _externalSymbolsTable.clear();
 
-    _relocations.push_back(_relocation);
-    _relocation.clear();
+    _relocations.push_back(_relocationBitMap);
+    _relocationBitMap.clear();
 
     _objectCodes.push_back(_objectCode);
     _objectCode.clear();
@@ -139,6 +144,7 @@ void Assembler::assemble() {
     // generateOutput();
   } 
 
+  generateMultipleOutputs();
   outputData();
 }
 
@@ -156,6 +162,7 @@ void Assembler::runZerothPass() {
     }
 
     if (toLower(_tokens[0]) != "section") {
+      lineCounter++;
       continue;
     }
 
@@ -303,7 +310,8 @@ void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
         auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
         positionCounter = (this->*directiveFunctionPtr)(positionCounter, operands);
         // assumindo que todas as diretivas alocam UM espaço de memória.
-        if (lowerCasedOperation != "section") _dataSectionSize++;
+        if (lowerCasedOperation != "section" && lowerCasedOperation != "begin") 
+          _dataSectionSize++;
       }
       else if (labelExists) { // || savedLabelForLater
         // Assumindo que diretivas sempre aparecem diretamente _associadas_ a 
@@ -426,6 +434,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
       }
       
       _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
+      _relocationBitMap.push_back(0);
       
       if (lowerCasedOperation != "stop") {
         int discount = lowerCasedOperation == "copy" ? 2 : 1;
@@ -434,25 +443,24 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
           _objectCode.push_back(position);
           _externalSymbolsTable[toLower(operand1)] = position;
           _usageTable.push_back(std::make_pair(toLower(operand1), position));
+          _relocationBitMap.push_back(0);
         }
         else if (operand1FoundInInternSymTable) {
           _objectCode.push_back(_symbolsTable[toLower(operand1)]);
-          _relocation.push_back(position);
+          _relocationBitMap.push_back(1);
         }
       }
       if (lowerCasedOperation == "copy") {
         int position = positionCounter-1;
-        if (operand2FoundInInternSymTab) {
-          _objectCode.push_back(_symbolsTable[toLower(operand2)]);
-          _relocation.push_back(position);
+        if (operand2FoundInExternSymTab) {
+          _objectCode.push_back(position);
+          _externalSymbolsTable[toLower(operand2)] = position;
+          _usageTable.push_back(std::make_pair(toLower(operand2), position));
+          _relocationBitMap.push_back(0);
         }
-        if (!operand2FoundInInternSymTab && !operand2.empty()) {
-          operand2FoundInExternSymTab = _externalSymbolsTable.find(toLower(operand2)) != _externalSymbolsTable.end();
-          if (operand2FoundInExternSymTab) {
-            _objectCode.push_back(position);
-            _externalSymbolsTable[toLower(operand2)] = position;
-            _usageTable.push_back(std::make_pair(toLower(operand2), position));
-          }
+        else if (operand2FoundInInternSymTab) {
+          _objectCode.push_back(_symbolsTable[toLower(operand2)]);
+          _relocationBitMap.push_back(1);
         }
       }
     }
@@ -493,9 +501,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
 }
 
 
-void Assembler::adjustForDataSection() {
-  std::map<std::string, int>::iterator it;
-
+void Assembler::adjustInternalSymbolsTable() {
   for (auto const& pair : _symbolsTable) {
     auto key = pair.first;
     int positionCounter = _symbolsTable[key];
@@ -510,6 +516,36 @@ void Assembler::adjustForDataSection() {
   }
 }
 
+
+void Assembler::adjustDefinitionsTable() {
+  // Tenho que me atentar à origem dos labels
+  for (auto& pair : _definitionsTable) {
+    auto key = pair.first;
+    int positionCounter = _definitionsTable[key];
+
+    bool labelMustBeModuleName = positionCounter == 0;
+    if (labelMustBeModuleName) {
+      continue;
+    }
+
+    bool isLabelInTextSection = positionCounter >= _dataSectionSize;
+    if (isLabelInTextSection) {
+      _definitionsTable[key] -= _dataSectionSize;
+    }
+    else {
+      _definitionsTable[key] += _textSectionSize;
+    }
+  }
+}
+
+
+void Assembler::adjustUsageTable() {
+  for (auto& pair : _usageTable) {
+    pair.second -= _dataSectionSize;
+  }
+
+  std::cout << "adjustUsageTable" << std::endl;
+}
 
 void Assembler::adjustObjectCode() {
   // Se tenho que ajustar o código objeto, SECTION DATA
@@ -531,6 +567,27 @@ void Assembler::adjustObjectCode() {
 
   _objectCode = adjustedObjectCode;
 }
+
+
+void Assembler::adjustRelocationBitMap() {
+  int textSectionStart = _objectCode.size() - _textSectionSize;
+
+  // começar por SECTION TEXT
+  auto adjustedRelocationBitMap = std::vector<int>(
+    _relocationBitMap.begin() + textSectionStart, _relocationBitMap.end()
+  );
+
+  // acrescentar SECTION DATA no final
+  adjustedRelocationBitMap.insert(
+    adjustedRelocationBitMap.end(), 
+    _relocationBitMap.begin(), 
+    _relocationBitMap.end()-_textSectionSize
+  );
+
+  _relocationBitMap = adjustedRelocationBitMap;
+
+}
+
 
 
 void Assembler::extractDefinitionsTableFromSymbolsTable() {
@@ -607,7 +664,7 @@ std::vector<std::string> Assembler::findOperands(int labelPosition, int operatio
 }
 
 
-void Assembler::generateOutput() {
+void Assembler::generateMultipleOutputs() {
   if (_errors.size() > 0) {
     for (auto err : _errors) {
       std::cout << err << std::endl;
@@ -615,27 +672,42 @@ void Assembler::generateOutput() {
     return;
   }
 
+  int counter = 0;
+  for (auto filename : _filenames) {
+    generateOutput(counter, filename);
+    counter++;
+  }
+}
+
+
+void Assembler::generateOutput(int counter, std::string filename) {
   std::string finalString = "", outFilename = "";
+  std::stringstream ss;
 
   // o nome do arquivo está entre '/' e '.'
   bool insertMode = false;
-  for (int i = _filename.size() - 1; i >= 0; --i) {
+  for (int i = filename.size() - 1; i >= 0; --i) {
     if (insertMode) {
-      outFilename.insert(0, 1,  _filename[i]);
+      outFilename.insert(0, 1,  filename[i]);
     }
 
-    if (_filename[i] == '/') {
+    if (filename[i] == '/') {
       break;
     }
 
-    if (_filename[i] == '.') {
+    if (filename[i] == '.') {
       insertMode = true;
       continue;
     }
   }
 
-  if (outFilename[0] != '/') { // "nome" => "/nome"
-    outFilename.insert(0, 1, '/');
+  std::string pureOutFilename;
+  if (outFilename[0] != '/') { 
+    pureOutFilename = outFilename; // apenas "nome"
+    outFilename.insert(0, 1, '/'); // "nome" => "/nome"
+  }
+  else {
+    pureOutFilename = outFilename.substr(1, outFilename.length()-1);
   }
 
   outFilename.insert(0, "."); // "/nome" => "./nome"
@@ -644,11 +716,33 @@ void Assembler::generateOutput() {
   std::fstream outputFile;
   outputFile.open(outFilename, std::ios::out);
 
+  _objectCode = _objectCodes[counter];
+  ss << "H " << pureOutFilename << std::endl;
+  ss << "H " << _objectCode.size() << std::endl;
+
+  _relocationBitMap = _relocations[counter];
+  ss << "R ";
+  for (auto bit : _relocationBitMap) {
+    ss << bit;
+  }
+
+  ss << std::endl;
+  _usageTable = _usageTables[counter];
+  for (auto pair : _usageTable) {
+    ss << "U " << pair.first << " " << pair.second << std::endl;
+  }
+
+  _definitionsTable = _definitionsTables[counter];
+  for (auto pair : _definitionsTable) {
+    ss << "D " << pair.first << " " << pair.second << std::endl;
+  }
+
+  ss << "T ";
   for (auto n : _objectCode) {
-    finalString.append(std::to_string(n) + " ");
+    ss << n << " ";
   }
   
-  outputFile << finalString;
+  outputFile << ss.str();
   outputFile.close();
 }
 
@@ -666,13 +760,18 @@ void Assembler::outputData() {
     std::cout << "\n>> SYMBOLS table" << std::endl;
     std::cout << strToIntMapToString(_symbolsTables[i]) << std::endl;
 
+    std::cout << "\n>> EXT SYMBOLS table" << std::endl;
+    std::cout << strToIntMapToString(_externalSymbolsTables[i]) << std::endl;
+
     std::cout << "\n>> DEFINITIONS table" << std::endl;
     std::cout << strToIntMapToString(_definitionsTables[i]) << std::endl;
 
-    std::cout << "\n>> OBJECT code" << std::endl;
-    std::cout << vectorToString(_objectCodes[i]) << std::endl;
+    std::cout << "\n>> OBJECT code: " << _objectCodes[i].size() << std::endl << "[";
+    for (size_t i = 0; i < _objectCodes[i].size(); i++) 
+      printf("%2d, ", (int) i);
+    std::cout << "]" << std::endl << vectorToString(_objectCodes[i]) << std::endl;
 
-    std::cout << "\n>> RELOCATION" << std::endl;
+    std::cout << "\n>> RELOCATION: " << _relocations[i].size() << std::endl;
     std::cout << vectorToString(_relocations[i]) << std::endl;
   }
 
@@ -803,6 +902,7 @@ std::vector<int> Assembler::objectCode() {
 int Assembler::directiveSpace(int posCounter, std::vector<std::string> operands) { 
   if (_isRunningSecondPass) {
     _objectCode.push_back(0);
+    _relocationBitMap.push_back(0);
   }
   return posCounter + 1;
 }
@@ -824,6 +924,8 @@ int Assembler::directiveConst(int posCounter, std::vector<std::string> operands)
   std::string strOperand = operands.size() > 0 ? operands[0] : "";
   int operand = std::atoi(strOperand.c_str());
   _objectCode.push_back(operand);
+  _relocationBitMap.push_back(0);
+
   return posCounter + 1;
 }
 
