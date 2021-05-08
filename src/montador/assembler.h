@@ -78,6 +78,8 @@ public:
 
   void runZerothPass2(int lineContentCounter);
   
+  void checkIfAllFilesHaveModules();
+
   void runFirstPass(std::vector<std::string>& fileContent);
 
   void runSecondPass(std::vector<std::string>& fileContent);

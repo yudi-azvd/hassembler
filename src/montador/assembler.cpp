@@ -114,8 +114,6 @@ void Assembler::assemble() {
       adjustDefinitionsTable(); // faz diferença???
     }
 
-    extractDefinitionsTableFromSymbolsTable();
-
     runSecondPass(_filesContents[fileContentCounter]);
 
     if (_dataSectionComesFirst) {
@@ -143,12 +141,11 @@ void Assembler::assemble() {
 
     _objectCodes.push_back(_objectCode);
     _objectCode.clear();
-
-    // generateOutput();
   } 
 
+  checkIfAllFilesHaveModules();
   generateMultipleOutputs();
-  outputData();
+  // outputData();
 }
 
 
@@ -190,7 +187,7 @@ void Assembler::runZerothPass() {
 void Assembler::runZerothPass2(int fileContentCounter) {
   int lineCounter = 1;
   bool lineHasExtern, lineHasPublic, lineHasBegin, lineHasEnd;
-  std::string label, programName;
+  std::string label;
   std::vector<std::string> lowerCasedTokens;
 
   for (std::string line: _fileContent) {
@@ -211,25 +208,22 @@ void Assembler::runZerothPass2(int fileContentCounter) {
     if (lineHasExtern) {
       label = _tokens[0]; // {"label", ":", "extern"}
       _externalSymbolsTable[toLower(label)] = 0;
-      // _usageTable.push_back(std::make_pair(toLower(label), -1));
       _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasPublic) {
       label = _tokens[1]; // {"public", "label"}
       _definitionsTable[toLower(label)] = -1;
-      // marcar linha para ser comentada fora      
       _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else if (lineHasBegin) {
-      programName = _tokens[0]; // {"main", ":", "begin"}
       _modulename = _tokens[0];
-      // checar se pode ter begin/end; lançar exceção
-      // salvar nome do módulo em algum lugar
+      bool singleFileWithModule = (_filenames.size() == 1) && lineHasBegin;
+      if (singleFileWithModule)
+        _errors.push_back("Não é permitido o uso de BEGIN e END com arquivo único.");
     }
     else if (lineHasEnd) {
       // checar se pode ter begin/end; lançar exceção
       // precisa fazer algo?
-      // marcar linha para ser comentada fora
       _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
     }
     else {
@@ -237,6 +231,15 @@ void Assembler::runZerothPass2(int fileContentCounter) {
     }
 
     lineCounter++;
+  }
+}
+
+
+void Assembler::checkIfAllFilesHaveModules() {
+  bool allFilesHaveModules = _modulenames.size() != _filenames.size();
+  if (!allFilesHaveModules && _filenames.size() > 1) {
+    _errors.push_back("Para montar mais de um arquivo, é necessário que cada um"
+      " deles tenham um módulo");
   }
 }
 
@@ -549,8 +552,6 @@ void Assembler::adjustUsageTable() {
   for (auto& pair : _usageTable) {
     pair.second -= _dataSectionSize;
   }
-
-  std::cout << "adjustUsageTable" << std::endl;
 }
 
 void Assembler::adjustObjectCode() {
@@ -598,10 +599,10 @@ void Assembler::adjustRelocationBitMap() {
 void Assembler::extractDefinitionsTableFromSymbolsTable() {
   for (auto const& pair : _definitionsTable) {
     auto keyFromDefsTable = pair.first;
-    bool foundInST = _symbolsTable.find(keyFromDefsTable) != _symbolsTable.end();
-    if (!foundInST) {
-      std::cout << "!!! não encontrado em TS: " << keyFromDefsTable << std::endl;
-    }
+    // bool foundInST = _symbolsTable.find(keyFromDefsTable) != _symbolsTable.end();
+    // if (!foundInST) {
+    //   std::cout << "!!! não encontrado em TS: " << keyFromDefsTable << std::endl;
+    // }
     _definitionsTable[keyFromDefsTable] = _symbolsTable[keyFromDefsTable];
   }
 }
