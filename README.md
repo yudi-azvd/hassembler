@@ -10,44 +10,40 @@ Baixe esse repositório por esse [link](https://github.com/yudi-azvd/hassembler)
 clicando no botão verde. Ou baixe pela linha de comando e entre no repositório 
 baixado.
 
-```sh
-# baixar
-git clone https://github.com/yudi-azvd/hassembler
+    git clone https://github.com/yudi-azvd/hassembler
 
-# entrar
-cd hassembler
-```
+    cd hassembler
+
 
 ## Usar e executar
-Para compilar o projeto é necessário ter o [Make](https://www.gnu.org/software/make/) 
+Para compilar o projeto é necessário ter o 
+[Make](https://www.gnu.org/software/make/) 
 instalado em seu computador. Foi usado **g++ 7.5.0** com **Ubuntu 18.04**.
 
-Para compilar o **`montador`** e o **`simulador`**:
+Para compilar o **montador**, o **ligador** e o **simulador**:
 
-```sh
-make
+    make
 
-# monte com:
-./montador <caminho-relativo-do-seu-arquivo.asm>
+Para usar o programas:
 
-# exemplo
-./montador asm_files/fatorial.asm
-```
+    ./montador asm_files/main.asm asm_files/mul_div.asm asm_files/soma_sub.asm
+    
+    ./ligador main.obj mul_div.obj soma_sub.obj
 
-Se tudo deu certo executando o comando do exemplo anterior,
- o arquivo `fatorial.obj` está no diretório raíz do projeto.
+    ./simulador a.out
 
-```sh
-./simulador fatorial.obj
-```
 
-Para compilar um dos dois individualmente:
+Para compilar qualquer um dos três individualmente:
 
-```sh
-make assembler
-# ou
-make simulator
-```
+    make assembler
+
+    make linker
+
+    make simulator
+
+Para limpar o diretório:
+
+    make clean
 
 ---
 
@@ -55,6 +51,4 @@ make simulator
 Pra quem tiver interesse e quiser ver os testes, eles também podem ser 
 compilados com:
 
-```sh
-make utests
-```
+    make utests

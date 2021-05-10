@@ -1,5 +1,6 @@
 
 EXEC_ASSEMBLER ?= montador
+EXEC_LINKER ?= ligador
 EXEC_SIMULATOR ?= simulador
 
 EXEC_TESTS ?= utests
@@ -15,6 +16,10 @@ MAIN_ASSEMBLER := $(SRC_DIR)/$(EXEC_ASSEMBLER)/$(EXEC_ASSEMBLER).cpp
 SRCS_ASSEMBLER := $(wildcard $(SRC_DIR)/$(EXEC_ASSEMBLER)/*.cpp)
 OBJS_ASSEMBLER := $(SRCS_ASSEMBLER:%=$(BUILD_DIR)/m/%.o) # REPARE O 'm' !!!
 
+MAIN_LINKER := $(SRC_DIR)/$(EXEC_LINKER)/$(EXEC_LINKER).cpp
+SRCS_LINKER := $(wildcard $(SRC_DIR)/$(EXEC_LINKER)/*.cpp)
+OBJS_LINKER := $(SRCS_LINKER:%=$(BUILD_DIR)/l/%.o) # REPARE O 'l' !!!
+
 MAIN_SIMULATOR := $(SRC_DIR)/$(EXEC_SIMULATOR)/$(EXEC_SIMULATOR).cpp
 SRCS_SIMULATOR := $(wildcard $(SRC_DIR)/$(EXEC_SIMULATOR)/*.cpp)
 OBJS_SIMULATOR := $(SRCS_SIMULATOR:%=$(BUILD_DIR)/s/%.o) # REPARE O 's' !!!
@@ -24,7 +29,7 @@ TEST_SRCS := $(wildcard tests/*.test.cpp) $(wildcard tests/**/*.test.cpp)
 TEST_OBJS := $(filter-out build/m/src/$(EXEC_ASSEMBLER)/$(EXEC_ASSEMBLER).cpp.o, $(OBJS_ASSEMBLER)) \
 						 $(TEST_SRCS:%=$(BUILD_DIR)/%.o)
 
-all: assembler simulator
+all: assembler simulator linker
 
 everything: all utests
 
@@ -44,6 +49,25 @@ $(BUILD_DIR)/$(EXEC_ASSEMBLER): $(OBJS_ASSEMBLER) $(MAIN_ASSEMBLER)
 $(BUILD_DIR)/m/%.cpp.o: %.cpp
 	@echo ">> assembler: Building source file: $<"
 	@echo " > assembler: Output file: $@\n"
+	@$(MKDIR_P) $(dir $@)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+
+####################################
+# Executável LIGADOR               #
+####################################
+linker: $(BUILD_DIR)/$(EXEC_LINKER) 
+	@echo " > linker: Done $@ => $<"
+	@cp $< $(EXEC_LINKER)
+	@echo " ------------------------"
+
+$(BUILD_DIR)/$(EXEC_LINKER): $(OBJS_LINKER) $(MAIN_LINKER)
+	@echo ">> linker: Building executable"
+	@$(CXX) $(CXXFLAGS) $(OBJS_LINKER) -o $@
+
+$(BUILD_DIR)/l/%.cpp.o: %.cpp
+	@echo ">> linker: Building source file: $<"
+	@echo " > linker: Output file: $@\n"
 	@$(MKDIR_P) $(dir $@)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -88,6 +112,9 @@ $(BUILD_DIR)/%.test.cpp.o: %.test.cpp
 .PHONY: clean test main
 
 clean:
-	rm -fr $(BUILD_DIR)/* $(EXEC_ASSEMBLER) $(EXEC_SIMULATOR) $(EXEC_TESTS)
+	rm -fr $(BUILD_DIR)/* $(EXEC_ASSEMBLER) $(EXEC_LINKER) $(EXEC_SIMULATOR) $(EXEC_TESTS)
+
+remove:
+	rm *.o*
 
 MKDIR_P ?= mkdir -p

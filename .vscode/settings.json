@@ -22,6 +22,7 @@
     "Build utests": [ // Nome da tarefa a ser desencadeada
       "src/montador/!montador.cpp",
       "src/montador/*.cpp",
+      "src/ligador/*.cpp",
       "tests/*.cpp",
       "tests/**/*.cpp",
     ],
