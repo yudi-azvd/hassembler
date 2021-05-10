@@ -9,6 +9,8 @@ build/**
 
 montador
 !montador/
+ligador
+!ligador/
 simulador
 !simulador/
 

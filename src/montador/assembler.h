@@ -112,6 +112,8 @@ public:
   
   void generateSimpleOutput(std::string filename);
 
+  void outputErrors();
+
   void outputData();
 
   std::vector<std::string> parseLine(std::string line);

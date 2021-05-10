@@ -1,3 +1,6 @@
+; Imprime o proximo numero da sequencia de fibonacci 
+; maior que o numero em INPUT
+
 SECTION data
 ZERO:   CONST 0            ; 33
 ONE:    CONST 1            ; 34
@@ -20,5 +23,5 @@ FRONT:  LOAD OLDER         ; 10
         COPY OLD,OLDER     ; 22
         COPY NEW,OLD       ; 25
         JMP FRONT          ; 28
-FINAL:  OUTPUT LIMIT       ; 30
+FINAL:  OUTPUT new         ; 30
         STOP               ; 32

@@ -145,6 +145,11 @@ void Assembler::assemble() {
 
   checkIfAllFilesHaveModules();
 
+  if (_errors.size() > 0) {
+    outputErrors();
+    return;
+  }
+
   bool thereAreMultipleFiles = _filenames.size() > 1;
   if (thereAreMultipleFiles) {
     generateMultipleOutputs();
@@ -212,6 +217,8 @@ void Assembler::runZerothPass2(int fileContentCounter) {
     lineHasPublic = findInVector(lowerCasedTokens, "public");
     lineHasBegin = findInVector(lowerCasedTokens, "begin");
     lineHasEnd = findInVector(lowerCasedTokens, "end");
+    bool singleFileWithModule = (_filenames.size() == 1) 
+      && (lineHasBegin || lineHasEnd);
 
     // assumindo que apenas uma delas é verdadeira em uma linha
     if (lineHasExtern) {
@@ -226,11 +233,12 @@ void Assembler::runZerothPass2(int fileContentCounter) {
     }
     else if (lineHasBegin) {
       _modulename = _tokens[0];
-      bool singleFileWithModule = (_filenames.size() == 1) && lineHasBegin;
       if (singleFileWithModule)
-        _errors.push_back("Não é permitido o uso de BEGIN e END com arquivo único.");
+        _errors.push_back("Não é permitido o uso de BEGIN com arquivo único.");
     }
     else if (lineHasEnd) {
+      if (singleFileWithModule)
+        _errors.push_back("Não é permitido o uso de END com arquivo único.");
       // checar se pode ter begin/end; lançar exceção
       // precisa fazer algo?
       _filesContents[fileContentCounter][lineCounter-1].insert(0, 1, ';');
@@ -680,13 +688,6 @@ std::vector<std::string> Assembler::findOperands(int labelPosition, int operatio
 
 
 void Assembler::generateMultipleOutputs() {
-  if (_errors.size() > 0) {
-    for (auto err : _errors) {
-      std::cout << err << std::endl;
-    }
-    return;
-  }
-
   int counter = 0;
   for (auto filename : _filenames) {
     generateOutputForLinker(counter, filename);
@@ -805,6 +806,16 @@ void Assembler::generateOutputForLinker(int counter, std::string filename) {
 }
 
 
+void Assembler::outputErrors() {
+  if (_errors.size() > 0) {
+    for (auto err : _errors) {
+      std::cout << err << std::endl;
+    }
+    return;
+  }
+}
+
+
 void Assembler::outputData() {
   for (size_t i = 0; i < _filenames.size(); i++) {
     std::cout << "\n### " << _filenames[i] << " ####"<< std::endl;
@@ -873,7 +884,7 @@ std::string Assembler::findNextTokenStartingFrom(
   for (i = start; i < line.length(); i++) {
     c = line[i];
     isCommentDelimiter = c == ';';
-    isWhitespace = (c == ' ' || c == '\t');
+    isWhitespace = (c == ' ' || c == '\t' || c == '\r');
     isTokenDelimiter = c == ':' || c == ',';
 
     if (isCommentDelimiter) {
