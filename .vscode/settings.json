@@ -28,13 +28,16 @@
     ],
     "Build assembler": [
       "src/montador/*.cpp",
-      "include/assembler.h",
       "src/utl.cpp",
       "include/util.h",
     ],
+    "Build linker": [
+      "src/ligador/*.cpp",
+      "src/ligador/*.hpp",
+      "src/utl.cpp",
+    ],
     "Build simulator": [
       "src/simulador/*.cpp",
-      "include/simulador.h",
     ],
   },
   "clang.completion.enable": true,

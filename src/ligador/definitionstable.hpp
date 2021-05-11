@@ -1,0 +1,8 @@
+#ifndef DEFINITIONSTABLE_H_INCLUDED
+#define DEFINITIONSTABLE_H_INCLUDED
+
+class DefinitionsTable {
+  
+};
+
+#endif // DEFINITIONSTABLE_H_INCLUDED

@@ -5,7 +5,7 @@
 #include "../../src/ligador/linker.hpp"
 
 TEST_CASE("basic linker") {
-  Linker linker("yudi");
+  Linker linker({"yudi"});
 
   CHECK_EQ(1, 1);
 }

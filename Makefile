@@ -27,6 +27,7 @@ OBJS_SIMULATOR := $(SRCS_SIMULATOR:%=$(BUILD_DIR)/s/%.o) # REPARE O 's' !!!
 # Existe alguma maneira mais concisa de fazer o que está na linha debaixo?
 TEST_SRCS := $(wildcard tests/*.test.cpp) $(wildcard tests/**/*.test.cpp)
 TEST_OBJS := $(filter-out build/m/src/$(EXEC_ASSEMBLER)/$(EXEC_ASSEMBLER).cpp.o, $(OBJS_ASSEMBLER)) \
+						 $(filter-out build/l/src/$(EXEC_LINKER)/$(EXEC_LINKER).cpp.o, $(OBJS_LINKER)) \
 						 $(TEST_SRCS:%=$(BUILD_DIR)/%.o)
 
 all: assembler simulator linker

@@ -49,6 +49,18 @@
       "problemMatcher": []
     },
     {
+      "label": "Build linker",
+      "type": "shell",
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "command": "make linker",
+      "problemMatcher": []
+    },
+    {
       "label": "Build simulator",
       "type": "shell",
       "presentation": {
