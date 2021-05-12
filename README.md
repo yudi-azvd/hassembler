@@ -2,9 +2,6 @@
 Montador e ligador desenvolvidos por Yudi Yamane (16/0149410) para o trabalho 2
 da disciplina de Software Básico.
 
-## Funcionamento
-Para entender melhor como eles funcionam leia sobre isso [aqui](./explicação.md).
-
 ## Baixar
 Baixe esse repositório por esse [link](https://github.com/yudi-azvd/hassembler) 
 clicando no botão verde. Ou baixe pela linha de comando e entre no repositório 

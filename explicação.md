@@ -1,3 +1,0 @@
-# Montador
-
-# Ligador
