@@ -8,14 +8,8 @@ Linker::Linker(std::vector<std::string> fns) {
 void Linker::link() {
   getFilesContents();
 
-  // Talvez valha mais à pena alinhar/fundir os objectCodes no final
-  // finalObjectCode = alignObjectCodes(objectCodes);
   correctionFactorTable = createCorrectionFactorTable(objectCodes);
   globalDefinitionsTable = createGlobalDefinitionsTable(definitionsTables);
-
-  // std::cout << globalDefinitionsTable << std::endl;
-
-  // std::cout << definitionsTables[moduleIndex] << std::endl;
 
   int moduleCounter = 0;
   for (auto objectCode : objectCodes) {
@@ -28,9 +22,6 @@ void Linker::link() {
 
   finalObjectCode = alignObjectCodes(objectCodes);
 
-  // std::cout <<  << std::endl;
-
-  // std::cout << definitionsTables[moduleIndex] << std::endl;
   // printData();
   if (errors.size() > 0) {
     std::cout << ns_linker::vectorToString(errors) << std::endl;
