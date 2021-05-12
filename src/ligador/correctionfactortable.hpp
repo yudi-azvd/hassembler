@@ -9,6 +9,8 @@ class CorrectionFactorTable {
 public:
   CorrectionFactorTable() {}
 
+  ~CorrectionFactorTable() {}
+
   void add(std::string name, int size);
 
   int getSizeOf(std::string name);
@@ -16,6 +18,10 @@ public:
   std::string toString();
 
 private:
+  int lastSize = 0;
+  
+  int accumulator = 0;
+
   std::vector<std::pair<std::string, int>> table;
 };
 

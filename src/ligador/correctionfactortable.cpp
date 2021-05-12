@@ -1,8 +1,9 @@
 #include "correctionfactortable.hpp"
 
 void CorrectionFactorTable::add(std::string name, int size) {
-  int lastSize = table.empty() ? 0 : table.back().second;
-  table.push_back(std::make_pair(name, lastSize+size));
+  table.push_back(std::make_pair(name, accumulator));
+  lastSize = size;
+  accumulator += lastSize;
 }
 
 

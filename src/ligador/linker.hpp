@@ -3,9 +3,14 @@
 
 #include <iostream>
 #include <vector>
+#include <sstream>
+#include <fstream>
+#include <sstream>
 
 #include "correctionfactortable.hpp"
 #include "definitionstable.hpp"
+#include "usagetable.hpp"
+#include "utilforlinker.h"
 
 class Linker {
 public:
@@ -21,34 +26,57 @@ public:
 
   DefinitionsTable createGlobalDefinitionsTable(std::vector<DefinitionsTable> definitionsTables);
 
-  void adjustUsageTable(/* globalDefinitionsTable */);
+  void adjustGlobalDefinitionsTable();
 
-  void adjustAddressesInObjectCode(/* correctionFactor */);
+  void adjustUsagesInObjectCodeWithGlobalDefinitionsTable(int moduleCounter);
 
-  void adjustRelativeAddresses(/* correctionFactor */);
+  void adjustAddressesInObjectCode(int moduleCounter);
+
+  void adjustRelativeAddressesInObjectCode(int moduleCounter);
 
   std::vector<int> getFinalObjectCode();
 
 private:
+  void getFilesContents();
 
-  void readFile(std::string filename);
+  // Acrescenta um fileContent em filesContents
+  void readFileContent(std::string filename);
+  
+  void extractModulename();
+
+  void extractRelocationInformation();
+  
+  void extractUsageTable();
+  
+  void extractDefinitionsTable();
+
+  void extractObjectCode();
 
   void generateOutput();
 
+  void printData();
+
   std::vector<std::string> filenames;
+  
+  std::vector<std::vector<std::string>> filesContents;
 
   std::vector<std::string> modulesnames;
 
   CorrectionFactorTable correctionFactorTable;
 
   std::vector<DefinitionsTable> definitionsTables;
+  
+  std::vector<UsageTable> usageTables;
 
   DefinitionsTable globalDefinitionsTable;
+
+  std::vector<std::vector<int>> relocations;
 
   std::vector<int> finalObjectCode;
 
   std::vector<std::vector<int>> objectCodes;
 
+  std::vector<std::string> errors;
 };
 
 #endif // LINKER_H_INCLUDED

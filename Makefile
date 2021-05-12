@@ -23,7 +23,6 @@ OBJS_LINKER := $(SRCS_LINKER:%=$(BUILD_DIR)/l/%.o) # REPARE O 'l' !!!
 MAIN_SIMULATOR := $(SRC_DIR)/$(EXEC_SIMULATOR)/$(EXEC_SIMULATOR).cpp
 SRCS_SIMULATOR := $(wildcard $(SRC_DIR)/$(EXEC_SIMULATOR)/*.cpp)
 OBJS_SIMULATOR := $(SRCS_SIMULATOR:%=$(BUILD_DIR)/s/%.o) # REPARE O 's' !!!
-
 # Existe alguma maneira mais concisa de fazer o que está na linha debaixo?
 TEST_SRCS := $(wildcard tests/*.test.cpp) $(wildcard tests/**/*.test.cpp)
 TEST_OBJS := $(filter-out build/m/src/$(EXEC_ASSEMBLER)/$(EXEC_ASSEMBLER).cpp.o, $(OBJS_ASSEMBLER)) \
@@ -62,7 +61,7 @@ linker: $(BUILD_DIR)/$(EXEC_LINKER)
 	@cp $< $(EXEC_LINKER)
 	@echo " ------------------------"
 
-$(BUILD_DIR)/$(EXEC_LINKER): $(OBJS_LINKER) $(MAIN_LINKER)
+$(BUILD_DIR)/$(EXEC_LINKER): $(OBJS_LINKER) $(MAIN_LINKER) $(BUILD_DIR)/m/$(SRC_DIR)/$(EXEC_ASSEMBLER)/util.cpp.o
 	@echo ">> linker: Building executable"
 	@$(CXX) $(CXXFLAGS) $(OBJS_LINKER) -o $@
 

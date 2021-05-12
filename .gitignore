@@ -3,6 +3,7 @@ build/**
 .vscode/*.log
 
 *.o
+*.out
 /*.out
 /*.obj
 /*.asm
