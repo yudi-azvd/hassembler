@@ -106,10 +106,11 @@ public:
 
   std::vector<std::string> findOperands(int labelPosition, int operationPosition);
   
-  void generateMultipleOutputs();
+  void generateOutput();
   
   void generateOutputForLinker(int counter, std::string filename);
   
+  // Não é usado atualmente.
   void generateSimpleOutput(std::string filename);
 
   void outputErrors();

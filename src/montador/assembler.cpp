@@ -150,14 +150,7 @@ void Assembler::assemble() {
     return;
   }
 
-  bool thereAreMultipleFiles = _filenames.size() > 1;
-  if (thereAreMultipleFiles) {
-    generateMultipleOutputs();
-  }
-  else {
-    // Só tem um arquivo, então ele deve ser o primeiro.
-    generateSimpleOutput(_filenames[0]);
-  }
+  generateOutput();
 
   // outputData();
 }
@@ -687,7 +680,7 @@ std::vector<std::string> Assembler::findOperands(int labelPosition, int operatio
 }
 
 
-void Assembler::generateMultipleOutputs() {
+void Assembler::generateOutput() {
   int counter = 0;
   for (auto filename : _filenames) {
     generateOutputForLinker(counter, filename);
@@ -696,46 +689,46 @@ void Assembler::generateMultipleOutputs() {
 }
 
 
-void Assembler::generateSimpleOutput(std::string filename) {
-  std::string finalString = "", outFilename = "";
-  std::stringstream ss;
+// void Assembler::generateSimpleOutput(std::string filename) {
+//   std::string finalString = "", outFilename = "";
+//   std::stringstream ss;
 
-  // o nome do arquivo está entre '/' e '.'
-  bool insertMode = false;
-  for (int i = filename.size() - 1; i >= 0; --i) {
-    if (insertMode) {
-      outFilename.insert(0, 1,  filename[i]);
-    }
+//   // o nome do arquivo está entre '/' e '.'
+//   bool insertMode = false;
+//   for (int i = filename.size() - 1; i >= 0; --i) {
+//     if (insertMode) {
+//       outFilename.insert(0, 1,  filename[i]);
+//     }
 
-    if (filename[i] == '/') {
-      break;
-    }
+//     if (filename[i] == '/') {
+//       break;
+//     }
 
-    if (filename[i] == '.') {
-      insertMode = true;
-      continue;
-    }
-  }
+//     if (filename[i] == '.') {
+//       insertMode = true;
+//       continue;
+//     }
+//   }
 
-  if (outFilename[0] != '/') { 
-    outFilename.insert(0, 1, '/'); // "nome" => "/nome"
-  }
+//   if (outFilename[0] != '/') { 
+//     outFilename.insert(0, 1, '/'); // "nome" => "/nome"
+//   }
 
-  outFilename.insert(0, "."); // "/nome" => "./nome"
-  outFilename.append(".obj"); // "./nome.obj"
+//   outFilename.insert(0, "."); // "/nome" => "./nome"
+//   outFilename.append(".obj"); // "./nome.obj"
 
-  std::fstream outputFile;
-  outputFile.open(outFilename, std::ios::out);
+//   std::fstream outputFile;
+//   outputFile.open(outFilename, std::ios::out);
 
-  // Só tem um arquivo, então ele deve ser o primeiro.
-  _objectCode = _objectCodes[0];
-  for (auto n : _objectCode) {
-    ss << n << " ";
-  }
+//   // Só tem um arquivo, então ele deve ser o primeiro.
+//   _objectCode = _objectCodes[0];
+//   for (auto n : _objectCode) {
+//     ss << n << " ";
+//   }
   
-  outputFile << ss.str();
-  outputFile.close();
-}
+//   outputFile << ss.str();
+//   outputFile.close();
+// }
 
 
 
