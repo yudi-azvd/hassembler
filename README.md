@@ -24,13 +24,26 @@ Para compilar o **montador**, o **ligador** e o **simulador**:
 
     make
 
+
 Para usar o programas:
 
     ./montador asm_files/main.asm asm_files/mul_div.asm asm_files/soma_sub.asm
     
     ./ligador main.obj mul_div.obj soma_sub.obj
 
-    ./simulador a.out
+    ./simulador main_ligado.obj
+
+
+Por padrão, o nome do arquivo de saída do **ligador** é igual ao o nome do 
+primeiro arquivo usado como argumento acrescido de `_ligado` antes da extensão
+`.obj`. De maneira geral, `<nome>.obj` => `<nome>_ligado.obj`. Exemplos:
+
+    ./ligador arq.obj arq2.obj arq3.obj
+    ./ligador arq_ligado.obj
+
+    ./ligador arquivo.obj
+    ./simulador arquivo_ligado.obj
+
 
 
 Para compilar qualquer um dos três individualmente:
