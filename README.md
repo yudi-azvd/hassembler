@@ -1,6 +1,10 @@
-# Software Básico: Montador e Ligador
-Montador e ligador desenvolvidos por Yudi Yamane (16/0149410) para o trabalho 2
-da disciplina de Software Básico.
+# Hassembler
+Montador e ligador para um Assembly hipotético. 
+
+
+[Diagrama](https://app.diagrams.net/#G16oGpIRZghYMjgEKRxyjuXornyU8yxIrf) onde eu
+ rascunho algumas ideias.
+
 
 ## Baixar
 Baixe esse repositório por esse [link](https://github.com/yudi-azvd/hassembler) 

@@ -14,7 +14,6 @@ void Linker::link() {
   int moduleCounter = 0;
   for (auto objectCode : objectCodes) {
     adjustUsagesInObjectCodeWithGlobalDefinitionsTable(moduleCounter);
-    // adjustAddressesInObjectCode(moduleCounter);
     adjustRelativeAddressesInObjectCode(moduleCounter);
 
     moduleCounter++;
