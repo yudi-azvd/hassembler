@@ -15,16 +15,29 @@ endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -ansi -pedantic -std=c++11")
 
-include_directories(
-  src
-  lib
+add_subdirectory(src/assembler)
+add_subdirectory(src/linker)
+
+
+add_executable(hasm "src/main.cpp")
+target_link_libraries(hasm PRIVATE Assembler)
+target_link_libraries(hasm PRIVATE Linker)
+target_include_directories(
+  hasm PRIVATE
+  "${PROJECT_BINARY_DIR}"
+  "${PROJECT_SOURCE_DIR}/src/assembler"
+  "${PROJECT_SOURCE_DIR}/src/linker"
 )
 
-file(GLOB srcs_assembler "src/assembler/*.cpp")
-file(GLOB srcs_linker "src/linker/*.cpp")
-add_executable(hasm "src/main.cpp" ${srcs_assembler})
 
-file(GLOB srcs_utests "src/assembler/_tests/*.ut.cpp" "src/linker/_tests/*.ut.cpp")
-add_executable(utests ${srcs_assembler} ${srcs_linker} ${srcs_utests} "src/main.ut.cpp")
-
-
+# Usando file GLOB: não tão moderno assim
+file(GLOB srcs_utests "src/**/_tests/*.ut.cpp")
+add_executable(utests "src/main.ut.cpp" ${srcs_utests})
+target_link_libraries(utests PRIVATE Assembler)
+target_link_libraries(utests PRIVATE Linker)
+target_include_directories(
+  utests PRIVATE
+  "${PROJECT_BINARY_DIR}"
+  "${PROJECT_SOURCE_DIR}/src"
+  "${PROJECT_SOURCE_DIR}/lib"
+)
