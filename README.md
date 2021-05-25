@@ -67,9 +67,27 @@ testes são indicados com uma sub extensão:
 
 
 ## Aleatórios
+### Automatização no Visual Studio Code
+Com ajuda de algumas extensões, você pode automatizar algumas tarefas repetivas
+no VSCOde. Em `.vscode/tasks.json` e `.vscode/settings.json`, estão algumas 
+configurações para a automação. Salvando os arquivos corretos, as tarefas
+"Build hasm" e "Build utests" são executadas automaticamente. Pra isso funcionar
+você precisa da extensão 
+[Trigger Task on Save](https://marketplace.visualstudio.com/items?itemName=Gruntfuggly.triggertaskonsave).
+
+Além disso, você pode habilitar a opção "Enable autorun" para execução 
+automática dos testes assim que eles forem compilados. 
+
+![img](https://github.com/matepek/vscode-catch2-test-adapter/raw/HEAD/resources/Screenshot_2019-05-29.png)
+
+Para isso funcionar, você precisa das extensões 
+[Test Explorer UI](https://marketplace.visualstudio.com/items?itemName=hbenl.vscode-test-explorer) e 
+[TestMate](https://marketplace.visualstudio.com/items?itemName=matepek.vscode-catch2-test-adapter).
+
+
 ### Trabalhos originais
 Para os curiosos, os trabalhos originais entregues na displina de Software 
-básico podem ser contemplados nesses links:
+Básico podem ser contemplados nesses links:
 
 - [Trabalho 1](https://github.com/yudi-azvd/hassembler/tree/sb-trabalho-1):
 montador e simulador
