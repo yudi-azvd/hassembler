@@ -2,9 +2,9 @@
 #include <vector>
 #include <map>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/montador/assembler.h"
-#include "../../src/montador/util.h"
+#include "doctest/doctest.h"
+#include "assembler/assembler.h"
+#include "assembler/util.h"
 
 
 TEST_CASE("sum of two numbers") {

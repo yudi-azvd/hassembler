@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/montador/util.h"
+#include "doctest/doctest.h"
+#include "assembler/util.h"
 
 TEST_CASE("should find in vector") {
   std::vector<std::string> strs = {

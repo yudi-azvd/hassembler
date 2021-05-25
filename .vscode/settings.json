@@ -1,5 +1,4 @@
 {
-  "makefile.extensionOutputFolder": "./.vscode",
   "testMate.cpp.test.advancedExecutables": [
     {
       // https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md#testgrouping
@@ -10,39 +9,16 @@
             "label": "${filename}",
             "description": "${relDirpath}/",
             "groupBySource": {
-              "label": "${sourceRelPath[2]}"
+              "label": "${sourceRelPath[1]}",
+              "groupBySource": {
+                "label": "${sourceRelPath}",
+              }
             }
           },
         }
       },
     }
   ],
-  "triggerTaskOnSave.on": true,
-  "triggerTaskOnSave.tasks": {
-    "Build utests": [ // Nome da tarefa a ser desencadeada
-      "src/montador/!montador.cpp",
-      "src/montador/*.cpp",
-      "src/ligador/*.cpp",
-      "tests/*.cpp",
-      "tests/**/*.cpp",
-    ],
-    "Build assembler": [
-      "src/montador/*.cpp",
-      "src/utl.cpp",
-      "include/util.h",
-    ],
-    "Build linker": [
-      "src/ligador/*.cpp",
-      "src/ligador/*.hpp",
-      "src/utl.cpp",
-    ],
-    "Build simulator": [
-      "src/simulador/*.cpp",
-    ],
-  },
-  "clang.completion.enable": true,
-  "clang.diagnostic.enable": true,
-  "clang.cxxflags": ["-pedantic", "-Wall"],
   "files.associations": {
     ".sequelizerc": "javascript",
     ".prettierrc": "json",
@@ -101,9 +77,4 @@
     "set": "cpp",
     "string": "cpp"
   },
-  "cSpell.language": "en,pt,pt-BR",
-  "cSpell.words": [
-    "hasm",
-    "hassembler"
-  ],
 }

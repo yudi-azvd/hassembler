@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/ligador/usagetable.hpp"
+#include "doctest/doctest.h"
+#include "linker/usagetable.hpp"
 
 TEST_CASE("basic usage table - has") {
   UsageTable table;

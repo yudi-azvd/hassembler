@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/montador/assembler.h"
-#include "../../src/montador/util.h"
+#include "doctest/doctest.h"
+#include "assembler/assembler.h"
+#include "assembler/util.h"
 
 TEST_CASE("rsp print number") {
   std::vector<std::string> sourceFileContent = {

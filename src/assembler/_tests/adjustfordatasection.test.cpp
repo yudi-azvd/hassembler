@@ -1,9 +1,9 @@
 // #include <iostream>
 // #include <vector>
 
-// #include "../../lib/doctest/doctest.h"
-// #include "../../src/montador/assembler.h"
-// #include "../../src/montador/util.h"
+// #include "doctest/doctest.h"
+// #include "assembler/assembler.h"
+// #include "assembler/util.h"
 
 // TEST_CASE("adjust data section") {
 //   std::map<std::string, int> symbolTable = {
@@ -25,7 +25,7 @@
 //   int offset = 8;
 
 //   as.setSymbolTable(symbolTable);
-//   as.adjustForDataSection();
+//   as.adjustInternalSymbolsTable();
 
 //   std::map<std::string, int> gotSymbolTable = as.symbolTable();
 

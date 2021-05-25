@@ -1,11 +1,11 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/ligador/linker.hpp"
-#include "../../src/ligador/correctionfactortable.hpp"
+#include "doctest/doctest.h"
+#include "linker/linker.hpp"
+#include "linker/correctionfactortable.hpp"
 
-#include "../../src/montador/util.h"
+#include "assembler/util.h"
 
 TEST_CASE("basic code alignment") {
   CorrectionFactorTable table;

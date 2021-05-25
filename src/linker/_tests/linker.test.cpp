@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/ligador/linker.hpp"
+#include "doctest/doctest.h"
+#include "linker/linker.hpp"
 
 TEST_CASE("basic linker") {
   Linker linker({"yudi"});

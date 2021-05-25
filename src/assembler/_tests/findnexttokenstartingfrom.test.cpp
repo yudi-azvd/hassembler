@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/montador/errors.h"
-#include "../../src/montador/assembler.h"
+#include "doctest/doctest.h"
+#include "assembler/errors.h"
+#include "assembler/assembler.h"
 
 
 TEST_CASE("basic cases") {

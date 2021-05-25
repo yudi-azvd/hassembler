@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "assembler.h"
+#include "assembler/assembler.h"
 
 
 void showCorrectUsage();
@@ -10,7 +10,7 @@ int main(int commandlineCount, char* commandlineArguments[]) {
   std::vector<std::string> filenames;
 
   bool correctCommandlineArgumentsCount = 
-    1 <= commandlineCount && commandlineCount <= 4;
+    2 <= commandlineCount && commandlineCount <= 4;
   if (!correctCommandlineArgumentsCount) {
     showCorrectUsage();
     return 1;

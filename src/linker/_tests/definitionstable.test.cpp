@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/ligador/definitionstable.hpp"
+#include "doctest/doctest.h"
+#include "linker/definitionstable.hpp"
 
 TEST_CASE("basic definitions table - addition and has") {
   DefinitionsTable table;

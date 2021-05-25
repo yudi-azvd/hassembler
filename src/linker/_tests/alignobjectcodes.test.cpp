@@ -1,9 +1,9 @@
 #include <iostream>
 #include <vector>
 
-#include "../../lib/doctest/doctest.h"
-#include "../../src/ligador/linker.hpp"
-#include "../../src/montador/util.h"
+#include "doctest/doctest.h"
+#include "linker/linker.hpp"
+#include "assembler/util.h"
 
 TEST_CASE("basic object code alignment") {
   std::vector<int> gotFinalObjectCode;

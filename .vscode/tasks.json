@@ -3,9 +3,11 @@
     {
       "type": "cppbuild",
       "label": "C/C++: clang++ build active file",
-      "command": "/usr/bin/clang++",
+      "command": "/usr/bin/clang",
       "args": [
         "-g",
+        "-Wall",
+        // "-std=c++11",
         "${file}",
         "-o",
         "${fileDirname}/${fileBasenameNoExtension}"
@@ -37,7 +39,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Build assembler",
+      "label": "Build hasm",
       "type": "shell",
       "presentation": {
         "echo": false,
@@ -45,31 +47,7 @@
         "panel": "dedicated",
         "clear": true
       },
-      "command": "make assembler",
-      "problemMatcher": []
-    },
-    {
-      "label": "Build linker",
-      "type": "shell",
-      "presentation": {
-        "echo": false,
-        "reveal": "silent",
-        "panel": "dedicated",
-        "clear": true
-      },
-      "command": "make linker",
-      "problemMatcher": []
-    },
-    {
-      "label": "Build simulator",
-      "type": "shell",
-      "presentation": {
-        "echo": false,
-        "reveal": "silent",
-        "panel": "dedicated",
-        "clear": true
-      },
-      "command": "make simulator",
+      "command": "make hasm",
       "problemMatcher": []
     },
   ],

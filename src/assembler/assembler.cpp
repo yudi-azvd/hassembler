@@ -753,6 +753,7 @@ void Assembler::generateOutputForLinker(int counter, std::string filename) {
     }
   }
 
+
   std::string pureOutFilename;
   if (outFilename[0] != '/') { 
     pureOutFilename = outFilename; // apenas "nome"
