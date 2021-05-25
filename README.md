@@ -40,7 +40,8 @@ em assembly hipotético com:
 
 O resultado deve ser um arquivo objeto `fatorial.obj` no mesmo diretório. O 
 `hasm` usa o nome do arquivo de entrada para gerar o nome do arquivo de saída 
-substituindo a extensão por `.obj`. Atualmente, os arquivos objetos sempre são criados no mesmo diretório onde o programa foi executado.
+substituindo a extensão por `.obj`. Atualmente, os arquivos objetos sempre são 
+criados no mesmo diretório onde o programa foi executado.
 
 Você ainda pode copiar esse executável para qualquer lugar do seu computaddor
 e usá-lo normalmente atentando-se somente aos caminhos dos arquivos usados como
@@ -65,7 +66,8 @@ testes são indicados com uma sub extensão:
 - Testes de ponta a ponta (end-to-end): `.e2et`
 
 
-## Trabalhos originais
+## Aleatórios
+### Trabalhos originais
 Para os curiosos, os trabalhos originais entregues na displina de Software 
 básico podem ser contemplados nesses links:
 
@@ -75,3 +77,8 @@ montador e simulador
 montador adpatado para ligação e ligador (simulador é o mesmo do Trabalho 1)
 
 [Usando o filesystem em testes](https://softwareengineering.stackexchange.com/questions/330393/reading-a-file-before-testing-a-method-it-is-an-integration-test-or-a-unit-tes).
+
+
+### Coisas aleatórias que eu aprendi
+- [Renomear mútiplos arquivos](https://stackoverflow.com/questions/15290186/find-a-pattern-in-files-and-rename-them):
+`find src/** -name '*.test.cpp' -exec bash -c 'mv $0 ${0/.test./.ut.}' {} \;`

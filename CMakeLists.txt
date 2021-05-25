@@ -24,7 +24,7 @@ file(GLOB srcs_assembler "src/assembler/*.cpp")
 file(GLOB srcs_linker "src/linker/*.cpp")
 add_executable(hasm "src/main.cpp" ${srcs_assembler})
 
-file(GLOB srcs_utests "src/assembler/_tests/*.test.cpp" "src/linker/_tests/*.test.cpp")
-add_executable(utests ${srcs_assembler} ${srcs_linker} ${srcs_utests} "src/main.test.cpp")
+file(GLOB srcs_utests "src/assembler/_tests/*.ut.cpp" "src/linker/_tests/*.ut.cpp")
+add_executable(utests ${srcs_assembler} ${srcs_linker} ${srcs_utests} "src/main.ut.cpp")
 
 
