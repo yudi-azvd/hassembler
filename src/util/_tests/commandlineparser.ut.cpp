@@ -2,19 +2,20 @@
 
 #include "doctest/doctest.h"
 #include "util/commandlineparser.h"
+#include "util/assemblyoptions.h"
 
 
-TEST_CASE("command line parser") {
+TEST_CASE("command line parser get correct file names") {
+  int argc = 3;
   const char* argv[] = {"./hasm", "a.asm", "b.asm"};
 
-  CommandLineParser parser(argv);
+  CommandLineParser parser(argc, argv);
 
-  parser.getFilesNames();
+  AssemblyOptions asmOptions = parser.getAssemblyOptions();
 
-  CHECK_FALSE(parser.getCompileOnly());
-  parser.getCompileOnly();
+  std::vector<std::string> expectedFileNames = {"a.asm", "b.asm"};
 
-
+  CHECK_EQ(expectedFileNames, asmOptions.fileNames);
 }
 
 /*
