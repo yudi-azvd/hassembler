@@ -1,0 +1,8 @@
+#ifndef COMMANDLINEPARSER_H_INCLUDED
+#define COMMANDLINEPARSER_H_INCLUDED
+
+class CommandLineParser {
+  
+};
+
+#endif // COMMANDLINEPARSER_H_INCLUDED

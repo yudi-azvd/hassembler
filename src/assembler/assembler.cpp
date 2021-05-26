@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include "assembler.h"
-#include "errors.h"
 #include "util.h"
 
 Assembler::Assembler(std::vector<std::string> filenames) { 

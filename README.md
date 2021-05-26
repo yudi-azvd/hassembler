@@ -84,5 +84,5 @@ montador adpatado para ligação e ligador (simulador é o mesmo do Trabalho 1)
 
 
 ### Coisas aleatórias que eu aprendi
-- [Renomear mútiplos arquivos](https://stackoverflow.com/questions/15290186/find-a-pattern-in-files-and-rename-them):
+- [Renomear múltiplos arquivos](https://stackoverflow.com/questions/15290186/find-a-pattern-in-files-and-rename-them):
 `find src/** -name '*.test.cpp' -exec bash -c 'mv $0 ${0/.test./.ut.}' {} \;`

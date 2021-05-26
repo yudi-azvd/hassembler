@@ -22,9 +22,17 @@ include_directories(
 
 file(GLOB srcs_assembler "src/assembler/*.cpp")
 file(GLOB srcs_linker "src/linker/*.cpp")
-add_executable(hasm "src/main.cpp" ${srcs_assembler})
+file(GLOB srcs_util "src/util/*.cpp")
 
-file(GLOB srcs_utests "src/assembler/_tests/*.ut.cpp" "src/linker/_tests/*.ut.cpp")
-add_executable(utests ${srcs_assembler} ${srcs_linker} ${srcs_utests} "src/main.ut.cpp")
+add_executable(hasm "src/main.cpp" ${srcs_assembler} ${srcs_linker} ${srcs_util})
+
+file(GLOB srcs_utests "src/assembler/_tests/*.ut.cpp" "src/linker/_tests/*.ut.cpp" "src/util/_tests/*.ut.cpp")
+add_executable(utests 
+  ${srcs_assembler} 
+  ${srcs_linker} 
+  ${srcs_util} 
+  ${srcs_utests} 
+  "src/main.ut.cpp")
+# add_executable(utests ${srcs_utests} "src/main.ut.cpp")
 
 
