@@ -2,6 +2,7 @@
 #define COMMANDLINEPARSER_H_INCLUDED
 
 #include <iostream>
+#include <exception>
 
 #include "assemblyoptions.h"
 
@@ -13,10 +14,28 @@ public:
 
   ~CommandLineParser();
 
-  AssemblyOptions getAssemblyOptions();
+  AssemblyOptions run();
 
 private:
+  const std::string OUTPUT_FILE_NAME_FLAG = "-o";
+  
+  const std::string COMPILE_ONLY_FLAG = "-c";
+
+  int argumentsCount;
+
+  std::vector<std::string> arguments;
+
   AssemblyOptions assemblyOptions;
+
+  bool hasMultipleInputFiles();
+
+  void checkForOuputFileNameFlag();
+
+  void checkForCompileOnlyFlag();
+
+  void checkForMultipleFilesAndOutputFlag();
+
+  void getFileNames();
 };
 
 #endif // COMMANDLINEPARSER_H_INCLUDED

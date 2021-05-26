@@ -13,6 +13,7 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 endif()
 
 
+# set(CMAKE_CXX_FLAGS "-Wall -Wextra -ansi -pedantic -std=c++11")
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -ansi -pedantic -std=c++11")
 
 include_directories(

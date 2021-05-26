@@ -9,7 +9,7 @@ struct AssemblyOptions {
 
   std::vector<std::string> fileNames;
   
-  std::vector<std::string> outputFileNames;
+  std::string outputFileName;
 
   // ~AssemblyOptions() {}
 };
