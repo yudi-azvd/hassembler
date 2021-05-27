@@ -39,15 +39,15 @@ void CommandLineParser::getFileNames() {
 
 void CommandLineParser::checkForCompileOnlyFlag() {
   size_t i;
-  std::vector<std::string>::iterator flagIt = 
+  std::vector<std::string>::iterator it = 
     std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
 
-  bool flagNotFound = flagIt == arguments.end();
+  bool flagNotFound = it == arguments.end();
   if (flagNotFound)
     return;
 
   assemblyOptions.isCompileOnly = true;
-  arguments.erase(flagIt);
+  arguments.erase(it);
 }
 
 
