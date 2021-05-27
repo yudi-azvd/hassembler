@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "hasm/hasm.h"
-#include "util/commandlineparser.h"
+#include "hasm/commandlineparser.h"
 
 
 int main(int argc, const char* argv[]) {

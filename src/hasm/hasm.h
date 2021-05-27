@@ -5,8 +5,7 @@
 #include <vector>
 
 #include "assembler/assembler.h"
-#include "util/commandlineparser.h"
-#include "util/assemblyoptions.h"
+#include "commandlineparser.h"
 
 
 class Hasm {
@@ -20,7 +19,7 @@ public:
   void run();
 
 private:
-  AssemblyParameters parameters;
+  HasmParameters parameters;
 
   Assembler* assembler;
 };

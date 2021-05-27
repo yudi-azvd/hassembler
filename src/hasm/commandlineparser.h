@@ -5,7 +5,7 @@
 #include <exception>
 #include <algorithm>
 
-#include "assemblyoptions.h"
+#include "hasmparameters.h"
 
 class CommandLineParser {
 public:
@@ -15,18 +15,16 @@ public:
 
   ~CommandLineParser();
 
-  AssemblyParameters run();
+  HasmParameters run();
 
 private:
   const std::string OUTPUT_FILE_NAME_FLAG = "-o";
 
   const std::string COMPILE_ONLY_FLAG = "-c";
 
-  int argumentsCount;
-
   std::vector<std::string> arguments;
 
-  AssemblyParameters assemblyParameters;
+  HasmParameters assemblyParameters;
 
   bool hasMultipleInputFiles();
 

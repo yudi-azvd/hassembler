@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "doctest/doctest.h"
-#include "util/commandlineparser.h"
-#include "util/assemblyoptions.h"
+#include "hasm/commandlineparser.h"
+#include "hasm/commandlineparser.h"
 
 
 TEST_CASE("should get correct file names") {

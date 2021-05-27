@@ -17,7 +17,7 @@ CommandLineParser::CommandLineParser(int argc, const char* argv[]) {
 }
 
 
-AssemblyParameters CommandLineParser::run() {
+HasmParameters CommandLineParser::run() {
   checkForOuputFileNameFlag();
   checkForCompileOnlyFlag();
   getFileNames();
