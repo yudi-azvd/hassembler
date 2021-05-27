@@ -17,8 +17,6 @@ CommandLineParser::CommandLineParser(int argc, const char* argv[]) {
 }
 
 
-// Melhor funções menores que pegam cada interesse: arquivo de entrada,
-// arquivo de saída, etc
 AssemblyOptions CommandLineParser::run() {
   checkForOuputFileNameFlag();
   checkForCompileOnlyFlag();
@@ -30,64 +28,59 @@ AssemblyOptions CommandLineParser::run() {
 
 
 void CommandLineParser::getFileNames() {
-  std::string arg;
-  for (size_t i = 0; i < arguments.size(); ++i) {
-    arg = arguments[i];
-    assemblyOptions.fileNames.push_back(arg);
-  }
-
-  if (assemblyOptions.fileNames.size() == 0) {
+  if (arguments.size() == 0) {
     throw std::invalid_argument("Não há arquivos de entrada");
   }
 
-  assemblyOptions.fileNames.shrink_to_fit();
+  assemblyOptions.fileNames = arguments;
 }
 
 
 void CommandLineParser::checkForCompileOnlyFlag() {
+  size_t i;
   std::vector<std::string>::iterator flagPosition;
 
-  for (size_t i = 0; i < arguments.size(); ++i) {
-    if (arguments[i] != COMPILE_ONLY_FLAG)
-      continue;
-    
-    flagPosition = arguments.begin() + i;
-    assemblyOptions.isCompileOnly = true;
-    break;
-  }
+  for (i = 0; i < arguments.size(); ++i)
+    if (arguments[i] == COMPILE_ONLY_FLAG)
+      break;
+
+  bool flagFound = i < arguments.size();
+  if (!flagFound) 
+    return;
+
+  flagPosition = arguments.begin() + i;
+  assemblyOptions.isCompileOnly = true;
   
-  if (assemblyOptions.isCompileOnly)
+  if (flagFound)
     arguments.erase(flagPosition);
 }
 
 
 void CommandLineParser::checkForOuputFileNameFlag() {
-  int size = arguments.size();
+  int i, size = arguments.size();
   bool noSpaceForOutputName = false;
   std::vector<std::string>::iterator flagPosition;
   std::string arg;
   
-  for (int i = 0; i < size; ++i) {
-    arg = arguments[i];
-    if (arg != OUTPUT_FILE_NAME_FLAG) {
-      continue;
-    }
+  for (i = 0; i < size; ++i)
+    if (arguments[i] == OUTPUT_FILE_NAME_FLAG)
+      break;
+  
+  bool flagFound = i < size;
+  if (!flagFound)
+    return;
 
-    noSpaceForOutputName = i + 1 > size - 1;
-    if (noSpaceForOutputName) {
-      throw std::invalid_argument("Falta o nome do arquivo depois de '-o'");
-    }
-
-    flagPosition = arguments.begin() + i;
-    assemblyOptions.outputFileName = arguments[i+1];
-    break;
+  noSpaceForOutputName = i + 1 > size - 1;
+  if (noSpaceForOutputName) {
+    throw std::invalid_argument("Falta o nome do arquivo depois de '-o'");
   }
 
-  if (!assemblyOptions.outputFileName.empty())
+  flagPosition = arguments.begin() + i;
+  assemblyOptions.outputFileName = arguments[i+1];
+
+  if (flagFound)
     arguments.erase(flagPosition, flagPosition+2);
 }
-
-
 
 
 void CommandLineParser::checkForMultipleFilesAndOutputFlag() {
