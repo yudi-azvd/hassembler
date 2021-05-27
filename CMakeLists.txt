@@ -13,7 +13,6 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
 endif()
 
 
-# set(CMAKE_CXX_FLAGS "-Wall -Wextra -ansi -pedantic -std=c++11")
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -ansi -pedantic -std=c++11")
 
 include_directories(
@@ -32,11 +31,15 @@ add_executable(hasm "src/main.cpp"
   ${srcs_linker}
   ${srcs_util})
 
-file(GLOB srcs_utests "src/assembler/_tests/*.ut.cpp" "src/linker/_tests/*.ut.cpp" "src/util/_tests/*.ut.cpp")
+file(GLOB srcs_utests
+  "src/hasm/_tests/*.ut.cpp"
+  "src/assembler/_tests/*.ut.cpp"
+  "src/linker/_tests/*.ut.cpp"
+  "src/util/_tests/*.ut.cpp")
 add_executable(utests
+  ${srcs_hasm}
   ${srcs_assembler}
   ${srcs_linker}
   ${srcs_util}
   ${srcs_utests}
   "src/main.ut.cpp")
-# add_executable(utests ${srcs_utests} "src/main.ut.cpp")

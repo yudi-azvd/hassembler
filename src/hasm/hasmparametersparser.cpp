@@ -1,15 +1,16 @@
-#include "commandlineparser.h"
+#include "hasmparametersparser.h"
 
-CommandLineParser::CommandLineParser() {
+
+HasmParametersParser::HasmParametersParser() {
   throw std::invalid_argument("default constructor should not be used. Use "
-  "'CommandLineParser(int argc, const char* argv[])' instead");
+  "'HasmParametersParser(int argc, const char* argv[])' instead");
 }
 
 
-CommandLineParser::~CommandLineParser() {}
+HasmParametersParser::~HasmParametersParser() {}
 
 
-CommandLineParser::CommandLineParser(int argc, const char* argv[]) {
+HasmParametersParser::HasmParametersParser(int argc, const char* argv[]) {
   constexpr int executableNameOffset = 1;
   std::vector<std::string> v(argv+executableNameOffset, argv + argc);
   arguments = v;
@@ -17,7 +18,7 @@ CommandLineParser::CommandLineParser(int argc, const char* argv[]) {
 }
 
 
-HasmParameters CommandLineParser::run() {
+HasmParameters HasmParametersParser::run() {
   checkForOuputFileNameFlag();
   checkForCompileOnlyFlag();
   getFileNames();
@@ -28,7 +29,7 @@ HasmParameters CommandLineParser::run() {
 }
 
 
-void CommandLineParser::getFileNames() {
+void HasmParametersParser::getFileNames() {
   if (arguments.size() == 0) {
     throw std::invalid_argument("Não há arquivos de entrada");
   }
@@ -37,7 +38,7 @@ void CommandLineParser::getFileNames() {
 }
 
 
-void CommandLineParser::checkForCompileOnlyFlag() {
+void HasmParametersParser::checkForCompileOnlyFlag() {
   size_t i;
   std::vector<std::string>::iterator it =
     std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
@@ -51,7 +52,7 @@ void CommandLineParser::checkForCompileOnlyFlag() {
 }
 
 
-void CommandLineParser::checkForOuputFileNameFlag() {
+void HasmParametersParser::checkForOuputFileNameFlag() {
   int i, size = arguments.size();
   bool noSpaceForOutputName = false;
   std::vector<std::string>::iterator it
@@ -71,7 +72,7 @@ void CommandLineParser::checkForOuputFileNameFlag() {
 }
 
 
-void CommandLineParser::throwIfOutputNameEqualsInputName() {
+void HasmParametersParser::throwIfOutputNameEqualsInputName() {
   for (auto fileName : assemblyParameters.fileNames) {
     if (fileName == assemblyParameters.outputFileName)
       throw std::invalid_argument("Nome de saída é igual ao nome de entrada");
@@ -79,7 +80,7 @@ void CommandLineParser::throwIfOutputNameEqualsInputName() {
 }
 
 
-void CommandLineParser::throwIfThereAreMultipleFilesAndOutputFlag() {
+void HasmParametersParser::throwIfThereAreMultipleFilesAndOutputFlag() {
   bool hasOutputFileName = !assemblyParameters.outputFileName.empty();
   bool hasMultipleInputFiles = assemblyParameters.fileNames.size() > 1;
   if (hasMultipleInputFiles && hasOutputFileName) {

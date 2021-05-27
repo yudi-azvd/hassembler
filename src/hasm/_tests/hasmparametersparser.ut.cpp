@@ -1,21 +1,22 @@
 #include <iostream>
 
 #include "doctest/doctest.h"
-#include "hasm/commandlineparser.h"
-#include "hasm/commandlineparser.h"
+#include "hasm/hasmparametersparser.h"
 
 
 TEST_CASE("should get correct file names") {
   int argc = 3;
   const char* argv[] = {"./hasm", "a.asm", "b.asm"};
 
-  CommandLineParser parser(argc, argv);
+  std::cout << "/* message */" << std::endl;
 
-  AssemblyParameters asmOptions = parser.run();
+  HasmParametersParser parser(argc, argv);
+
+  HasmParameters params = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm", "b.asm"};
 
-  CHECK_EQ(expectedFileNames, asmOptions.fileNames);
+  CHECK_EQ(expectedFileNames, params.fileNames);
 }
 
 
@@ -23,13 +24,13 @@ TEST_CASE("should get correct single file name even with -c flag") {
   int argc = 3;
   const char* argv[] = {"./hasm", "a.asm", "-c"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
-  AssemblyParameters asmOptions = parser.run();
+  HasmParameters params = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm"};
 
-  CHECK_EQ(expectedFileNames, asmOptions.fileNames);
+  CHECK_EQ(expectedFileNames, params.fileNames);
 }
 
 
@@ -37,13 +38,13 @@ TEST_CASE("should get correct file names even with -c flag") {
   int argc = 4;
   const char* argv[] = {"./hasm", "a.asm", "b.asm", "-c"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
-  AssemblyParameters asmOptions = parser.run();
+  HasmParameters params = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm", "b.asm"};
 
-  CHECK_EQ(expectedFileNames, asmOptions.fileNames);
+  CHECK_EQ(expectedFileNames, params.fileNames);
 }
 
 
@@ -51,15 +52,15 @@ TEST_CASE("should get correct file names even with -o flag") {
   int argc = 4;
   const char* argv[] = {"./hasm", "a.asm", "-o", "a.o"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
-  AssemblyParameters asmOptions = parser.run();
+  HasmParameters params = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm"};
 
   INFO("exp ", expectedFileNames);
-  INFO("got ", asmOptions.fileNames);
-  CHECK_EQ(expectedFileNames, asmOptions.fileNames);
+  INFO("got ", params.fileNames);
+  CHECK_EQ(expectedFileNames, params.fileNames);
 }
 
 
@@ -67,13 +68,13 @@ TEST_CASE("should get correct output names with -o flag") {
   int argc = 4;
   const char* argv[] = {"./hasm", "a.asm", "-o", "a.o"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
-  AssemblyParameters asmOptions = parser.run();
+  HasmParameters params = parser.run();
 
   std::string expectedOutputName = {"a.o"};
 
-  CHECK_EQ(expectedOutputName, asmOptions.outputFileName);
+  CHECK_EQ(expectedOutputName, params.outputFileName);
 }
 
 
@@ -81,7 +82,7 @@ TEST_CASE("should throw exception when input name is the same as output name") {
   int argc = 4;
   const char* argv[] = {"./hasm", "a.asm", "-o", "a.asm"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
   CHECK_THROWS_WITH(parser.run(), "Nome de saída é igual ao nome de entrada");
 }
@@ -91,7 +92,7 @@ TEST_CASE("should throw exception when no output name is given using -o flag") {
   int argc = 3;
   const char* argv[] = {"./hasm", "a.asm", "-o"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
   CHECK_THROWS_WITH(parser.run(), "Falta o nome do arquivo depois de '-o'");
 }
@@ -101,7 +102,7 @@ TEST_CASE("should throw exception when given multiple input files while  using -
   int argc = 5;
   const char* argv[] = {"./hasm", "a.asm", "b.asm", "-o", "c.o"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
   CHECK_THROWS_WITH(parser.run(), "Não é permitido usar '-o' com mútiplos arquivos");
 }
@@ -111,7 +112,7 @@ TEST_CASE("should throw exception when no input files are given") {
   int argc = 1;
   const char* argv[] = {"./hasm"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
   CHECK_THROWS_WITH(parser.run(), "Não há arquivos de entrada");
 }
@@ -121,7 +122,7 @@ TEST_CASE("should throw exception when no input files are given while using -o")
   int argc = 1;
   const char* argv[] = {"./hasm", "-o", "outfile"};
 
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
 
   CHECK_THROWS_WITH(parser.run(), "Não há arquivos de entrada");
 }
@@ -129,12 +130,12 @@ TEST_CASE("should throw exception when no input files are given while using -o")
 
 TEST_CASE("should throw exception when using wrong constructor") {
   try {
-    CommandLineParser parser;
+    HasmParametersParser parser;
   }
   catch(const std::invalid_argument& e) {
     std::string exceptionMessage(e.what());
     CHECK("default constructor should not be used. Use "
-      "'CommandLineParser(int argc, const char* argv[])' instead"
+      "'HasmParametersParser(int argc, const char* argv[])' instead"
       == exceptionMessage);
   }
 }

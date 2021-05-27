@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "assembler/assembler.h"
-#include "commandlineparser.h"
+#include "hasmparametersparser.h"
 
 
 class Hasm {

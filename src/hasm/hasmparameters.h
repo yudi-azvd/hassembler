@@ -15,4 +15,4 @@ struct HasmParameters {
 };
 
 
-#endif // !HASMPARAMETERS_H_INCLUDED
+#endif // HASMPARAMETERS_H_INCLUDED

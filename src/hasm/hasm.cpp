@@ -10,7 +10,7 @@ Hasm::~Hasm() {
 
 
 Hasm::Hasm(int argc, const char** argv) {
-  CommandLineParser parser(argc, argv);
+  HasmParametersParser parser(argc, argv);
   parameters = parser.run();
   assembler = new Assembler(parameters.fileNames);
 }

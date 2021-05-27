@@ -1,5 +1,5 @@
-#ifndef COMMANDLINEPARSER_H_INCLUDED
-#define COMMANDLINEPARSER_H_INCLUDED
+#ifndef HASMPARAMETERSPARSER_H_INCLUDED
+#define HASMPARAMETERSPARSER_H_INCLUDED
 
 #include <iostream>
 #include <exception>
@@ -7,13 +7,13 @@
 
 #include "hasmparameters.h"
 
-class CommandLineParser {
+class HasmParametersParser {
 public:
-  CommandLineParser();
+  HasmParametersParser();
 
-  CommandLineParser(int argc, const char* commandLineArguments[]);
+  HasmParametersParser(int argc, const char* commandLineArguments[]);
 
-  ~CommandLineParser();
+  ~HasmParametersParser();
 
   HasmParameters run();
 
@@ -39,4 +39,4 @@ private:
   void throwIfOutputNameEqualsInputName();
 };
 
-#endif // COMMANDLINEPARSER_H_INCLUDED
+#endif // HASMPARAMETERSPARSER_H_INCLUDED
