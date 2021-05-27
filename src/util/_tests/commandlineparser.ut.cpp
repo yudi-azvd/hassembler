@@ -5,20 +5,6 @@
 #include "util/assemblyoptions.h"
 
 
-TEST_CASE("should get correct single file name even with -c flag") {
-  int argc = 3;
-  const char* argv[] = {"./hasm", "a.asm", "-c"};
-
-  CommandLineParser parser(argc, argv);
-
-  AssemblyOptions asmOptions = parser.run();
-
-  std::vector<std::string> expectedFileNames = {"a.asm"};
-
-  CHECK_EQ(expectedFileNames, asmOptions.fileNames);
-}
-
-
 TEST_CASE("should get correct file names") {
   int argc = 3;
   const char* argv[] = {"./hasm", "a.asm", "b.asm"};
@@ -28,6 +14,20 @@ TEST_CASE("should get correct file names") {
   AssemblyOptions asmOptions = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm", "b.asm"};
+
+  CHECK_EQ(expectedFileNames, asmOptions.fileNames);
+}
+
+
+TEST_CASE("should get correct single file name even with -c flag") {
+  int argc = 3;
+  const char* argv[] = {"./hasm", "a.asm", "-c"};
+
+  CommandLineParser parser(argc, argv);
+
+  AssemblyOptions asmOptions = parser.run();
+
+  std::vector<std::string> expectedFileNames = {"a.asm"};
 
   CHECK_EQ(expectedFileNames, asmOptions.fileNames);
 }

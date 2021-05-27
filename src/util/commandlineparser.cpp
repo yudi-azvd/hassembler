@@ -67,7 +67,7 @@ void CommandLineParser::checkForOuputFileNameFlag() {
   }
 
   assemblyOptions.outputFileName = *(it + 1);
-  arguments.erase(it, it + 2); // erase([it, it+2))
+  arguments.erase(it, it + 2); // erase: [inicio, fim)
 }
 
 
