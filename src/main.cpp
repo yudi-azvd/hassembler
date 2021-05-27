@@ -11,8 +11,13 @@ int main(int argc, const char* argv[]) {
     Hasm hasm(args);
     hasm.run();
   }
-  catch(std::exception& e) {
+  catch(HasmParameterException& e) {
     std::cout << e.what() << std::endl;
+    return EXIT_FAILURE;
+  }
+  catch(...) {
+    std::cout << "Algo de errado não deu certo..." << std::endl;
+    return EXIT_FAILURE;
   }
 
   return 0;
