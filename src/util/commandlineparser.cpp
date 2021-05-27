@@ -22,7 +22,7 @@ AssemblyOptions CommandLineParser::run() {
   checkForCompileOnlyFlag();
   getFileNames();
   throwIfOutputNameEqualsInputName();
-  checkForMultipleFilesAndOutputFlag();
+  throwIfThereAreMultipleFilesAndOutputFlag();
   
   return assemblyOptions;
 }
@@ -39,48 +39,35 @@ void CommandLineParser::getFileNames() {
 
 void CommandLineParser::checkForCompileOnlyFlag() {
   size_t i;
-  std::vector<std::string>::iterator flagPosition;
+  std::vector<std::string>::iterator flagIt = 
+    std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
 
-  for (i = 0; i < arguments.size(); ++i)
-    if (arguments[i] == COMPILE_ONLY_FLAG)
-      break;
-
-  bool flagFound = i < arguments.size();
-  if (!flagFound) 
+  bool flagNotFound = flagIt == arguments.end();
+  if (flagNotFound)
     return;
 
-  flagPosition = arguments.begin() + i;
   assemblyOptions.isCompileOnly = true;
-  
-  if (flagFound)
-    arguments.erase(flagPosition);
+  arguments.erase(flagIt);
 }
 
 
 void CommandLineParser::checkForOuputFileNameFlag() {
   int i, size = arguments.size();
   bool noSpaceForOutputName = false;
-  std::vector<std::string>::iterator flagPosition;
-  std::string arg;
+  std::vector<std::string>::iterator it
+    = std::find(arguments.begin(), arguments.end(), OUTPUT_FILE_NAME_FLAG);
   
-  for (i = 0; i < size; ++i)
-    if (arguments[i] == OUTPUT_FILE_NAME_FLAG)
-      break;
-  
-  bool flagFound = i < size;
-  if (!flagFound)
+  bool flagNotFound = it == arguments.end();
+  if (flagNotFound)
     return;
 
-  noSpaceForOutputName = i + 1 > size - 1;
+  noSpaceForOutputName = it + 1 > arguments.end() - 1;
   if (noSpaceForOutputName) {
     throw std::invalid_argument("Falta o nome do arquivo depois de '-o'");
   }
 
-  flagPosition = arguments.begin() + i;
-  assemblyOptions.outputFileName = arguments[i+1];
-
-  if (flagFound)
-    arguments.erase(flagPosition, flagPosition+2);
+  assemblyOptions.outputFileName = *(it + 1);
+  arguments.erase(it, it + 2); // erase([it, it+2))
 }
 
 
@@ -92,7 +79,7 @@ void CommandLineParser::throwIfOutputNameEqualsInputName() {
 }
 
 
-void CommandLineParser::checkForMultipleFilesAndOutputFlag() {
+void CommandLineParser::throwIfThereAreMultipleFilesAndOutputFlag() {
   bool hasOutputFileName = !assemblyOptions.outputFileName.empty();
   bool hasMultipleInputFiles = assemblyOptions.fileNames.size() > 1;
   if (hasMultipleInputFiles && hasOutputFileName) {

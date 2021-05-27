@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <exception>
+#include <algorithm>
 
 #include "assemblyoptions.h"
 
@@ -33,7 +34,7 @@ private:
 
   void checkForCompileOnlyFlag();
 
-  void checkForMultipleFilesAndOutputFlag();
+  void throwIfThereAreMultipleFilesAndOutputFlag();
 
   void getFileNames();
 
