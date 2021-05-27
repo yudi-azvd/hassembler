@@ -21,6 +21,7 @@ AssemblyOptions CommandLineParser::run() {
   checkForOuputFileNameFlag();
   checkForCompileOnlyFlag();
   getFileNames();
+  throwIfOutputNameEqualsInputName();
   checkForMultipleFilesAndOutputFlag();
   
   return assemblyOptions;
@@ -80,6 +81,14 @@ void CommandLineParser::checkForOuputFileNameFlag() {
 
   if (flagFound)
     arguments.erase(flagPosition, flagPosition+2);
+}
+
+
+void CommandLineParser::throwIfOutputNameEqualsInputName() {
+  for (auto fileName : assemblyOptions.fileNames) {
+    if (fileName == assemblyOptions.outputFileName)
+      throw std::invalid_argument("Nome de saída é igual ao nome de entrada");
+  }
 }
 
 

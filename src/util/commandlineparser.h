@@ -36,6 +36,8 @@ private:
   void checkForMultipleFilesAndOutputFlag();
 
   void getFileNames();
+
+  void throwIfOutputNameEqualsInputName();
 };
 
 #endif // COMMANDLINEPARSER_H_INCLUDED

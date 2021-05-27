@@ -77,6 +77,16 @@ TEST_CASE("should get correct output names with -o flag") {
 }
 
 
+TEST_CASE("should throw exception when input name is the same as output name") {
+  int argc = 4;
+  const char* argv[] = {"./hasm", "a.asm", "-o", "a.asm"};
+
+  CommandLineParser parser(argc, argv);
+
+  CHECK_THROWS_WITH(parser.run(), "Nome de saída é igual ao nome de entrada");
+}
+
+
 TEST_CASE("should throw exception when no output name is given using -o flag") {
   int argc = 3;
   const char* argv[] = {"./hasm", "a.asm", "-o"};
