@@ -10,18 +10,18 @@
 class Assembler {
 private:
   int _textSectionSize;
-  
+
   int _dataSectionSize;
 
   bool _isRunningSecondPass = false;
-  
+
   bool _dataSectionComesFirst = true; // os exemplos do professor.
 
   std::map<std::string, int> _opcodeTable;
-  
+
   // instructionSizeTable?
   std::map<std::string, int> _operationSizeTable;
-  
+
   std::map<std::string, int (Assembler::*)(int positionCounter, std::vector<std::string> operands)> _directiveTable;
 
   std::vector<std::string> _modulenames;
@@ -32,9 +32,9 @@ private:
 
   std::vector<std::vector<std::string>> _filesContents;
   std::vector<std::string> _fileContent;
-  
+
   std::vector<std::string> _tokens;
- 
+
   std::vector<std::map<std::string, int>> _symbolsTables;
   std::map<std::string, int> _symbolsTable;
 
@@ -46,7 +46,7 @@ private:
 
   std::vector<std::vector<std::pair< std::string, int>>> _usageTables;
   std::vector<std::pair< std::string, int>> _usageTable;
-  
+
   std::vector<std::vector<int>> _objectCodes;
   std::vector<int> _objectCode;
 
@@ -59,15 +59,15 @@ private:
 
 public:
   Assembler(std::vector<std::string> filename);
-  
+
   Assembler(std::string filename = "");
-  
+
   ~Assembler();
 
   void assemble();
 
   void getMultipleFileContents();
-  
+
   void getFileContent(std::string filename);
 
   /**
@@ -77,7 +77,7 @@ public:
   void runZerothPass();
 
   void runZerothPass2(int lineContentCounter);
-  
+
   void checkIfAllFilesHaveModules();
 
   void runFirstPass(std::vector<std::string>& fileContent);
@@ -85,13 +85,13 @@ public:
   void runSecondPass(std::vector<std::string>& fileContent);
 
   void adjustInternalSymbolsTable();
-  
+
   void adjustDefinitionsTable();
-  
+
   void adjustUsageTable();
 
   void adjustObjectCode();
-  
+
   void adjustRelocationBitMap();
 
   void extractDefinitionsTableFromSymbolsTable();
@@ -99,17 +99,17 @@ public:
   std::string findLabel(int& labelPosition, int& colonPosition);
 
   /**
-   * Tenta (quase um chute educado) encontrar uma operação (instrução ou 
+   * Tenta (quase um chute educado) encontrar uma operação (instrução ou
    * diretiva) segundo a sintaxe do assembly hipotético.
    */
   std::string findOperation(int labelPosition, int& operationPosition);
 
   std::vector<std::string> findOperands(int labelPosition, int operationPosition);
-  
+
   void generateOutput();
-  
+
   void generateOutputForLinker(int counter, std::string filename);
-  
+
   // Não é usado atualmente.
   void generateSimpleOutput(std::string filename);
 
@@ -121,29 +121,29 @@ public:
 
   /**
    * @brief Encontra um token na linha separado por espaços em branco.
-   * 
+   *
    * @param start Índice onde vai começar a procura.
    * @param line Linha a ser analisada.
-   * @param tokenStartsAt Posição inicial do token encontrado. 
-   * 
+   * @param tokenStartsAt Posição inicial do token encontrado.
+   *
    * @return Token e sua posição inicial.
    */
   std::string findNextTokenStartingFrom(
-    size_t start, 
+    size_t start,
     std::string line,
     int& tokenStartsAt
   );
 
   bool isValidSymbol(std::string symbol);
-  
+
   std::map<std::string, int> symbolTable();
 
   void setSymbolTable(std::map<std::string, int> st);
 
   void setSourceFileContent(std::vector<std::string> content);
-  
+
   std::vector<std::string> errors();
-  
+
   std::vector<int> objectCode();
 
 
@@ -159,8 +159,8 @@ public:
 
   // Função da diretiva BEGIN
   int directiveBegin(int posCounter, std::vector<std::string> operands);
-  
-  
+
+
   int directiveExtern(int posCounter, std::vector<std::string> operands);
 
 

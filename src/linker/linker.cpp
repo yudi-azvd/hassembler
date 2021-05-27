@@ -120,7 +120,7 @@ void Linker::extractObjectCode() {
   for (auto line : fileContent) {
     if (line[0] != 'T')
       continue;
-    
+
     substr = line.substr(2);
     substr.pop_back(); // remover um espaço adicional na linha
     ss << substr;
@@ -147,12 +147,12 @@ void Linker::extractUsageTable() {
   for (auto line : fileContent) {
     if (line[0] != 'U')
       continue;
-    
+
     substr = line.substr(2);
     ss << substr;
     ss >> name >> position;
     ss.clear();
-    
+
     usageTable.add(name, position);
   }
 
@@ -170,12 +170,12 @@ void Linker::extractDefinitionsTable() {
   for (auto line : fileContent) {
     if (line[0] != 'D')
       continue;
-    
+
     substr = line.substr(2);
     ss << substr;
     ss >> name >> position;
     ss.clear();
-    
+
     definitionsTable.add(name, position);
   }
 
@@ -259,7 +259,7 @@ void Linker::adjustRelativeAddressesInObjectCode(int moduleCounter) {
 
   const int relativeAddress = 1;
   int positionCounter = 0;
-  for (auto reloc : currentRelocationInformation) { 
+  for (auto reloc : currentRelocationInformation) {
     if (reloc == relativeAddress) {
       currentObjectCode[positionCounter] += correctionFactor;
     }
@@ -304,7 +304,7 @@ void Linker::printData() {
   std::cout << "\nMODULE NAMES" << std::endl;
   std::cout << ns_linker::vectorToString(modulesnames) << std::endl;
   std::cout << "RELOCATION INFO" << std::endl;
-  for (auto recInfo : relocations) 
+  for (auto recInfo : relocations)
     std::cout << recInfo.size() << " | " << ns_linker::vectorToString(recInfo) << std::endl;
   std::cout << "\nUSAGE TABLES" << std::endl;
   for (auto ut : usageTables) {
@@ -315,9 +315,9 @@ void Linker::printData() {
     std::cout << dt << std::endl;
   }
   std::cout << "\nOBJECT CODE" << std::endl;
-  for (auto oc : objectCodes) 
+  for (auto oc : objectCodes)
     std::cout << oc.size() << " | " << ns_linker::vectorToString(oc) << std::endl;
-  
+
   std::cout << ns_linker::vectorToString(errors) << std::endl;
 
 }

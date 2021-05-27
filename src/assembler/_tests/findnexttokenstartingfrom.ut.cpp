@@ -10,21 +10,21 @@ TEST_CASE("basic cases") {
   Assembler as;
   std::string token;
 
-  //                                                !           
+  //                                                !
   token = as.findNextTokenStartingFrom(9, "OLD_DATA: SPACE", tokenStartsAt);
   CHECK_EQ(token, "SPACE");
   CHECK_EQ(tokenStartsAt, 10);
 
-  //                                                !           
+  //                                                !
   token = as.findNextTokenStartingFrom(9, "OLD_DATA: SPACE ", tokenStartsAt);
   CHECK_EQ(token, "SPACE");
 
-  //                                                !           
+  //                                                !
   token = as.findNextTokenStartingFrom(9, "OLD_DATA  :    SPACE ", tokenStartsAt);
   CHECK_EQ(token, ":");
   CHECK_EQ(tokenStartsAt, 10);
 
-  //                                       !           
+  //                                       !
   token = as.findNextTokenStartingFrom(0, "OLD_DATA  :    SPACE ", tokenStartsAt);
   CHECK_EQ(token, "OLD_DATA");
   CHECK_EQ(tokenStartsAt, 0);
@@ -34,7 +34,7 @@ TEST_CASE("basic cases") {
 TEST_CASE("sequential calls 1") {
   int newStart = 0;
   int tokenStartsAt = 0;
-  Assembler as; 
+  Assembler as;
   std::string line = "COPY NEW_DATA,OLD_DATA";
   std::string token = "";
 
@@ -63,7 +63,7 @@ TEST_CASE("sequential calls 1") {
 TEST_CASE("sequential calls 2") {
   int newStart = 0;
   int tokenStartsAt = 0;
-  Assembler as; 
+  Assembler as;
   std::string line = "NEW_DATA:SPACE     ";
   std::string token = "";
 
@@ -130,7 +130,7 @@ TEST_CASE("sequential calls 3") {
 TEST_CASE("sequential calls 4 - comment") {
   int newStart = 0;
   int tokenStartsAt = 0;
-  Assembler as; 
+  Assembler as;
   std::string line = "NEW_DATA:SPACE  ; tem qie ser ignorado";
   std::string token = "";
 
@@ -157,7 +157,7 @@ TEST_CASE("sequential calls 4 - comment") {
 TEST_CASE("should not find tokens at the end of the line") {
   int newStart = 0;
   int tokenStartsAt = 0;
-  Assembler as; 
+  Assembler as;
   std::string line = "COPY    NEW_DATA,OLD_DATA";
   std::string token = "";
 
@@ -194,7 +194,7 @@ TEST_CASE("should not find tokens at the end of the line") {
 TEST_CASE("should work in iterative calls") {
   int newStart = 0;
   int tokenStartsAt = 0;
-  Assembler as; 
+  Assembler as;
   std::string line = "COPY    NEW_DATA,OLD_DATA";
   std::string token = "";
   std::vector<std::string> expectedtokens = {"COPY", "NEW_DATA", ",", "OLD_DATA"};

@@ -22,9 +22,9 @@ public:
   std::map<std::string, int>& getTable();
 
   friend std::ostream& operator<<(std::ostream& os, const DefinitionsTable& dt);
-  
+
 private:
-  std::map<std::string, int> table;  
+  std::map<std::string, int> table;
 };
 
 #endif // DEFINITIONSTABLE_H_INCLUDED

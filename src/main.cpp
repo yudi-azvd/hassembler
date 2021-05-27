@@ -9,7 +9,7 @@ void showCorrectUsage();
 int main(int commandlineCount, char* commandlineArguments[]) {
   std::vector<std::string> filenames;
 
-  bool correctCommandlineArgumentsCount = 
+  bool correctCommandlineArgumentsCount =
     2 <= commandlineCount && commandlineCount <= 4;
   if (!correctCommandlineArgumentsCount) {
     showCorrectUsage();
@@ -30,7 +30,7 @@ int main(int commandlineCount, char* commandlineArguments[]) {
 
 void showCorrectUsage() {
   std::cout <<
-    "Informe o nome do arquivo fonte a ser montado. Exemplo:\n" 
-    "$ ./montador ./caminho/relativo/pro/seu/arquivo.asm" 
+    "Informe o nome do arquivo fonte a ser montado. Exemplo:\n"
+    "$ ./montador ./caminho/relativo/pro/seu/arquivo.asm"
   << std::endl;
 }

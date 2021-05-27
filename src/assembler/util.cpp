@@ -17,7 +17,7 @@ std::string vectorToString(std::vector<std::string> tokens) {
   for (auto &tk : tokens) {
     finalString.append("\"" + tk + "\"\n");
   }
-  
+
   return finalString;
 }
 
@@ -25,14 +25,14 @@ std::string vectorToString(std::vector<std::string> tokens) {
 std::string vectorToString(std::vector<int> v) {
   if (v.empty())
     return "empty!";
-    
+
   std::string finalString = "[";
   char buff[10];
   for (auto n : v) {
     snprintf(buff, sizeof(buff), "%2d, ", n);
     finalString.append(buff);
   }
-  
+
   return finalString + "]";
 }
 
@@ -55,15 +55,15 @@ bool findErrorWith(std::string str, std::vector<std::string>& errors) {
       return true;
     }
   }
-  
+
   return false;
 }
 
 
 std::string toLower(std::string str) {
   std::for_each(
-    str.begin(), 
-    str.end(), 
+    str.begin(),
+    str.end(),
     [](char& c) { c = ::tolower(c); }
   );
 
@@ -81,7 +81,7 @@ bool isNumber(std::string str) {
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -101,7 +101,7 @@ std::vector<std::string> stringVectorLowerCased(const std::vector<std::string> s
       return out;
     }
   );
-  
+
   return lowered;
 }
 
@@ -111,6 +111,6 @@ bool findInVector(std::vector<std::string> vec, std::string value) {
     if (item == value)
       return true;
   }
-  
+
   return false;
 }

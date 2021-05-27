@@ -19,7 +19,7 @@ public:
 
 private:
   const std::string OUTPUT_FILE_NAME_FLAG = "-o";
-  
+
   const std::string COMPILE_ONLY_FLAG = "-c";
 
   int argumentsCount;

@@ -54,7 +54,7 @@ TEST_CASE("adjust object code - fibonacci") {
 
   auto gotObjectCode = as.objectCode();
   std::vector<int> expectedObjectCode = {
-    9, 33, 35, 9, 34, 36, 12, 38, 13, 36, 10, 35, 1, 36, 11, 37, 2, 38, 7, 30, 
+    9, 33, 35, 9, 34, 36, 12, 38, 13, 36, 10, 35, 1, 36, 11, 37, 2, 38, 7, 30,
     13, 37, 9, 36, 35, 9, 37, 36, 5, 10, 13, 38, 14, 0, 1, 0, 0, 0, 0
   };
 
@@ -107,7 +107,7 @@ TEST_CASE("adjust object code - fatorial") {
 
   auto gotObjectCode = as.objectCode();
   std::vector<int> expectedObjectCode = {
-    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3, 
+    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3,
     22, 11, 22, 10, 21, 5, 4, 13, 22, 14, 0, 0, 1
   };
 
@@ -158,7 +158,7 @@ TEST_CASE("not adjusting fatorial object code should work as well") {
 
   auto gotObjectCode = as.objectCode();
   std::vector<int> expectedObjectCode = {
-    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3, 
+    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3,
     22, 11, 22, 10, 21, 5, 4, 13, 22, 14, 0, 0, 1
   };
 

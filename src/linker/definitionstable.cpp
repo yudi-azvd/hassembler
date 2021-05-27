@@ -13,7 +13,7 @@ bool DefinitionsTable::has(std::string name) {
 
 
 int DefinitionsTable::getPositionOf(std::string name) {
-  for (auto nameAndPostion : table) { 
+  for (auto nameAndPostion : table) {
     if (nameAndPostion.first == name)
       return nameAndPostion.second;
   }

@@ -5,7 +5,7 @@
 #include "assembler.h"
 #include "util.h"
 
-Assembler::Assembler(std::vector<std::string> filenames) { 
+Assembler::Assembler(std::vector<std::string> filenames) {
   if (!filenames.empty())
     _filenames = filenames;
   _initialize();
@@ -13,7 +13,7 @@ Assembler::Assembler(std::vector<std::string> filenames) {
 }
 
 
-Assembler::Assembler(std::string filename) { 
+Assembler::Assembler(std::string filename) {
   if (!filename.empty())
     _filename = filename;
   _initialize();
@@ -76,7 +76,7 @@ void Assembler::getMultipleFileContents() {
 }
 
 
-void Assembler::getFileContent(std::string filename) { 
+void Assembler::getFileContent(std::string filename) {
   std::string line;
   _filename = filename;
   std::vector<std::string> fileContent;
@@ -140,7 +140,7 @@ void Assembler::assemble() {
 
     _objectCodes.push_back(_objectCode);
     _objectCode.clear();
-  } 
+  }
 
   checkIfAllFilesHaveModules();
 
@@ -202,14 +202,14 @@ void Assembler::runZerothPass2(int fileContentCounter) {
       lineCounter++;
       continue;
     }
-    
+
     lowerCasedTokens = stringVectorLowerCased(_tokens);
 
     lineHasExtern = findInVector(lowerCasedTokens, "extern");
     lineHasPublic = findInVector(lowerCasedTokens, "public");
     lineHasBegin = findInVector(lowerCasedTokens, "begin");
     lineHasEnd = findInVector(lowerCasedTokens, "end");
-    bool singleFileWithModule = (_filenames.size() == 1) 
+    bool singleFileWithModule = (_filenames.size() == 1)
       && (lineHasBegin || lineHasEnd);
 
     // assumindo que apenas uma delas é verdadeira em uma linha
@@ -283,7 +283,7 @@ void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
       labelWasFound = _symbolsTable.find(toLower(label)) != _symbolsTable.end();
       if (!labelWasFound) {
         if (!isValidSymbol(label)) {
-          _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter) 
+          _errors.push_back("Erro Léxico, linha " + std::to_string(lineCounter)
             + ": símbolo '" + label + "' é inválido."
           );
         }
@@ -294,7 +294,7 @@ void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
         }
       }
       else {
-        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
+        _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter)
           + ": símbolo '" + label + "' redefinido."
         );
       }
@@ -327,11 +327,11 @@ void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
         auto directiveFunctionPtr = _directiveTable[lowerCasedOperation];
         positionCounter = (this->*directiveFunctionPtr)(positionCounter, operands);
         // assumindo que todas as diretivas alocam UM espaço de memória.
-        if (lowerCasedOperation != "section" && lowerCasedOperation != "begin") 
+        if (lowerCasedOperation != "section" && lowerCasedOperation != "begin")
           _dataSectionSize++;
       }
       else if (labelExists) { // || savedLabelForLater
-        // Assumindo que diretivas sempre aparecem diretamente _associadas_ a 
+        // Assumindo que diretivas sempre aparecem diretamente _associadas_ a
         // um rótulo
         _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) +
           ": diretiva '" + operation + "' não identificada."
@@ -346,12 +346,12 @@ void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
 
     lineCounter++;
   }
-} 
+}
 
 
 void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
   int positionCounter = 0, lineCounter = 1;
-  bool labelExists, operationFound, directiveFound, 
+  bool labelExists, operationFound, directiveFound,
     operand1FoundInInternSymTable, operand2FoundInInternSymTab,
     operand1FoundInExternSymTab, operand2FoundInExternSymTab;
   std::string label, operation, operand1, operand2;
@@ -384,7 +384,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
       continue;
     }
 
-    if (toLower(operation) == "copy") { 
+    if (toLower(operation) == "copy") {
       // 0        1   2
       // "label1" "," "label2"
       operand2 = operands.size() >= 2 ? operands[2] : "";
@@ -397,7 +397,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
     if (!directiveFound) { // GAMBIARRA, tenho que corrigir ainda
       // OPERAND 1
       if (std::isdigit(operand1[0])) {
-        _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter) 
+        _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter)
           + ": operando '" + operand1 + "' deve ser um rótulo."
         );
       }
@@ -407,7 +407,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
         bool operand1NotFound = !operand1FoundInExternSymTab && !operand1FoundInInternSymTable;
         // aqui que adiciona o operand1
         if (operand1NotFound && !operand1.empty()) {
-          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
+          _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter)
             + ": operando '" + operand1 + "' indefinido."
           );
         }
@@ -416,7 +416,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
       // OPERAND 2
       if (toLower(operation) == "copy") {
         if (std::isdigit(operand2[0])) {
-          _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter) 
+          _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter)
             + ": operando '" + operand2 + "' deve ser um rótulo."
           );
         }
@@ -427,7 +427,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
 
           // aqui que adiciona o operand1
           if (operand2NotFound && !operand2.empty()) {
-            _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter) 
+            _errors.push_back("Erro Semântico, linha " + std::to_string(lineCounter)
               + ": operando '" + operand2 + "' indefinido."
             );
           }
@@ -440,19 +440,19 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
     if (operationFound) {
       int operationSize = _operationSizeTable[lowerCasedOperation];
       positionCounter += operationSize;
-      
+
       // O número de operandos de uma operação é o tamanho da operação
-      // menos 1 por causa do símbolo da própria operação, o que sobra 
+      // menos 1 por causa do símbolo da própria operação, o que sobra
       // é operando.
       if (numberOfOperands != (operationSize-1)) {
         _errors.push_back("Erro Sintático, linha " + std::to_string(lineCounter)
           + ": instrução '" + operation + "' com número de operandos errado."
         );
       }
-      
+
       _objectCode.push_back(_opcodeTable[lowerCasedOperation]);
       _relocationBitMap.push_back(0);
-      
+
       if (lowerCasedOperation != "stop") {
         int discount = lowerCasedOperation == "copy" ? 2 : 1;
         int position = positionCounter-discount;
@@ -577,8 +577,8 @@ void Assembler::adjustObjectCode() {
 
   // acrescentar SECTION DATA no final
   adjustedObjectCode.insert(
-    adjustedObjectCode.end(), 
-    _objectCode.begin(), 
+    adjustedObjectCode.end(),
+    _objectCode.begin(),
     _objectCode.end()-_textSectionSize
   );
 
@@ -596,8 +596,8 @@ void Assembler::adjustRelocationBitMap() {
 
   // acrescentar SECTION DATA no final
   adjustedRelocationBitMap.insert(
-    adjustedRelocationBitMap.end(), 
-    _relocationBitMap.begin(), 
+    adjustedRelocationBitMap.end(),
+    _relocationBitMap.begin(),
     _relocationBitMap.end()-_textSectionSize
   );
 
@@ -619,7 +619,7 @@ void Assembler::extractDefinitionsTableFromSymbolsTable() {
 
 std::string Assembler::findLabel(int& labelPosition, int& colonPosition) {
   std::string tk, label;
-  // : ADD LABEL1  ;; ??? 
+  // : ADD LABEL1  ;; ???
   for (size_t i = 0; i < _tokens.size(); i++) {
     // Considero como label, mesmo que esteja na posição errada.
     if (_tokens[i] == ":" && i >= 1) {
@@ -637,7 +637,7 @@ std::string Assembler::findOperation(int labelPosition, int& operationPosition) 
   //       : INSTRUCTION [OP1, [OP2]]
   // LABEL : INSTRUCTION [OP1, [OP2]]
   // LABEL : DIRECTIVE   [OP1]
-  // LABEL : 
+  // LABEL :
   // _tokens[labelPostion+0] => "label"
   // _tokens[labelPostion+1] => ":"
   // _tokens[labelPostion+2] => potencial operação
@@ -709,7 +709,7 @@ void Assembler::generateOutput() {
 //     }
 //   }
 
-//   if (outFilename[0] != '/') { 
+//   if (outFilename[0] != '/') {
 //     outFilename.insert(0, 1, '/'); // "nome" => "/nome"
 //   }
 
@@ -724,7 +724,7 @@ void Assembler::generateOutput() {
 //   for (auto n : _objectCode) {
 //     ss << n << " ";
 //   }
-  
+
 //   outputFile << ss.str();
 //   outputFile.close();
 // }
@@ -754,7 +754,7 @@ void Assembler::generateOutputForLinker(int counter, std::string filename) {
 
 
   std::string pureOutFilename;
-  if (outFilename[0] != '/') { 
+  if (outFilename[0] != '/') {
     pureOutFilename = outFilename; // apenas "nome"
     outFilename.insert(0, 1, '/'); // "nome" => "/nome"
   }
@@ -793,7 +793,7 @@ void Assembler::generateOutputForLinker(int counter, std::string filename) {
   for (auto n : _objectCode) {
     ss << n << " ";
   }
-  
+
   outputFile << ss.str();
   outputFile.close();
 }
@@ -829,7 +829,7 @@ void Assembler::outputData() {
     std::cout << strToIntMapToString(_definitionsTables[i]) << std::endl;
 
     std::cout << "\n>> OBJECT code: " << _objectCodes[i].size() << std::endl << "[";
-    for (size_t i = 0; i < _objectCodes[i].size(); i++) 
+    for (size_t i = 0; i < _objectCodes[i].size(); i++)
       printf("%2d, ", (int) i);
     std::cout << "]" << std::endl << vectorToString(_objectCodes[i]) << std::endl;
 
@@ -864,7 +864,7 @@ std::vector<std::string> Assembler::parseLine(std::string line) {
 
 
 std::string Assembler::findNextTokenStartingFrom(
-  size_t start, 
+  size_t start,
   std::string line,
   int& tokenStartsAt
 ) {
@@ -872,7 +872,7 @@ std::string Assembler::findNextTokenStartingFrom(
   char c;
   bool symbolStarted = false,
     isCommentDelimiter, isTokenDelimiter, isWhitespace;
-  std::string symbol = ""; 
+  std::string symbol = "";
 
   for (i = start; i < line.length(); i++) {
     c = line[i];
@@ -881,8 +881,8 @@ std::string Assembler::findNextTokenStartingFrom(
     isTokenDelimiter = c == ':' || c == ',';
 
     if (isCommentDelimiter) {
-      tokenStartsAt = symbolStarted 
-        ? i-symbol.length() 
+      tokenStartsAt = symbolStarted
+        ? i-symbol.length()
         : -1;
       return symbol;
     }
@@ -907,8 +907,8 @@ std::string Assembler::findNextTokenStartingFrom(
     }
   }
 
-  tokenStartsAt = symbolStarted 
-    ? i-symbol.length() 
+  tokenStartsAt = symbolStarted
+    ? i-symbol.length()
     : -1;
 
   return symbol;
@@ -936,7 +936,7 @@ bool Assembler::isValidSymbol(std::string symbol) {
 }
 
 
-std::map<std::string, int> Assembler::symbolTable() { 
+std::map<std::string, int> Assembler::symbolTable() {
   return _symbolsTable;
 }
 
@@ -951,17 +951,17 @@ void Assembler::setSourceFileContent(std::vector<std::string> content) {
 }
 
 
-std::vector<std::string> Assembler::errors() { 
+std::vector<std::string> Assembler::errors() {
   return _errors;
 }
 
 
-std::vector<int> Assembler::objectCode() { 
+std::vector<int> Assembler::objectCode() {
   return _objectCode;
 }
 
 
-int Assembler::directiveSpace(int posCounter, std::vector<std::string> operands) { 
+int Assembler::directiveSpace(int posCounter, std::vector<std::string> operands) {
   if (_isRunningSecondPass) {
     _objectCode.push_back(0);
     _relocationBitMap.push_back(0);
@@ -982,7 +982,7 @@ int Assembler::directiveConst(int posCounter, std::vector<std::string> operands)
   if (!_isRunningSecondPass) {
     return posCounter+1;
   }
-  
+
   std::string strOperand = operands.size() > 0 ? operands[0] : "";
   int operand = std::atoi(strOperand.c_str());
   _objectCode.push_back(operand);

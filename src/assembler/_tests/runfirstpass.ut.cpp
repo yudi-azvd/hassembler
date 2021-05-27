@@ -356,7 +356,7 @@ TEST_CASE("rfp label alone in line should work for instructions") {
   };
 
   Assembler as;
-  
+
   as.setSourceFileContent(sourceFileContent);
   as.runFirstPass(sourceFileContent);
 

@@ -21,7 +21,7 @@ public:
   void link();
 
   std::vector<int> alignObjectCodes(std::vector<std::vector<int>> objectCodes);
-  
+
   CorrectionFactorTable createCorrectionFactorTable(std::vector<std::vector<int>> objectCodes);
 
   DefinitionsTable createGlobalDefinitionsTable(std::vector<DefinitionsTable> definitionsTables);
@@ -41,13 +41,13 @@ private:
 
   // Acrescenta um fileContent em filesContents
   void readFileContent(std::string filename);
-  
+
   void extractModulename();
 
   void extractRelocationInformation();
-  
+
   void extractUsageTable();
-  
+
   void extractDefinitionsTable();
 
   void extractObjectCode();
@@ -57,7 +57,7 @@ private:
   void printData();
 
   std::vector<std::string> filenames;
-  
+
   std::vector<std::vector<std::string>> filesContents;
 
   std::vector<std::string> modulesnames;
@@ -65,7 +65,7 @@ private:
   CorrectionFactorTable correctionFactorTable;
 
   std::vector<DefinitionsTable> definitionsTables;
-  
+
   std::vector<UsageTable> usageTables;
 
   DefinitionsTable globalDefinitionsTable;

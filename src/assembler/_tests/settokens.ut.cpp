@@ -13,9 +13,9 @@
 //   std::string operand2;
 
 //   friend std::ostream& operator<<(std::ostream& os, TokenizedLine line) {
-//     return os << "label: \"" << line.label 
-//       << "\", operation: \"" << line.operation 
-//       << "\", operand1: \"" << line.operand1 
+//     return os << "label: \"" << line.label
+//       << "\", operation: \"" << line.operation
+//       << "\", operand1: \"" << line.operand1
 //       << "\", operand2: \"" << line.operand2 << "\"";
 //   };
 
@@ -37,12 +37,12 @@
 // }
 
 
-// struct LineAndTokenizedLine { 
+// struct LineAndTokenizedLine {
 //   std::string line;
 //   TokenizedLine tkLine;
 
 //   friend std::ostream& operator<<(std::ostream& os, LineAndTokenizedLine latkLine) {
-//     return os << "line: " << latkLine.line 
+//     return os << "line: " << latkLine.line
 //       << latkLine.tkLine;
 //   };
 // };
@@ -56,17 +56,17 @@
 //     {"N1: SPACE", {"N1", "SPACE", "", ""}},
 
 //     {"some_label: copy zero older", {"some_label", "copy", "zero", "older"}},
-    
+
 //     {"some_label: add um", {"some_label", "add", "um", ""}},
 
 //     {"copy zero older", {"", "copy", "zero", "older"}},
-    
+
 //     {"stop", {"", "stop", "", ""}},
-    
+
 //     {"input n2", {"", "input", "n2", ""}},
-    
+
 //     {"b: space", {"b", "space", "", ""}},
-    
+
 //     {"DOIS: CONST 2", {"DOIS", "CONST", "2", ""}},
 //   };
 
@@ -75,7 +75,7 @@
 
 //     INFO("exp: ", lineAndExpectedTokenizedLine.tkLine);
 //     INFO("got: ", gotTokenizedLine);
-    
+
 //     CHECK_EQ(lineAndExpectedTokenizedLine.tkLine, gotTokenizedLine);
 //   }
 // }

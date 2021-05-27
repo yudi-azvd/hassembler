@@ -23,7 +23,7 @@ AssemblyOptions CommandLineParser::run() {
   getFileNames();
   throwIfOutputNameEqualsInputName();
   throwIfThereAreMultipleFilesAndOutputFlag();
-  
+
   return assemblyOptions;
 }
 
@@ -39,7 +39,7 @@ void CommandLineParser::getFileNames() {
 
 void CommandLineParser::checkForCompileOnlyFlag() {
   size_t i;
-  std::vector<std::string>::iterator it = 
+  std::vector<std::string>::iterator it =
     std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
 
   bool flagNotFound = it == arguments.end();
@@ -56,7 +56,7 @@ void CommandLineParser::checkForOuputFileNameFlag() {
   bool noSpaceForOutputName = false;
   std::vector<std::string>::iterator it
     = std::find(arguments.begin(), arguments.end(), OUTPUT_FILE_NAME_FLAG);
-  
+
   bool flagNotFound = it == arguments.end();
   if (flagNotFound)
     return;

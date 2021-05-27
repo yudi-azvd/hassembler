@@ -19,7 +19,7 @@ public:
 
 private:
   int lastSize = 0;
-  
+
   int accumulator = 0;
 
   std::vector<std::pair<std::string, int>> table;

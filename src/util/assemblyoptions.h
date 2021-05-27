@@ -8,7 +8,7 @@ struct AssemblyOptions {
   bool isCompileOnly = false;
 
   std::vector<std::string> fileNames;
-  
+
   std::string outputFileName;
 
   // ~AssemblyOptions() {}

@@ -52,8 +52,8 @@ TEST_CASE("rsp add two numbers") {
   };
 
   std::map<std::string, int> symbolTable = {
-    {"n1", 13}, 
-    {"n2", 14}, 
+    {"n1", 13},
+    {"n2", 14},
     {"n3", 15},
   };
 
@@ -198,7 +198,7 @@ TEST_CASE("rsp fatorial") {
 
   std::vector<int> gotObjectCode;
   std::vector<int> expectedObjectCode = {
-    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3, 
+    12, 22, 10, 22, 2, 23, 8, 18, 11, 21, 3,
     22, 11, 22, 10, 21, 5, 4, 13, 22, 14, 0, 0, 1
   };
 
@@ -226,7 +226,7 @@ TEST_CASE("rsp should add errors undefined operands") {
     "jmp FAT",
     "LABEL: space",
   };
-  
+
   Assembler as;
 
   as.setSymbolTable(symbolTable);
@@ -344,7 +344,7 @@ TEST_CASE("rsp label alone in line should work for instructions") {
   };
 
   Assembler as;
-  
+
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
   as.runFirstPass(sourceFileContent);

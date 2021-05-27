@@ -10,7 +10,7 @@
 // int main(int commandlineCount, char* commandlineArguments[]) {
 //   std::vector<std::string> filenames;
 
-//   bool correctCommandlineArgumentsCount = 
+//   bool correctCommandlineArgumentsCount =
 //     1 <= commandlineCount && commandlineCount <= 4;
 //   if (!correctCommandlineArgumentsCount) {
 //     showCorrectUsage();
@@ -31,7 +31,7 @@
 
 // void showCorrectUsage() {
 //   std::cout <<
-//     "Informe os nomes dos arquivos objeto a serem ligados. Exemplo:\n" 
-//     "$ ./ligador arq1.obj arq2.obj arq2.obj" 
+//     "Informe os nomes dos arquivos objeto a serem ligados. Exemplo:\n"
+//     "$ ./ligador arq1.obj arq2.obj arq2.obj"
 //   << std::endl;
 // }

@@ -14,7 +14,7 @@ namespace ns_linker {
 
 
 /**
- * @brief Classe para facilitar testes unitários. 
+ * @brief Classe para facilitar testes unitários.
  * Linha (string) e tokens esperados (vetor de strings).
  * Registro para facilitar testes unitários.
 */
@@ -48,7 +48,7 @@ std::vector<std::string> stringVectorLowerCased(const std::vector<std::string> s
 
 
 bool findInVector(std::vector<std::string> vec, std::string value);
-  
+
 }
 
 #endif // !UTIL_H_INCLUDED
