@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "assembler/util.h"
+#include "util/util.h"
 
 TEST_CASE("section should") {
   std::vector<int> vec1 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};

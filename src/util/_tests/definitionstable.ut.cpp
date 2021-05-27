@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "linker/definitionstable.hpp"
+#include "util/definitionstable.hpp"
 
 TEST_CASE("basic definitions table - addition and has") {
   DefinitionsTable table;

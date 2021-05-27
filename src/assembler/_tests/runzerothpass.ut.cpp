@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "assembler/util.h"
+#include "util/util.h"
 
 TEST_CASE("rzp section data first") {
   std::map<std::string, int> symbolTable = {

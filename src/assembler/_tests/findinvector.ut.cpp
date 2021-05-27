@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "assembler/util.h"
+#include "util/util.h"
 
 TEST_CASE("should find in vector") {
   std::vector<std::string> strs = {

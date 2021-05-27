@@ -7,10 +7,11 @@
 #include <fstream>
 #include <sstream>
 
-#include "correctionfactortable.hpp"
-#include "definitionstable.hpp"
-#include "usagetable.hpp"
-#include "utilforlinker.h"
+#include "util/correctionfactortable.hpp"
+#include "util/definitionstable.hpp"
+#include "util/usagetable.hpp"
+#include "util/util.h"
+
 
 class Linker {
 public:

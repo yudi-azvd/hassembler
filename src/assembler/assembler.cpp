@@ -3,7 +3,7 @@
 #include <sstream>
 
 #include "assembler.h"
-#include "util.h"
+#include "util/util.h"
 
 Assembler::Assembler(std::vector<std::string> filenames) {
   if (!filenames.empty())

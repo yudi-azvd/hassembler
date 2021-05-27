@@ -23,7 +23,7 @@ void Linker::link() {
 
   // printData();
   if (errors.size() > 0) {
-    std::cout << ns_linker::vectorToString(errors) << std::endl;
+    std::cout << vectorToString(errors) << std::endl;
   }
   else {
     generateOutput();
@@ -302,10 +302,10 @@ void Linker::printData() {
   std::cout << "CORR FACTOR" << std::endl;
   std::cout << correctionFactorTable.toString() << std::endl;
   std::cout << "\nMODULE NAMES" << std::endl;
-  std::cout << ns_linker::vectorToString(modulesnames) << std::endl;
+  std::cout << vectorToString(modulesnames) << std::endl;
   std::cout << "RELOCATION INFO" << std::endl;
   for (auto recInfo : relocations)
-    std::cout << recInfo.size() << " | " << ns_linker::vectorToString(recInfo) << std::endl;
+    std::cout << recInfo.size() << " | " << vectorToString(recInfo) << std::endl;
   std::cout << "\nUSAGE TABLES" << std::endl;
   for (auto ut : usageTables) {
     std::cout << ut << std::endl;
@@ -316,8 +316,8 @@ void Linker::printData() {
   }
   std::cout << "\nOBJECT CODE" << std::endl;
   for (auto oc : objectCodes)
-    std::cout << oc.size() << " | " << ns_linker::vectorToString(oc) << std::endl;
+    std::cout << oc.size() << " | " << vectorToString(oc) << std::endl;
 
-  std::cout << ns_linker::vectorToString(errors) << std::endl;
+  std::cout << vectorToString(errors) << std::endl;
 
 }

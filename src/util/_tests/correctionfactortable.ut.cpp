@@ -3,9 +3,9 @@
 
 #include "doctest/doctest.h"
 #include "linker/linker.hpp"
-#include "linker/correctionfactortable.hpp"
+#include "util/correctionfactortable.hpp"
 
-#include "assembler/util.h"
+#include "util/util.h"
 
 TEST_CASE("basic code alignment") {
   CorrectionFactorTable table;

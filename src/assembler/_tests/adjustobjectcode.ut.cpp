@@ -3,7 +3,7 @@
 
 #include "doctest/doctest.h"
 #include "assembler/assembler.h"
-#include "assembler/util.h"
+#include "util/util.h"
 
 TEST_CASE("adjust object code - fibonacci") {
   std::map<std::string, int> expectedSymbolTable = {

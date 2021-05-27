@@ -3,7 +3,7 @@
 
 #include "doctest/doctest.h"
 #include "linker/linker.hpp"
-#include "assembler/util.h"
+#include "util/util.h"
 
 TEST_CASE("basic object code alignment") {
   std::vector<int> gotFinalObjectCode;
