@@ -961,7 +961,7 @@ std::vector<int> Assembler::objectCode() {
 }
 
 
-int Assembler::directiveSpace(int posCounter, std::vector<std::string> operands) {
+int Assembler::directiveSpace(int posCounter, std::vector<std::string>) {
   if (_isRunningSecondPass) {
     _objectCode.push_back(0);
     _relocationBitMap.push_back(0);
@@ -992,16 +992,16 @@ int Assembler::directiveConst(int posCounter, std::vector<std::string> operands)
 }
 
 
-int Assembler::directiveBegin(int posCounter, std::vector<std::string> operands) {
+int Assembler::directiveBegin(int posCounter, std::vector<std::string>) {
   return posCounter;
 }
 
 
-int Assembler::directiveExtern(int posCounter, std::vector<std::string> operands) {
+int Assembler::directiveExtern(int posCounter, std::vector<std::string>) {
   return posCounter;
 }
 
 
-int Assembler::directiveSection(int posCounter, std::vector<std::string> operands) {
+int Assembler::directiveSection(int posCounter, std::vector<std::string>) {
   return posCounter;
 }

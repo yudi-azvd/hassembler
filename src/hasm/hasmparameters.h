@@ -7,9 +7,9 @@
 struct HasmParameters {
   bool isCompileOnly = false;
 
-  std::vector<std::string> fileNames;
+  std::vector<std::string> filenames;
 
-  std::string outputFileName;
+  std::string outputFilename;
 
   // ~HasmParameters() {}
 };

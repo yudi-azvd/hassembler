@@ -6,12 +6,14 @@
 #include <algorithm>
 
 #include "hasmparameters.h"
+#include "hasmparameterexception.h"
+
 
 class HasmParametersParser {
 public:
   HasmParametersParser();
 
-  HasmParametersParser(int argc, const char* commandLineArguments[]);
+  HasmParametersParser(std::vector<std::string> args);
 
   ~HasmParametersParser();
 
@@ -28,13 +30,13 @@ private:
 
   bool hasMultipleInputFiles();
 
-  void checkForOuputFileNameFlag();
+  void checkForOuputFilenameFlag();
 
   void checkForCompileOnlyFlag();
 
-  void throwIfThereAreMultipleFilesAndOutputFlag();
-
   void getFileNames();
+
+  void throwIfThereAreMultipleFilesAndOutputFlag();
 
   void throwIfOutputNameEqualsInputName();
 };

@@ -12,7 +12,7 @@ class Hasm {
 public:
   Hasm();
 
-  Hasm(int argc, const char** argv);
+  Hasm(std::vector<std::string> args);
 
   ~Hasm();
 

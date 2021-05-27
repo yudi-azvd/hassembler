@@ -2,24 +2,22 @@
 
 
 HasmParametersParser::HasmParametersParser() {
-  throw std::invalid_argument("default constructor should not be used. Use "
-  "'HasmParametersParser(int argc, const char* argv[])' instead");
+  throw std::runtime_error("default constructor should not be used. Use "
+  "'HasmParametersParser(std::vector<std::string> args)' instead");
 }
 
 
 HasmParametersParser::~HasmParametersParser() {}
 
 
-HasmParametersParser::HasmParametersParser(int argc, const char* argv[]) {
-  constexpr int executableNameOffset = 1;
-  std::vector<std::string> v(argv+executableNameOffset, argv + argc);
-  arguments = v;
+HasmParametersParser::HasmParametersParser(std::vector<std::string> args) {
+  arguments = args;
   arguments.shrink_to_fit();
 }
 
 
 HasmParameters HasmParametersParser::run() {
-  checkForOuputFileNameFlag();
+  checkForOuputFilenameFlag();
   checkForCompileOnlyFlag();
   getFileNames();
   throwIfOutputNameEqualsInputName();
@@ -31,10 +29,10 @@ HasmParameters HasmParametersParser::run() {
 
 void HasmParametersParser::getFileNames() {
   if (arguments.size() == 0) {
-    throw std::invalid_argument("Não há arquivos de entrada");
+    throw HasmParameterException("Não há arquivos de entrada");
   }
 
-  assemblyParameters.fileNames = arguments;
+  assemblyParameters.filenames = arguments;
 }
 
 
@@ -52,7 +50,7 @@ void HasmParametersParser::checkForCompileOnlyFlag() {
 }
 
 
-void HasmParametersParser::checkForOuputFileNameFlag() {
+void HasmParametersParser::checkForOuputFilenameFlag() {
   int i, size = arguments.size();
   bool noSpaceForOutputName = false;
   std::vector<std::string>::iterator it
@@ -64,26 +62,26 @@ void HasmParametersParser::checkForOuputFileNameFlag() {
 
   noSpaceForOutputName = it + 1 > arguments.end() - 1;
   if (noSpaceForOutputName) {
-    throw std::invalid_argument("Falta o nome do arquivo depois de '-o'");
+    throw HasmParameterException("Falta o nome do arquivo depois de '-o'");
   }
 
-  assemblyParameters.outputFileName = *(it + 1);
+  assemblyParameters.outputFilename = *(it + 1);
   arguments.erase(it, it + 2); // erase: [inicio, fim)
 }
 
 
 void HasmParametersParser::throwIfOutputNameEqualsInputName() {
-  for (auto fileName : assemblyParameters.fileNames) {
-    if (fileName == assemblyParameters.outputFileName)
-      throw std::invalid_argument("Nome de saída é igual ao nome de entrada");
+  for (auto fileName : assemblyParameters.filenames) {
+    if (fileName == assemblyParameters.outputFilename)
+      throw HasmParameterException("Nome de saída é igual ao nome de entrada");
   }
 }
 
 
 void HasmParametersParser::throwIfThereAreMultipleFilesAndOutputFlag() {
-  bool hasOutputFileName = !assemblyParameters.outputFileName.empty();
-  bool hasMultipleInputFiles = assemblyParameters.fileNames.size() > 1;
+  bool hasOutputFileName = !assemblyParameters.outputFilename.empty();
+  bool hasMultipleInputFiles = assemblyParameters.filenames.size() > 1;
   if (hasMultipleInputFiles && hasOutputFileName) {
-    throw std::invalid_argument("Não é permitido usar '-o' com mútiplos arquivos");
+    throw HasmParameterException("Não é permitido usar '-o' com mútiplos arquivos");
   }
 }

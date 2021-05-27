@@ -9,10 +9,10 @@ Hasm::~Hasm() {
 }
 
 
-Hasm::Hasm(int argc, const char** argv) {
-  HasmParametersParser parser(argc, argv);
+Hasm::Hasm(std::vector<std::string> args) {
+  HasmParametersParser parser(args);
   parameters = parser.run();
-  assembler = new Assembler(parameters.fileNames);
+  assembler = new Assembler(parameters.filenames);
 }
 
 
