@@ -15,7 +15,7 @@ public:
 
   ~CommandLineParser();
 
-  AssemblyOptions run();
+  AssemblyParameters run();
 
 private:
   const std::string OUTPUT_FILE_NAME_FLAG = "-o";
@@ -26,7 +26,7 @@ private:
 
   std::vector<std::string> arguments;
 
-  AssemblyOptions assemblyOptions;
+  AssemblyParameters assemblyParameters;
 
   bool hasMultipleInputFiles();
 

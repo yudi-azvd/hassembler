@@ -21,11 +21,16 @@ include_directories(
   lib
 )
 
+file(GLOB srcs_hasm "src/hasm/*.cpp")
 file(GLOB srcs_assembler "src/assembler/*.cpp")
 file(GLOB srcs_linker "src/linker/*.cpp")
 file(GLOB srcs_util "src/util/*.cpp")
 
-add_executable(hasm "src/main.cpp" ${srcs_assembler} ${srcs_linker} ${srcs_util})
+add_executable(hasm "src/main.cpp"
+  ${srcs_hasm}
+  ${srcs_assembler}
+  ${srcs_linker}
+  ${srcs_util})
 
 file(GLOB srcs_utests "src/assembler/_tests/*.ut.cpp" "src/linker/_tests/*.ut.cpp" "src/util/_tests/*.ut.cpp")
 add_executable(utests

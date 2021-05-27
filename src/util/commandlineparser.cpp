@@ -17,14 +17,14 @@ CommandLineParser::CommandLineParser(int argc, const char* argv[]) {
 }
 
 
-AssemblyOptions CommandLineParser::run() {
+AssemblyParameters CommandLineParser::run() {
   checkForOuputFileNameFlag();
   checkForCompileOnlyFlag();
   getFileNames();
   throwIfOutputNameEqualsInputName();
   throwIfThereAreMultipleFilesAndOutputFlag();
 
-  return assemblyOptions;
+  return assemblyParameters;
 }
 
 
@@ -33,7 +33,7 @@ void CommandLineParser::getFileNames() {
     throw std::invalid_argument("Não há arquivos de entrada");
   }
 
-  assemblyOptions.fileNames = arguments;
+  assemblyParameters.fileNames = arguments;
 }
 
 
@@ -46,7 +46,7 @@ void CommandLineParser::checkForCompileOnlyFlag() {
   if (flagNotFound)
     return;
 
-  assemblyOptions.isCompileOnly = true;
+  assemblyParameters.isCompileOnly = true;
   arguments.erase(it);
 }
 
@@ -66,22 +66,22 @@ void CommandLineParser::checkForOuputFileNameFlag() {
     throw std::invalid_argument("Falta o nome do arquivo depois de '-o'");
   }
 
-  assemblyOptions.outputFileName = *(it + 1);
+  assemblyParameters.outputFileName = *(it + 1);
   arguments.erase(it, it + 2); // erase: [inicio, fim)
 }
 
 
 void CommandLineParser::throwIfOutputNameEqualsInputName() {
-  for (auto fileName : assemblyOptions.fileNames) {
-    if (fileName == assemblyOptions.outputFileName)
+  for (auto fileName : assemblyParameters.fileNames) {
+    if (fileName == assemblyParameters.outputFileName)
       throw std::invalid_argument("Nome de saída é igual ao nome de entrada");
   }
 }
 
 
 void CommandLineParser::throwIfThereAreMultipleFilesAndOutputFlag() {
-  bool hasOutputFileName = !assemblyOptions.outputFileName.empty();
-  bool hasMultipleInputFiles = assemblyOptions.fileNames.size() > 1;
+  bool hasOutputFileName = !assemblyParameters.outputFileName.empty();
+  bool hasMultipleInputFiles = assemblyParameters.fileNames.size() > 1;
   if (hasMultipleInputFiles && hasOutputFileName) {
     throw std::invalid_argument("Não é permitido usar '-o' com mútiplos arquivos");
   }

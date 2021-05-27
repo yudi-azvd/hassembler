@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-struct AssemblyOptions {
+struct AssemblyParameters {
   bool isCompileOnly = false;
 
   std::vector<std::string> fileNames;

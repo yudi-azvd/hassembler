@@ -11,7 +11,7 @@ TEST_CASE("should get correct file names") {
 
   CommandLineParser parser(argc, argv);
 
-  AssemblyOptions asmOptions = parser.run();
+  AssemblyParameters asmOptions = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm", "b.asm"};
 
@@ -25,7 +25,7 @@ TEST_CASE("should get correct single file name even with -c flag") {
 
   CommandLineParser parser(argc, argv);
 
-  AssemblyOptions asmOptions = parser.run();
+  AssemblyParameters asmOptions = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm"};
 
@@ -39,7 +39,7 @@ TEST_CASE("should get correct file names even with -c flag") {
 
   CommandLineParser parser(argc, argv);
 
-  AssemblyOptions asmOptions = parser.run();
+  AssemblyParameters asmOptions = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm", "b.asm"};
 
@@ -53,7 +53,7 @@ TEST_CASE("should get correct file names even with -o flag") {
 
   CommandLineParser parser(argc, argv);
 
-  AssemblyOptions asmOptions = parser.run();
+  AssemblyParameters asmOptions = parser.run();
 
   std::vector<std::string> expectedFileNames = {"a.asm"};
 
@@ -69,7 +69,7 @@ TEST_CASE("should get correct output names with -o flag") {
 
   CommandLineParser parser(argc, argv);
 
-  AssemblyOptions asmOptions = parser.run();
+  AssemblyParameters asmOptions = parser.run();
 
   std::string expectedOutputName = {"a.o"};
 
