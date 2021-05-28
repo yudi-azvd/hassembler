@@ -1,19 +1,43 @@
 # Hassembler
-Montador para um assembly hipotético estudado durante a disciplina de Software
-Básico da Universidade de Brasília.
+**Hassembler** é um montador e ligador para
+o Assembly hipotético estudado durante a disciplina de Software Básico da
+Universidade de Brasília. Como se trata de um montador para Assembly hipotético,
+nada mais justo que considerar o montador também como hipotético:
+<b>H</b>ypothetical <b>Assembler</b> ➜ <b> Hassembler</b>.
 
-Por enquanto ele só monta. Não tem ligador nem simulador.
 
-Além disso, é garantido que funciona apenas em Linux ou
-[WSL](https://docs.microsoft.com/en-us/windows/wsl/). Usuários de Windows vão
-ter que esperar um pouco. Ainda assim, são incentivados a experimentar com esse
-projeto e abrir [issues](https://github.com/yudi-azvd/hassembler/issues/new).
+## O que o Hassembler consegue fazer atualmente:
+- Montar códigos de Assembly hipotético traduzindo-os para arquivos objeto.
+- Mostrar os erros de montagem indicando a respectiva linha (mas não o arquivo,
+he he. Vai ser consertado).
+- Suporte às diretivas `SPACE` (não funciona para vetores) e `CONST`.
+
+
+### O que o Hassembler vai conseguir fazer em um futuro próximo:
+- Montar e ligar, gerando o "executável" para o [simulador](docs/simulador.md).
+- Mostrar erros de ligação, indicando linha e arquivo.
+- Suporte às diretivas `EQU` para substituir valores e `SPACE` para alocar
+vetores.
+- Strings?
+- E mais outras coisas se eu tiver paciência.
+
+Se você estiver muito impaciente para montar e ligar, você pode usar o programa
+em uma [versão anterior](docs/curiosidades.md#trabalhos-originais).
+
+
+## Fique atento
+É garantido que o Hassembler funciona (eu espero pelo menos isso) apenas em
+Linux ou [WSL](https://docs.microsoft.com/en-us/windows/wsl/). Usuários de
+Windows vão ter que esperar um pouco. Ainda assim, são incentivados a
+experimentar com esse projeto e abrir
+[issues](https://github.com/yudi-azvd/hassembler/issues/new).
 
 
 ## Dependências
 Para compilar esse projeto, você vai precisar ter os seguintes programas
 instalados em seu computador:
 
+- g++
 - [CMake](https://cmake.org/download/)
 - [Make](https://www.gnu.org/software/make/)
 <!-- (ou [Ninja](https://ninja-build.org/)) -->
@@ -22,7 +46,7 @@ instalados em seu computador:
 ## Como usar
 Baixe esse [repositório](https://github.com/yudi-azvd/hassembler) e entre nele:
 
-    git clone https://github.com/yudi-azvd/hassembler
+    git clone https://github.com/yudi-azvd/hassembler.git
     cd hassembler
 
 Crie a pasta de build, entre nela, gere os arquivos de build e compile:
@@ -67,18 +91,14 @@ testes são indicados com uma sub extensão:
 
 
 ## Aleatórios
+
 ### Automatização no Visual Studio Code
 Dê uma olhada [aqui](docs/vscode-automation.md) para automatizar os processos de
 build no VSCode.
 
-### Trabalhos originais
-Para os curiosos, os trabalhos originais entregues na displina de Software
-Básico podem ser contemplados nesses links:
 
-- [Trabalho 1](https://github.com/yudi-azvd/hassembler/tree/sb-trabalho-1):
-montador e simulador
-- [Trabalho 2](https://github.com/yudi-azvd/hassembler/tree/sb-trabalho-2):
-montador adpatado para ligação e ligador (simulador é o mesmo do Trabalho 1)
+### Trabalhos originais
+Dê uma olhada [aqui](docs/curiosidades.md#trabalhos-originais)
 
 [Usando o filesystem em testes](https://softwareengineering.stackexchange.com/questions/330393/reading-a-file-before-testing-a-method-it-is-an-integration-test-or-a-unit-tes).
 

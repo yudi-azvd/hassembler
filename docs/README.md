@@ -19,6 +19,7 @@ _Essa documentação ainda está desenvolvimento_.
 | INPUT     | 12     | 2                     | `mem[OP] = entrada  `      |
 | OUTPUT    | 13     | 2                     | `saída = mem[OP]    `      |
 | STOP      | 14     | 1                     | Suspende a execução      |
+
 <small> Tabela feita com <a href="https://www.tablesgenerator.com/markdown_tables#"> Tables Generator</a></small>.
 
 
