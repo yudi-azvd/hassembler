@@ -6,25 +6,37 @@ Hasm::Hasm() { }
 
 Hasm::~Hasm() {
   delete assembler;
+  // delete linker;
+  // delete outputGen;
 }
 
 
 Hasm::Hasm(std::vector<std::string> args) {
   HasmParametersParser parser(args);
   parameters = parser.run();
-  assembler = new Assembler(parameters.filenames);
 }
 
 
 void Hasm::run() {
-  // inputFileGetter.run()
-  // init assemblyData
+  /*
+  HasmData hasmData(parameters);
 
-  assembler->assemble();
-  // if (!parameters.isCompileOnly) // refatorar pra .mustAlsoLink
-  // linker = new Linker(assemblyData);
-  // linker->link()
+  inputFiles = new InputFiles(hasmData);
+  inputFiles.read(); // Deve adicionar Sources em hasmData.
+                     // Deve também lançar exceção se existirem arquivos
+                     // de tipos diferentes.
 
-  // output assemblyData
-  // outputGenerator.run()
+  if (inputFiles.areAssemblyFiles()) {
+    assembler = new Assembler(hasmData);
+    assembler->assemble();
+  }
+
+  if (hasmData.mustLink()) {
+    linker = new Linker(hasmData);
+    linker->link()
+  }
+
+  outputGen = new OutputGenerator(hasmData);
+  outputGen->run();
+  */
 }
