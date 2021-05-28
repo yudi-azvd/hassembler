@@ -5,9 +5,7 @@
 
 
 TEST_CASE("should get correct file names") {
-  std::vector<std::string> args = {"a.asm", "b.asm"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "b.asm"});
 
   HasmParameters params = parser.run();
 
@@ -18,9 +16,7 @@ TEST_CASE("should get correct file names") {
 
 
 TEST_CASE("should get correct single file name even with -c flag") {
-  std::vector<std::string> args = {"a.asm", "-c"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "-c"});
 
   HasmParameters params = parser.run();
 
@@ -31,9 +27,7 @@ TEST_CASE("should get correct single file name even with -c flag") {
 
 
 TEST_CASE("should get correct file names even with -c flag") {
-  std::vector<std::string> args = {"a.asm", "b.asm", "-c"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "b.asm", "-c"});
 
   HasmParameters params = parser.run();
 
@@ -44,9 +38,7 @@ TEST_CASE("should get correct file names even with -c flag") {
 
 
 TEST_CASE("should get correct file names even with -o flag") {
-  std::vector<std::string> args = {"a.asm", "-o", "a.o"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "-o", "a.o"});
 
   HasmParameters params = parser.run();
 
@@ -59,9 +51,7 @@ TEST_CASE("should get correct file names even with -o flag") {
 
 
 TEST_CASE("should get correct output names with -o flag") {
-  std::vector<std::string> args = {"a.asm", "-o", "a.o"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "-o", "a.o"});
 
   HasmParameters params = parser.run();
 
@@ -72,9 +62,7 @@ TEST_CASE("should get correct output names with -o flag") {
 
 
 TEST_CASE("should throw exception when input name is the same as output name") {
-  std::vector<std::string> args = {"a.asm", "-o", "a.asm"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "-o", "a.asm"});
 
   CHECK_THROWS_WITH_AS(parser.run(),
     "erro: Nome de saída é igual ao nome de entrada",
@@ -84,9 +72,7 @@ TEST_CASE("should throw exception when input name is the same as output name") {
 
 
 TEST_CASE("should throw exception when no output name is given using -o flag") {
-  std::vector<std::string> args = {"a.asm", "-o"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "-o"});
 
   CHECK_THROWS_WITH_AS(parser.run(),
     "erro: Falta o nome do arquivo depois de '-o'",
@@ -95,9 +81,7 @@ TEST_CASE("should throw exception when no output name is given using -o flag") {
 
 
 TEST_CASE("should throw exception when given multiple input files while  using -o flag") {
-  std::vector<std::string> args = {"a.asm", "b.asm", "-o", "c.o"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"a.asm", "b.asm", "-o", "c.o"});
 
   CHECK_THROWS_WITH_AS(parser.run(),
     "erro: Não é permitido usar '-o' com mútiplos arquivos",
@@ -107,7 +91,6 @@ TEST_CASE("should throw exception when given multiple input files while  using -
 
 TEST_CASE("should throw exception when no input files are given") {
   std::vector<std::string> args = {};
-
   HasmParametersParser parser(args);
 
   CHECK_THROWS_WITH_AS(parser.run(),
@@ -117,9 +100,7 @@ TEST_CASE("should throw exception when no input files are given") {
 
 
 TEST_CASE("should throw exception when no input files are given while using -o") {
-  std::vector<std::string> args = {"-o", "outfile"};
-
-  HasmParametersParser parser(args);
+  HasmParametersParser parser({"-o", "outfile"});
 
   CHECK_THROWS_WITH_AS(parser.run(),
     "erro: Não há arquivos de entrada",
