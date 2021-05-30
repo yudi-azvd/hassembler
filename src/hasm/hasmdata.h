@@ -4,10 +4,11 @@
 #include <iostream>
 #include <vector>
 
-#include "util/correctionfactortable.hpp"
 #include "hasmparameters.h"
+#include "source.h"
 
-class Source;
+#include "util/correctionfactortable.hpp"
+
 
 class HasmData {
 public:
@@ -23,40 +24,6 @@ private:
   std::string outputFilename;
 
   bool _mustLink;
-};
-
-
-/**
- * Representação interna do conteúdo de um arquivo fonte
- * e talvez alguns meta dados.
- */
-class Source {
-public:
-  std::string getModulename();
-
-  std::string getOutputFilename();
-
-  bool isModule();
-
-private:
-  std::string modulename;
-
-  std::string inputFilename;
-
-  // Só está definido quando é compileOnly=true,
-  // é o nome do arquivo objeto.
-  std::string outputObjetctFilename;
-
-  bool _isModule;
-/*
-  FileContent fileContent;
-
-  SymbolsTable symbolsTable;
-  UsageTable usageTable;
-  DefinitionsTable definitionsTable;
-  ObjectCode objectCode;
-  RelocationInformation relocInfo;
-*/
 };
 
 

@@ -21,7 +21,7 @@ include_directories(
 )
 
 file(GLOB srcs_hasm "src/hasm/*.cpp")
-file(GLOB srcs_assembler "src/assembler/*.cpp")
+file(GLOB srcs_assembler "src/assembler/*.cpp" "src/assembler/twopasses/*.cpp" "src/assembler/scanner/*.cpp")
 file(GLOB srcs_linker "src/linker/*.cpp")
 file(GLOB srcs_util "src/util/*.cpp")
 
@@ -34,6 +34,8 @@ add_executable(hasm "src/main.cpp"
 file(GLOB srcs_utests
   "src/hasm/_tests/*.ut.cpp"
   "src/assembler/_tests/*.ut.cpp"
+    "src/assembler/twopasses/_tests/*.ut.cpp"
+    "src/assembler/scanner/_tests/*.ut.cpp"
   "src/linker/_tests/*.ut.cpp"
   "src/util/_tests/*.ut.cpp")
 add_executable(utests

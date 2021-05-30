@@ -12,7 +12,10 @@
             "groupBySource": {
               "label": "${sourceRelPath[1]}",
               "groupBySource": {
-                "label": "${sourceRelPath[3:]}",
+                "label": "${sourceRelPath[2]}",
+                "groupBySource": {
+                  "label": "${sourceRelPath[3:]}",
+                }
               }
             }
           },

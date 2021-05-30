@@ -6,9 +6,13 @@
 #include <vector>
 #include <map>
 
+#include "hasm/hasmdata.h"
+
 
 class Assembler {
 public:
+  Assembler(HasmData& hasmData);
+
   Assembler(std::vector<std::string> filename);
 
   Assembler(std::string filename = "");
@@ -119,6 +123,8 @@ public:
   int directiveSection(int posCounter, std::vector<std::string> operands);
 
 private:
+  // HasmData& hasmData;
+
   int _textSectionSize;
 
   int _dataSectionSize;

@@ -3,15 +3,14 @@
 
 #include "doctest/doctest.h"
 #include "assembler/assembler.h"
+#include "assembler/scanner/scanner.h"
 #include "util/util.h"
 
 
-TEST_CASE("parseLine") {
+TEST_CASE("parse tokens") {
   std::string line;
   std::vector<std::string> expectedTokens;
   std::vector<std::string> gotTokens;
-
-  Assembler as;
 
   std::vector<LineAndItsTokens> linesAndItsExpectedTokens {
     {"N2: SPACE", {"N2", ":", "SPACE"}},
@@ -28,7 +27,7 @@ TEST_CASE("parseLine") {
     line = lineExpectedTokens.line;
     expectedTokens = lineExpectedTokens.tokens;
 
-    gotTokens = as.parseLine(line);
+    gotTokens = Scanner::parseTokens(line);
     INFO(i, ": [", line, "]");
     INFO(i++, ": [", vectorToString(gotTokens), "]");
     CHECK_EQ(gotTokens, expectedTokens);

@@ -6,6 +6,10 @@
 #include "util/util.h"
 
 
+// Assembler::Assembler(HasmData& hd) : hasmData{ hd } {
+// }
+
+
 Assembler::Assembler(std::vector<std::string> filenames) {
   if (!filenames.empty())
     _filenames = filenames;
