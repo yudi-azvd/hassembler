@@ -14,13 +14,12 @@ void ZerothPass::run() {
 
   auto sourceContent = source.getContent();
   for (auto& line : sourceContent.getLines()) {
-    tokens = Scanner::parseTokens(line.getContent());
-
-    if (tokens.empty()) {
+    if (line.isDisabled()) {
       lineCounter++;
       continue;
     }
 
+    tokens = Scanner::parseTokens(line.getContent());
     if (toLower(tokens[0]) != "section") {
       lineCounter++;
       continue;
@@ -31,6 +30,9 @@ void ZerothPass::run() {
     }
     else if (toLower(tokens[1]) == "text") {
       textSectionLine = lineCounter;
+    }
+    else {
+      // Devia dar um erro
     }
 
     if (dataSectionLine > 0 && textSectionLine > 0) {
