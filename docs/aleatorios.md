@@ -26,7 +26,8 @@ build no VSCode.
 
 [Usando o filesystem em testes](https://softwareengineering.stackexchange.com/questions/330393/reading-a-file-before-testing-a-method-it-is-an-integration-test-or-a-unit-tes).
 
+## Renomear múlitplos arquivos
+[post no StackOverflow](https://stackoverflow.com/questions/15290186/find-a-pattern-in-files-and-rename-them):
 
-- [Renomear múltiplos arquivos](https://stackoverflow.com/questions/15290186/find-a-pattern-in-files-and-rename-them):
 `find src/** -name '*.test.cpp' -exec bash -c 'mv $0 ${0/.test./.ut.}' {} \;`
 
