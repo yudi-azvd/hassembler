@@ -90,19 +90,5 @@ testes são indicados com uma sub extensão:
 - Testes de ponta a ponta (end-to-end): `.e2et` -->
 
 
-## Aleatórios
-
-### Automatização no Visual Studio Code
-Dê uma olhada [aqui](docs/vscode-automation.md) para automatizar os processos de
-build no VSCode.
-
-
-### Trabalhos originais
-Dê uma olhada [aqui](docs/curiosidades.md#trabalhos-originais)
-
-[Usando o filesystem em testes](https://softwareengineering.stackexchange.com/questions/330393/reading-a-file-before-testing-a-method-it-is-an-integration-test-or-a-unit-tes).
-
-
-### Coisas aleatórias que eu aprendi
-- [Renomear múltiplos arquivos](https://stackoverflow.com/questions/15290186/find-a-pattern-in-files-and-rename-them):
-`find src/** -name '*.test.cpp' -exec bash -c 'mv $0 ${0/.test./.ut.}' {} \;`
+## Aleatórios e Curiosidades
+Dê uma olhada [aqui](docs/aleatorios.md) para conhecimentos aleatórios e curiosidades sobre esse projeto.
