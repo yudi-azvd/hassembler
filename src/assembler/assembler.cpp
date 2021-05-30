@@ -5,6 +5,7 @@
 #include "assembler.h"
 #include "util/util.h"
 
+
 Assembler::Assembler(std::vector<std::string> filenames) {
   if (!filenames.empty())
     _filenames = filenames;
