@@ -30,12 +30,10 @@
       "presentation": {
         "echo": false,
         "reveal": "silent",
-        // "focus": true,
         "panel": "dedicated",
-        // "showReuseMessage": false,
         "clear": true
       },
-      "command": "make utests",
+      "command": "cd build ; ninja -j4 utests",
       "problemMatcher": []
     },
     {
@@ -47,7 +45,7 @@
         "panel": "dedicated",
         "clear": true
       },
-      "command": "make hasm",
+      "command": "cd build ; ninja -j4 hasm",
       "problemMatcher": []
     },
   ],
