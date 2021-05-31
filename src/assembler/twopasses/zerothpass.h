@@ -11,7 +11,7 @@ class ZerothPass {
 public:
   ZerothPass();
 
-  ZerothPass(AssemblerData* ad);
+  ZerothPass(AssemblyData* ad);
 
   ~ZerothPass();
 
@@ -20,7 +20,7 @@ public:
 private:
   void runOn(Source* source);
 
-  AssemblerData* assemblerData;
+  AssemblyData* assemblyData;
 };
 
 

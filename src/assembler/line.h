@@ -23,6 +23,8 @@ public:
 
   bool isDisabled();
 
+  void disable();
+
 private:
   std::string content;
 

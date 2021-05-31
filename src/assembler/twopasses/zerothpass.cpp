@@ -4,14 +4,14 @@
 ZerothPass::ZerothPass() { }
 
 
-ZerothPass::ZerothPass(AssemblerData* ad) : assemblerData{ad} { }
+ZerothPass::ZerothPass(AssemblyData* ad) : assemblyData{ad} { }
 
 
 ZerothPass::~ZerothPass() {}
 
 
 void ZerothPass::run() {
-  for (auto source : assemblerData->getSources()) {
+  for (auto source : assemblyData->getSources()) {
     runOn(source);
   }
 }

@@ -5,15 +5,15 @@
 
 
 TEST_CASE("assembler data") {
-  AssemblerData* assemblerData = new AssemblerData();
-  assemblerData->addSource({{
+  AssemblyData* assemblyData = new AssemblyData();
+  assemblyData->addSource({{
     "one line",
     "two lines",
   }});
 
-  std::vector<Source*> gotSources = assemblerData->getSources();
+  std::vector<Source*> gotSources = assemblyData->getSources();
 
   CHECK("one line"  == gotSources[0]->getLineContentAt(0));
   CHECK("two lines" == gotSources[0]->getLineContentAt(1));
-  delete assemblerData;
+  delete assemblyData;
 }

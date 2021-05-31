@@ -29,3 +29,8 @@ void Line::setContent(std::string c) {
 bool Line::isDisabled() {
   return _isDisabled || content.empty();
 }
+
+
+void Line::disable() {
+  _isDisabled = true;
+}

@@ -1,16 +1,13 @@
 #include "source.h"
 
 
-Source::Source(std::vector<const char*> lns)
-  // : lines{lns}
-{
+Source::Source(std::vector<const char*> lns) {
   std::vector<Line> tmp(lns.begin(), lns.end());
   lines = tmp;
 }
 
 
 Source::~Source() {}
-
 
 
 void Source::setDataSectionComesFirst(bool comesFirst) {
@@ -53,8 +50,23 @@ std::string Source::getModulename() {
 }
 
 
+bool Source::hasModule() {
+  return !modulename.empty();
+}
+
+
+std::string Source::getInputfilename() {
+  return inputFilename;
+}
+
+
 std::vector<Line> Source::getLines() {
   return lines;
+}
+
+
+void Source::disableLine(int line) {
+  lines[line-1].disable();
 }
 
 

@@ -23,7 +23,7 @@ void Hasm::run() {
 
   /*
   inputFiles = new InputFiles(hasmData);
-  inputFiles.read(); // Deve adicionar Sources em hasmData.assemblerData.
+  inputFiles.read(); // Deve adicionar Sources em hasmData.assemblyData.
                      // Deve também lançar exceção se existirem arquivos
                      // de tipos diferentes.
 

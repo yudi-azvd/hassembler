@@ -17,7 +17,7 @@ public:
   bool mustLink();
 
 private:
-  AssemblerData* assemblerData;
+  AssemblyData* assemblyData;
 
   // LinkerData* LinkerData;
 

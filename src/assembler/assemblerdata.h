@@ -1,17 +1,18 @@
-#ifndef ASSEMBLERDATA_INCLUDED
-#define ASSEMBLERDATA_INCLUDED
+#ifndef ASSEMBLYDATA_INCLUDED
+#define ASSEMBLYDATA_INCLUDED
 
 #include <iostream>
 #include <vector>
 
 #include "assembler/source.h"
+#include "assembler/assemblyerror.h"
 
 
-class AssemblerData {
+class AssemblyData {
 public:
-  AssemblerData();
+  AssemblyData();
 
-  ~AssemblerData();
+  ~AssemblyData();
 
   void addSource(std::vector<const char*> source);
 
@@ -21,10 +22,16 @@ public:
 
   Source getNthSource(int index);
 
+  void addError(std::string filename, int line, std::string message);
+
+  std::vector<AssemblyError> getErrors();
+
 private:
   std::vector<Source*> sources;
+
+  std::vector<AssemblyError> errors;
 };
 
 
-#endif // ASSEMBLERDATA_INCLUDED
+#endif // ASSEMBLYDATA_INCLUDED
 

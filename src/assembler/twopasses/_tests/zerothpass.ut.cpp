@@ -11,41 +11,41 @@
  * só pra usar setUp e tearDown
  */
 TEST_CASE("ZerothPass") {
-  AssemblerData* assemblerData = new AssemblerData();
+  AssemblyData* assemblyData = new AssemblyData();
 
 
   SUBCASE("should detect data section coming in first") {
-    assemblerData->addSource({{
+    assemblyData->addSource({{
       "section data",
       "section text",
     }});
 
-    ZerothPass zerothPass(assemblerData);
+    ZerothPass zerothPass(assemblyData);
     zerothPass.run();
 
-    CHECK_EQ(2, assemblerData->getNthSource(0).getTextSectionLine());
-    CHECK_EQ(1, assemblerData->getNthSource(0).getDataSectionLine());
-    CHECK(assemblerData->getNthSource(0).dataSectionComesFirst());
+    CHECK_EQ(2, assemblyData->getNthSource(0).getTextSectionLine());
+    CHECK_EQ(1, assemblyData->getNthSource(0).getDataSectionLine());
+    CHECK(assemblyData->getNthSource(0).dataSectionComesFirst());
   }
 
 
   SUBCASE("should detect data section coming in second") {
-    assemblerData->addSource({{
+    assemblyData->addSource({{
       "section text",
       "section data",
     }});
 
-    ZerothPass zerothPass(assemblerData);
+    ZerothPass zerothPass(assemblyData);
     zerothPass.run();
 
-    CHECK_EQ(1, assemblerData->getNthSource(0).getTextSectionLine());
-    CHECK_EQ(2, assemblerData->getNthSource(0).getDataSectionLine());
-    CHECK_FALSE(assemblerData->getNthSource(0).dataSectionComesFirst());
+    CHECK_EQ(1, assemblyData->getNthSource(0).getTextSectionLine());
+    CHECK_EQ(2, assemblyData->getNthSource(0).getDataSectionLine());
+    CHECK_FALSE(assemblyData->getNthSource(0).dataSectionComesFirst());
   }
 
 
   SUBCASE("should detect sections with lines extra lines") {
-    assemblerData->addSource({{
+    assemblyData->addSource({{
       "section text",
       "output n1",
       "",
@@ -53,22 +53,22 @@ TEST_CASE("ZerothPass") {
       "n1: const 3"
     }});
 
-    ZerothPass zerothPass(assemblerData);
+    ZerothPass zerothPass(assemblyData);
     zerothPass.run();
 
-    CHECK_EQ(1, assemblerData->getNthSource(0).getTextSectionLine());
-    CHECK_EQ(4, assemblerData->getNthSource(0).getDataSectionLine());
-    CHECK_FALSE(assemblerData->getNthSource(0).dataSectionComesFirst());
+    CHECK_EQ(1, assemblyData->getNthSource(0).getTextSectionLine());
+    CHECK_EQ(4, assemblyData->getNthSource(0).getDataSectionLine());
+    CHECK_FALSE(assemblyData->getNthSource(0).dataSectionComesFirst());
   }
 
-  delete assemblerData;
+  delete assemblyData;
 }
 
 
 // Nenhum motivo especial além da preguiça:
 TEST_CASE("should detect sections with lines extra lines - inverted") {
-  AssemblerData* assemblerData = new AssemblerData();
-  assemblerData->addSource({{
+  AssemblyData* assemblyData = new AssemblyData();
+  assemblyData->addSource({{
     "section data",
     "n1: const 3",
     "section text", // linha 3!
@@ -76,11 +76,11 @@ TEST_CASE("should detect sections with lines extra lines - inverted") {
     "output n1",
   }});
 
-  ZerothPass zerothPass(assemblerData);
+  ZerothPass zerothPass(assemblyData);
   zerothPass.run();
 
-  CHECK_EQ(3, assemblerData->getNthSource(0).getTextSectionLine());
-  CHECK_EQ(1, assemblerData->getNthSource(0).getDataSectionLine());
-  CHECK(assemblerData->getNthSource(0).dataSectionComesFirst());
-  delete assemblerData;
+  CHECK_EQ(3, assemblyData->getNthSource(0).getTextSectionLine());
+  CHECK_EQ(1, assemblyData->getNthSource(0).getDataSectionLine());
+  CHECK(assemblyData->getNthSource(0).dataSectionComesFirst());
+  delete assemblyData;
 }

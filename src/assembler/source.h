@@ -33,7 +33,13 @@ public:
 
   std::string getModulename();
 
+  bool hasModule();
+
+  std::string getInputfilename();
+
   std::vector<Line> getLines();
+
+  void disableLine(int line);
 
   std::string getLineContentAt(int index);
 
@@ -46,7 +52,10 @@ private:
 
   std::string modulename = "";
 
+  std::string inputFilename;
+
   std::vector<Line> lines;
+
 
 /*
   // Só está definido quando é compileOnly=true,
@@ -54,7 +63,6 @@ private:
   std::string outputObjetctFilename;
 
 
-  std::string inputFilename;
   SymbolsTable symbolsTable;
   UsageTable usageTable;
   DefinitionsTable definitionsTable;

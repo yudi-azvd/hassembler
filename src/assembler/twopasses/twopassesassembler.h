@@ -6,21 +6,21 @@
 
 class TwoPassesAssembler {
 public:
-  TwoPassesAssembler(AssemblerData* ad) {
-    assemblerData = ad;
+  TwoPassesAssembler(AssemblyData* ad) {
+    assemblyData = ad;
     zerothPass = ZerothPass(ad);
   }
 
   void run() {
-    for (auto source : assemblerData->getSources()) {
-      zerothPass = ZerothPass(assemblerData);
+    for (auto source : assemblyData->getSources()) {
+      zerothPass = ZerothPass(assemblyData);
       zerothPass.run();
     }
 
   }
 
 private:
-  AssemblerData* assemblerData;
+  AssemblyData* assemblyData;
 
   ZerothPass zerothPass;
 };
