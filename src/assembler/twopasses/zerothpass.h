@@ -3,7 +3,7 @@
 
 #include "assembler/scanner/scanner.h"
 #include "assembler/source.h"
-#include "assembler/assemblerdata.h"
+#include "assembler/assemblydata.h"
 #include "util/util.h"
 
 

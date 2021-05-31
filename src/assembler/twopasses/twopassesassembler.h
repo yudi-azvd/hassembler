@@ -1,7 +1,7 @@
 #ifndef TWOPASSESASSEMBLER_H_INCLUDED
 #define TWOPASSESASSEMBLER_H_INCLUDED
 
-#include "assembler/assemblerdata.h"
+#include "assembler/assemblydata.h"
 #include "assembler/twopasses/zerothpass.h"
 
 class TwoPassesAssembler {

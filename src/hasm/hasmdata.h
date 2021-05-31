@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "hasmparameters.h"
-#include "assembler/assemblerdata.h"
+#include "assembler/assemblydata.h"
 
 
 class HasmData {

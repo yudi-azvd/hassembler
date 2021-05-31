@@ -75,14 +75,15 @@ std::string Source::getLineContentAt(int index) {
 }
 
 
-void Source::addToDefinitionsTable(std::string name, int pos) {
-  definitionsTable.add(name, pos);
+DefinitionsTable* Source::getDefinitionsTable() {
+  return &definitionsTable;
 }
 
 
-DefinitionsTable Source::getDefinitionsTable() {
-  return definitionsTable;
+UsageTable* Source::getUsageTable() {
+  return &usageTable;
 }
+
 
 std::ostream& operator<<(std::ostream& os, const Source& s) {
   int lineCounter = 1;

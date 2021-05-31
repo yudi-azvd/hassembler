@@ -1,4 +1,4 @@
-#include "assemblerdata.h"
+#include "assemblydata.h"
 
 
 AssemblyData::AssemblyData() {}
@@ -25,8 +25,8 @@ std::vector<Source*> AssemblyData::getSources() {
 }
 
 
-Source AssemblyData::getNthSource(int index) {
-  return *sources[index];
+Source* AssemblyData::getNthSource(int index) {
+  return sources[index];
 }
 
 

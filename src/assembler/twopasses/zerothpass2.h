@@ -3,7 +3,7 @@
 
 
 #include "assembler/scanner/scanner.h"
-#include "assembler/assemblerdata.h"
+#include "assembler/assemblydata.h"
 #include "util/util.h"
 
 /**
@@ -34,6 +34,22 @@ private:
 
   Source* source;
 
+  void tryToRunOnLine(Line line);
+
+  void handlePublicDirective();
+
+  void handleBeginDirective();
+
+  void handleEndDirective();
+
+  void handleExternDirective();
+
+  void checkForBeginAndEndMatch();
+
+  DefinitionsTable* definitionsTable;
+
+  UsageTable* usageTable;
+
   int lineCounter;
 
   bool lineHasBeginDirective;
@@ -42,19 +58,13 @@ private:
 
   bool lineHasPublicDirective;
 
+  bool lineHasExternDirective;
+
   bool sourceHasEndDirective = false;
 
   std::vector<std::string> tokens;
 
   std::vector<std::string> lowerCasedTokens;
-
-  void handlePublicDirective();
-
-  void handleBeginDirective();
-
-  void handleEndDirective();
-
-  void checkForBeginAndEndMatch();
 };
 
 

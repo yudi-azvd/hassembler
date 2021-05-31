@@ -23,9 +23,9 @@ TEST_CASE("ZerothPass") {
     ZerothPass zerothPass(assemblyData);
     zerothPass.run();
 
-    CHECK_EQ(2, assemblyData->getNthSource(0).getTextSectionLine());
-    CHECK_EQ(1, assemblyData->getNthSource(0).getDataSectionLine());
-    CHECK(assemblyData->getNthSource(0).dataSectionComesFirst());
+    CHECK_EQ(2, assemblyData->getNthSource(0)->getTextSectionLine());
+    CHECK_EQ(1, assemblyData->getNthSource(0)->getDataSectionLine());
+    CHECK(assemblyData->getNthSource(0)->dataSectionComesFirst());
   }
 
 
@@ -38,9 +38,9 @@ TEST_CASE("ZerothPass") {
     ZerothPass zerothPass(assemblyData);
     zerothPass.run();
 
-    CHECK_EQ(1, assemblyData->getNthSource(0).getTextSectionLine());
-    CHECK_EQ(2, assemblyData->getNthSource(0).getDataSectionLine());
-    CHECK_FALSE(assemblyData->getNthSource(0).dataSectionComesFirst());
+    CHECK_EQ(1, assemblyData->getNthSource(0)->getTextSectionLine());
+    CHECK_EQ(2, assemblyData->getNthSource(0)->getDataSectionLine());
+    CHECK_FALSE(assemblyData->getNthSource(0)->dataSectionComesFirst());
   }
 
 
@@ -56,9 +56,9 @@ TEST_CASE("ZerothPass") {
     ZerothPass zerothPass(assemblyData);
     zerothPass.run();
 
-    CHECK_EQ(1, assemblyData->getNthSource(0).getTextSectionLine());
-    CHECK_EQ(4, assemblyData->getNthSource(0).getDataSectionLine());
-    CHECK_FALSE(assemblyData->getNthSource(0).dataSectionComesFirst());
+    CHECK_EQ(1, assemblyData->getNthSource(0)->getTextSectionLine());
+    CHECK_EQ(4, assemblyData->getNthSource(0)->getDataSectionLine());
+    CHECK_FALSE(assemblyData->getNthSource(0)->dataSectionComesFirst());
   }
 
   delete assemblyData;
@@ -79,8 +79,8 @@ TEST_CASE("should detect sections with lines extra lines - inverted") {
   ZerothPass zerothPass(assemblyData);
   zerothPass.run();
 
-  CHECK_EQ(3, assemblyData->getNthSource(0).getTextSectionLine());
-  CHECK_EQ(1, assemblyData->getNthSource(0).getDataSectionLine());
-  CHECK(assemblyData->getNthSource(0).dataSectionComesFirst());
+  CHECK_EQ(3, assemblyData->getNthSource(0)->getTextSectionLine());
+  CHECK_EQ(1, assemblyData->getNthSource(0)->getDataSectionLine());
+  CHECK(assemblyData->getNthSource(0)->dataSectionComesFirst());
   delete assemblyData;
 }

@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "util/usagetable.hpp"
+#include "util/usagetable.h"
 
 TEST_CASE("basic usage table - has") {
   UsageTable table;

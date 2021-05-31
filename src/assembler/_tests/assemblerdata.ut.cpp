@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "doctest/doctest.h"
-#include "assembler/assemblerdata.h"
+#include "assembler/assemblydata.h"
 
 
 TEST_CASE("assembler data") {

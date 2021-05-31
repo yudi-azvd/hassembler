@@ -1,4 +1,4 @@
-#include "usagetable.hpp"
+#include "usagetable.h"
 
 void UsageTable::add(std::string name, int position) {
   table.push_back(std::make_pair(position, name));

@@ -9,7 +9,7 @@
 
 #include "util/correctionfactortable.hpp"
 #include "util/definitionstable.hpp"
-#include "util/usagetable.hpp"
+#include "util/usagetable.h"
 #include "util/util.h"
 
 

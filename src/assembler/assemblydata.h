@@ -20,7 +20,7 @@ public:
 
   std::vector<Source*> getSources();
 
-  Source getNthSource(int index);
+  Source* getNthSource(int index);
 
   void addError(std::string filename, int line, std::string message);
 

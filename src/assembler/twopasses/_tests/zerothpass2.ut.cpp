@@ -3,8 +3,11 @@
 
 #include "doctest/doctest.h"
 #include "assembler/twopasses/zerothpass2.h"
-#include "assembler/assemblerdata.h"
+#include "assembler/assemblydata.h"
 #include "util/util.h"
+
+
+TEST_SUITE_BEGIN("zerothpass2");
 
 
 TEST_CASE("should get module name") {
@@ -17,7 +20,7 @@ TEST_CASE("should get module name") {
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
 
-  CHECK("mod_a" == assemblyData.getNthSource(0).getModulename());
+  CHECK("mod_a" == assemblyData.getNthSource(0)->getModulename());
 }
 
 
@@ -80,10 +83,10 @@ TEST_CASE("should disable lines with BEGIN and END directives") {
   INFO("source:");
   INFO(assemblyData.getNthSource(0));
   CHECK(assemblyData.getErrors().size() == 0);
-  CHECK(      assemblyData.getNthSource(0).getLines()[0].isDisabled());
-  CHECK_FALSE(assemblyData.getNthSource(0).getLines()[1].isDisabled());
-  CHECK_FALSE(assemblyData.getNthSource(0).getLines()[2].isDisabled());
-  CHECK(      assemblyData.getNthSource(0).getLines()[3].isDisabled());
+  CHECK(      assemblyData.getNthSource(0)->getLines()[0].isDisabled());
+  CHECK_FALSE(assemblyData.getNthSource(0)->getLines()[1].isDisabled());
+  CHECK_FALSE(assemblyData.getNthSource(0)->getLines()[2].isDisabled());
+  CHECK(      assemblyData.getNthSource(0)->getLines()[3].isDisabled());
 }
 
 
@@ -106,12 +109,12 @@ TEST_CASE("should disable lines with PUBLIC directive") {
   INFO("source:");
   INFO(assemblyData.getNthSource(0));
   CHECK(assemblyData.getErrors().size() == 0);
-  CHECK(      source.getLines()[0].isDisabled());
-  CHECK_FALSE(source.getLines()[1].isDisabled());
-  CHECK(      source.getLines()[2].isDisabled());
-  CHECK_FALSE(source.getLines()[3].isDisabled());
-  CHECK(      source.getLines()[4].isDisabled());
-  CHECK(      source.getLines()[5].isDisabled());
+  CHECK(      source->getLines()[0].isDisabled());
+  CHECK_FALSE(source->getLines()[1].isDisabled());
+  CHECK(      source->getLines()[2].isDisabled());
+  CHECK_FALSE(source->getLines()[3].isDisabled());
+  CHECK(      source->getLines()[4].isDisabled());
+  CHECK(      source->getLines()[5].isDisabled());
 }
 
 
@@ -129,13 +132,12 @@ TEST_CASE("should add labels to definitions table when using PUBLIC directive") 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
 
-  auto source = assemblyData.getNthSource(0);
+  auto definitionsTable = assemblyData.getNthSource(0)->getDefinitionsTable();
 
-  INFO("source:");
-  INFO(assemblyData.getNthSource(0));
+  INFO("definitions table:\n", *definitionsTable);
   CHECK(assemblyData.getErrors().size() == 0);
-  CHECK(source.getDefinitionsTable().has("MY_LABEL"));
-  CHECK(source.getDefinitionsTable().has("RANDOM_LABEL"));
+  CHECK(definitionsTable->getPositionOf("MY_LABEL") == 0);
+  CHECK(definitionsTable->getPositionOf("RANDOM_LABEL") == 0);
 }
 
 
@@ -158,3 +160,52 @@ TEST_CASE("should add error when using PUBLIC with missing symbol") {
   auto gotError = assemblyData.getErrors().back();
   CHECK(expError == gotError);
 }
+
+
+TEST_CASE("should add labels to usage table when using EXTERN directive") {
+  AssemblyData assemblyData;
+  assemblyData.addSource({{
+    "my_module: begin",
+    "random line",
+    "MY_LABEL: EXTERN",
+    "random line",
+    "RANDOM_LABEL: EXTERN",
+    "end"
+  }});
+
+  ZerothPass2 zerothPass2(&assemblyData);
+  zerothPass2.run();
+
+  auto usageTable = assemblyData.getNthSource(0)->getUsageTable();
+
+  INFO("usage table:\n", *usageTable);
+  CHECK(assemblyData.getErrors().size() == 0);
+  CHECK(usageTable->getPositionOf("MY_LABEL") == 0);
+  CHECK(usageTable->getPositionOf("RANDOM_LABEL") == 0);
+}
+
+
+TEST_CASE("should add error when using EXTERN directive in incorrect manner") {
+  AssemblyData assemblyData;
+  assemblyData.addSource({{
+    "my_module: begin",
+    "random line",
+    "MY_LABEL  EXTERN",
+    "random line",
+    "end"
+  }});
+
+  ZerothPass2 zerothPass2(&assemblyData);
+  zerothPass2.run();
+
+  auto usageTable = assemblyData.getNthSource(0)->getUsageTable();
+
+  AssemblyError expError(3, "bad format using EXTERN directive. Use <LABEL>: EXTERN");
+  auto gotError = assemblyData.getErrors().back();
+
+  REQUIRE(assemblyData.getErrors().size() == 1);
+  CHECK(expError == gotError);
+}
+
+
+TEST_SUITE_END();

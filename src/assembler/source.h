@@ -6,6 +6,7 @@
 
 #include "line.h"
 #include "util/definitionstable.hpp"
+#include "util/usagetable.h"
 
 
 /**
@@ -44,9 +45,9 @@ public:
 
   std::string getLineContentAt(int index);
 
-  void addToDefinitionsTable(std::string name, int pos);
+  DefinitionsTable* getDefinitionsTable();
 
-  DefinitionsTable getDefinitionsTable();
+  UsageTable* getUsageTable();
 
   friend std::ostream& operator<<(std::ostream& os, const Source& s);
 
@@ -65,6 +66,8 @@ private:
 
   DefinitionsTable definitionsTable;
 
+  UsageTable usageTable;
+
 /*
   // Só está definido quando é compileOnly=true,
   // é o nome do arquivo objeto.
@@ -72,7 +75,6 @@ private:
 
 
   SymbolsTable symbolsTable;
-  UsageTable usageTable;
   ObjectCode objectCode;
   RelocationInformation relocInfo;
 */
