@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "line.h"
+#include "util/definitionstable.hpp"
 
 
 /**
@@ -43,6 +44,12 @@ public:
 
   std::string getLineContentAt(int index);
 
+  void addToDefinitionsTable(std::string name, int pos);
+
+  DefinitionsTable getDefinitionsTable();
+
+  friend std::ostream& operator<<(std::ostream& os, const Source& s);
+
 private:
   bool _dataSectionComesFirst = false;
 
@@ -56,6 +63,7 @@ private:
 
   std::vector<Line> lines;
 
+  DefinitionsTable definitionsTable;
 
 /*
   // Só está definido quando é compileOnly=true,
@@ -65,7 +73,6 @@ private:
 
   SymbolsTable symbolsTable;
   UsageTable usageTable;
-  DefinitionsTable definitionsTable;
   ObjectCode objectCode;
   RelocationInformation relocInfo;
 */

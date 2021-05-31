@@ -14,11 +14,9 @@ void ZerothPass2::run() {
 }
 
 
-void ZerothPass2::runOn(Source* source) {
-  int lineCounter = 1;
-  bool lineHasBeginDirective, lineHasEndDirective,
-    sourceHasEndDirective = false;
-  std::vector<std::string> tokens, lowerCasedTokens;
+void ZerothPass2::runOn(Source* src) {
+  lineCounter = 1;
+  source = src;
 
   for (auto line : source->getLines()) {
     if (line.isDisabled()) {
@@ -29,21 +27,54 @@ void ZerothPass2::runOn(Source* source) {
     tokens = Scanner::parseTokens(line.getContent());
     lowerCasedTokens = stringVectorLowerCased(tokens);
 
+    lineHasPublicDirective = findInVector(lowerCasedTokens, "public");
     lineHasBeginDirective = findInVector(lowerCasedTokens, "begin");
     lineHasEndDirective = findInVector(lowerCasedTokens, "end");
 
-    if (lineHasBeginDirective) {
-      source->setModulename(tokens[0]);
-      source->disableLine(lineCounter);
+    if (lineHasPublicDirective) {
+      handlePublicDirective();
+    }
+    else if (lineHasBeginDirective) {
+      handleBeginDirective();
     }
     else if(lineHasEndDirective) {
-      sourceHasEndDirective = true;
-      source->disableLine(lineCounter);
+      handleEndDirective();
     }
 
     lineCounter++;
   }
 
+  checkForBeginAndEndMatch();
+}
+
+
+void ZerothPass2::handlePublicDirective() {
+  source->disableLine(lineCounter);
+  if (tokens.size() != 2) {  // essa linha deve ser PUBLIC [SYMBOL]
+    assemblyData->addError(
+      source->getInputfilename(),
+      lineCounter,
+      "missing symbol");
+  }
+  else {
+    source->addToDefinitionsTable(tokens[1], 0);
+  }
+}
+
+
+void ZerothPass2::handleBeginDirective() {
+  source->setModulename(tokens[0]);
+  source->disableLine(lineCounter);
+}
+
+
+void ZerothPass2::handleEndDirective() {
+  sourceHasEndDirective = true;
+  source->disableLine(lineCounter);
+}
+
+
+void ZerothPass2::checkForBeginAndEndMatch() {
   if (source->hasModule() && !sourceHasEndDirective) {
     assemblyData->addError(
       source->getInputfilename(),

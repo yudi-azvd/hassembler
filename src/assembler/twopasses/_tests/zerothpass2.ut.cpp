@@ -65,7 +65,7 @@ TEST_CASE("should add error when module ends but does not begin") {
 }
 
 
-TEST_CASE("should disable lines with begin and end directives") {
+TEST_CASE("should disable lines with BEGIN and END directives") {
   AssemblyData assemblyData;
   assemblyData.addSource({{
     "my_module: begin",
@@ -79,8 +79,82 @@ TEST_CASE("should disable lines with begin and end directives") {
 
   INFO("source:");
   INFO(assemblyData.getNthSource(0));
+  CHECK(assemblyData.getErrors().size() == 0);
   CHECK(      assemblyData.getNthSource(0).getLines()[0].isDisabled());
-  CHECK(      assemblyData.getNthSource(0).getLines()[3].isDisabled());
   CHECK_FALSE(assemblyData.getNthSource(0).getLines()[1].isDisabled());
   CHECK_FALSE(assemblyData.getNthSource(0).getLines()[2].isDisabled());
+  CHECK(      assemblyData.getNthSource(0).getLines()[3].isDisabled());
+}
+
+
+TEST_CASE("should disable lines with PUBLIC directive") {
+  AssemblyData assemblyData;
+  assemblyData.addSource({{
+    "my_module: begin",
+    "random line",
+    "public RANDOM_LABEL",
+    "random line",
+    "public RANDOM_LABEL2",
+    "end"
+  }});
+
+  ZerothPass2 zerothPass2(&assemblyData);
+  zerothPass2.run();
+
+  auto source = assemblyData.getNthSource(0);
+
+  INFO("source:");
+  INFO(assemblyData.getNthSource(0));
+  CHECK(assemblyData.getErrors().size() == 0);
+  CHECK(      source.getLines()[0].isDisabled());
+  CHECK_FALSE(source.getLines()[1].isDisabled());
+  CHECK(      source.getLines()[2].isDisabled());
+  CHECK_FALSE(source.getLines()[3].isDisabled());
+  CHECK(      source.getLines()[4].isDisabled());
+  CHECK(      source.getLines()[5].isDisabled());
+}
+
+
+TEST_CASE("should add labels to definitions table when using PUBLIC directive") {
+  AssemblyData assemblyData;
+  assemblyData.addSource({{
+    "my_module: begin",
+    "random line",
+    "public MY_LABEL",
+    "random line",
+    "public RANDOM_LABEL",
+    "end"
+  }});
+
+  ZerothPass2 zerothPass2(&assemblyData);
+  zerothPass2.run();
+
+  auto source = assemblyData.getNthSource(0);
+
+  INFO("source:");
+  INFO(assemblyData.getNthSource(0));
+  CHECK(assemblyData.getErrors().size() == 0);
+  CHECK(source.getDefinitionsTable().has("MY_LABEL"));
+  CHECK(source.getDefinitionsTable().has("RANDOM_LABEL"));
+}
+
+
+TEST_CASE("should add error when using PUBLIC with missing symbol") {
+  AssemblyData assemblyData;
+  assemblyData.addSource({{
+    "my_module: begin",
+    "random line",
+    "public ", // símbolo faltando
+    "random line",
+    "end"
+  }});
+
+  ZerothPass2 zerothPass2(&assemblyData);
+  zerothPass2.run();
+
+  AssemblyError expError(3, "missing symbol");
+
+  REQUIRE(assemblyData.getErrors().size() == 1);
+  auto gotError = assemblyData.getErrors().back();
+  CHECK(expError == gotError);
 }

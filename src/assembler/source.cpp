@@ -75,3 +75,24 @@ std::string Source::getLineContentAt(int index) {
 }
 
 
+void Source::addToDefinitionsTable(std::string name, int pos) {
+  definitionsTable.add(name, pos);
+}
+
+
+DefinitionsTable Source::getDefinitionsTable() {
+  return definitionsTable;
+}
+
+std::ostream& operator<<(std::ostream& os, const Source& s) {
+  int lineCounter = 1;
+  os << s.inputFilename << std::endl;
+  for (auto line : s.lines) {
+    os << (line.isDisabled() ? "-" : "+");
+    os << lineCounter <<": ";
+    os << line.getContent() << std::endl;
+    ++lineCounter;
+  }
+  return os;
+}
+
