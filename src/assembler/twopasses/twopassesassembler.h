@@ -1,10 +1,12 @@
 #ifndef TWOPASSESASSEMBLER_H_INCLUDED
 #define TWOPASSESASSEMBLER_H_INCLUDED
 
+#include "assembler/assembler.h"
 #include "assembler/assemblydata.h"
-#include "assembler/twopasses/zerothpass.h"
+#include "zerothpass.h"
 
-class TwoPassesAssembler {
+
+class TwoPassesAssembler : public Assembler {
 public:
   TwoPassesAssembler(AssemblyData* ad) {
     assemblyData = ad;

@@ -39,3 +39,14 @@ void AssemblyData::addError(std::string filename, int line, std::string message)
 std::vector<AssemblyError> AssemblyData::getErrors() {
   return errors;
 }
+
+
+std::vector<std::string> AssemblyData::getInputFilenames() {
+  std::vector<std::string> filenames;
+
+  for (auto source : sources) {
+    filenames.push_back(source->getInputfilename());
+  }
+
+  return filenames;
+}

@@ -9,8 +9,9 @@
 #include <iostream>
 #include <exception>
 
+#include "hasmexception.h"
 
-class HasmParameterException : public std::exception {
+class HasmParameterException : public HasmException {
 public:
   HasmParameterException(std::string m) {
     msg = "erro: " +  m;

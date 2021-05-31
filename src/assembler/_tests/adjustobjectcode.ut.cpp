@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "assembler/assembler.h"
+#include "assembler/oldassembler.h"
 #include "util/util.h"
 
 TEST_CASE("adjust object code - fibonacci") {
@@ -43,7 +43,7 @@ TEST_CASE("adjust object code - fibonacci") {
     "        STOP",
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
@@ -96,7 +96,7 @@ TEST_CASE("adjust object code - fatorial") {
     "        stop",
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
@@ -149,7 +149,7 @@ TEST_CASE("not adjusting fatorial object code should work as well") {
     "one:    const 1",
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();
@@ -195,7 +195,7 @@ TEST_CASE("adjust object code - sumof2numbers") {
   };
 
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();

@@ -3,7 +3,7 @@
 #include <map>
 
 #include "doctest/doctest.h"
-#include "assembler/assembler.h"
+#include "assembler/oldassembler.h"
 #include "util/util.h"
 
 
@@ -28,7 +28,7 @@ TEST_CASE("sum of two numbers") {
     "n3: space  ",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -67,7 +67,7 @@ TEST_CASE("fatorial") {
     "one:    const 1",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -101,7 +101,7 @@ TEST_CASE("fatorial with errors") {
     "one:    const 1",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -155,7 +155,7 @@ TEST_CASE("fibonacci") {
     "limit:  space",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -193,7 +193,7 @@ TEST_CASE("area_triangulo") {
   };
 
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -232,7 +232,7 @@ TEST_CASE("label alone in line - 1") {
     "DOIS: CONST 2",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -265,7 +265,7 @@ TEST_CASE("area_triangulo with errors") {
     "dois: konst 2",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -298,7 +298,7 @@ TEST_CASE("invalid label alone in line") {
     " space",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -325,7 +325,7 @@ TEST_CASE("label alone in line should work for space directive") {
     " space",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   as.runFirstPass(sourceFileContent);
@@ -355,7 +355,7 @@ TEST_CASE("rfp label alone in line should work for instructions") {
     "N: space",
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSourceFileContent(sourceFileContent);
   as.runFirstPass(sourceFileContent);

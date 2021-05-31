@@ -14,6 +14,10 @@ public:
 
   ~HasmData();
 
+  AssemblyData* getAssemblyData();
+
+  std::vector<std::string> getFilenames();
+
   bool mustLink();
 
 private:

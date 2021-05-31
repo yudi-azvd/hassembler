@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "assembler/assembler.h"
+#include "assembler/oldassembler.h"
 #include "assembler/scanner/scanner.h"
 
 

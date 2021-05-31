@@ -21,16 +21,24 @@ include_directories(
 )
 
 file(GLOB srcs_hasm "src/hasm/*.cpp")
-file(GLOB srcs_assembler "src/assembler/*.cpp" "src/assembler/twopasses/*.cpp" "src/assembler/scanner/*.cpp")
+file(GLOB srcs_input "src/input/*.cpp")
+file(GLOB srcs_assembler "src/assembler/*.cpp" "src/assembler/twopasses/*.cpp" "src/assembler/scanner/*.cpp" )
 file(GLOB srcs_linker "src/linker/*.cpp")
 file(GLOB srcs_util "src/util/*.cpp")
 
+## GAMBIARRA:
+## Input (srcs_input) vai aparecer pq está incluso em srcs_assembler
 add_executable(hasm "src/main.cpp"
   ${srcs_hasm}
+  ${srcs_input}
   ${srcs_assembler}
   ${srcs_linker}
   ${srcs_util})
 
+
+###############
+# Testes Unitários
+###############
 file(GLOB srcs_utests
   "src/hasm/_tests/*.ut.cpp"
   "src/assembler/_tests/*.ut.cpp"

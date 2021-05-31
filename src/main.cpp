@@ -16,7 +16,7 @@ int main(int argc, const char* argv[]) {
     return EXIT_FAILURE;
   }
   catch(...) {
-    std::cout << "Algo de errado não deu certo..." << std::endl;
+    std::cout << "something wrong is not right X(" << std::endl;
     return EXIT_FAILURE;
   }
 

@@ -4,8 +4,10 @@
 #include <iostream>
 #include <vector>
 
-#include "assembler/assembler.h"
 #include "hasmparametersparser.h"
+#include "assembler/assembler.h"
+#include "input/input.h"
+#include "assembler/oldassembler.h"
 
 
 class Hasm {
@@ -23,7 +25,13 @@ private:
 
   HasmData* hasmData;
 
+  OldAssembler* oldAssembler;
+
+  Input* input;
+
   Assembler* assembler;
+
 };
+
 
 #endif // HASM_H_INCLUDED

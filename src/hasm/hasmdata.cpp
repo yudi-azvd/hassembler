@@ -9,6 +9,17 @@ HasmData::HasmData(HasmParameters params) {
 HasmData::~HasmData() {}
 
 
+AssemblyData* HasmData::getAssemblyData() {
+  return assemblyData;
+}
+
+
+std::vector<std::string> HasmData::getFilenames() {
+  return assemblyData->getInputFilenames();
+}
+
+
+
 bool HasmData::mustLink() {
   return _mustLink;
 }

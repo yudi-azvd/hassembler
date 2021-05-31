@@ -26,6 +26,8 @@ public:
 
   std::vector<AssemblyError> getErrors();
 
+  std::vector<std::string> getInputFilenames();
+
 private:
   std::vector<Source*> sources;
 

@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "assembler/assembler.h"
+#include "assembler/oldassembler.h"
 #include "util/util.h"
 
 TEST_CASE("rsp print number") {
@@ -16,7 +16,7 @@ TEST_CASE("rsp print number") {
     {"b", 4}
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
@@ -57,7 +57,7 @@ TEST_CASE("rsp add two numbers") {
     {"n3", 15},
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
@@ -91,7 +91,7 @@ TEST_CASE("rsp print and add number") {
     {"dois", 7},
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
@@ -148,7 +148,7 @@ TEST_CASE("rsp fibonacci") {
     "LIMIT:  SPACE",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
@@ -193,7 +193,7 @@ TEST_CASE("rsp fatorial") {
     "one:    const 1",
   };
 
-  Assembler as;
+  OldAssembler as;
   as.setSourceFileContent(sourceFileContent);
 
   std::vector<int> gotObjectCode;
@@ -227,7 +227,7 @@ TEST_CASE("rsp should add errors undefined operands") {
     "LABEL: space",
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSymbolTable(symbolTable);
   as.setSourceFileContent(sourceFileContent);
@@ -276,7 +276,7 @@ TEST_CASE("rsp should add errors with wrong number of operands") {
     "random:    const ", // ERRO
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSymbolTable(symbolTable);
   as.setSourceFileContent(sourceFileContent);
@@ -310,7 +310,7 @@ TEST_CASE("should give errors saying operand should be another type") {
     "label2: const trinta", // erro
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSymbolTable(symbolTable);
   as.setSourceFileContent(sourceFileContent);
@@ -343,7 +343,7 @@ TEST_CASE("rsp label alone in line should work for instructions") {
     "N: space",
   };
 
-  Assembler as;
+  OldAssembler as;
 
   as.setSourceFileContent(sourceFileContent);
   as.runZerothPass();

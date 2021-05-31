@@ -2,15 +2,16 @@
 #include <algorithm>
 #include <sstream>
 
-#include "assembler.h"
+#include "oldassembler.h"
 #include "util/util.h"
 
 
-// Assembler::Assembler(HasmData& hd) : hasmData{ hd } {
+// OldAssembler::OldAssembler(HasmData* hd) : hasmData{ hd } {
+//   // input = new Input(hd);
 // }
 
 
-Assembler::Assembler(std::vector<std::string> filenames) {
+OldAssembler::OldAssembler(std::vector<std::string> filenames) {
   if (!filenames.empty())
     _filenames = filenames;
   _initialize();
@@ -18,7 +19,7 @@ Assembler::Assembler(std::vector<std::string> filenames) {
 }
 
 
-Assembler::Assembler(std::string filename) {
+OldAssembler::OldAssembler(std::string filename) {
   if (!filename.empty())
     _filename = filename;
   _initialize();
@@ -26,7 +27,7 @@ Assembler::Assembler(std::string filename) {
 }
 
 
-void Assembler::_initialize() {
+void OldAssembler::_initialize() {
   _opcodeTable = {
     {"add", 1},
     {"sub", 2},
@@ -63,25 +64,26 @@ void Assembler::_initialize() {
 
   // directiveTable["space"] = &Assembler::directiveSpace;
   _directiveTable = {
-    {"space", &Assembler::directiveSpace},
-    {"const", &Assembler::directiveConst},
-    {"section", &Assembler::directiveSection},
-    {"begin", &Assembler::directiveBegin},
+    {"space", &OldAssembler::directiveSpace},
+    {"const", &OldAssembler::directiveConst},
+    {"section", &OldAssembler::directiveSection},
+    {"begin", &OldAssembler::directiveBegin},
   };
 }
 
 
-Assembler::~Assembler() { }
+OldAssembler::~OldAssembler() {
+}
 
 
-void Assembler::getMultipleFileContents() {
+void OldAssembler::getMultipleFileContents() {
   for (auto filename : _filenames) {
     getFileContent(filename);
   }
 }
 
 
-void Assembler::getFileContent(std::string filename) {
+void OldAssembler::getFileContent(std::string filename) {
   std::string line;
   _filename = filename;
   std::vector<std::string> fileContent;
@@ -101,7 +103,7 @@ void Assembler::getFileContent(std::string filename) {
 }
 
 
-void Assembler::assemble() {
+void OldAssembler::assemble() {
   getMultipleFileContents();
 
   size_t fileContentCounter = 0;
@@ -160,7 +162,7 @@ void Assembler::assemble() {
 }
 
 
-void Assembler::runZerothPass() {
+void OldAssembler::runZerothPass() {
   int lineCounter = 1;
   int dataSectionAtLine = 0;
   int textSectionAtLine = 0;
@@ -195,7 +197,7 @@ void Assembler::runZerothPass() {
 }
 
 
-void Assembler::runZerothPass2(int fileContentCounter) {
+void OldAssembler::runZerothPass2(int fileContentCounter) {
   int lineCounter = 1;
   bool lineHasExtern, lineHasPublic, lineHasBegin, lineHasEnd;
   std::string label;
@@ -249,7 +251,7 @@ void Assembler::runZerothPass2(int fileContentCounter) {
 }
 
 
-void Assembler::checkIfAllFilesHaveModules() {
+void OldAssembler::checkIfAllFilesHaveModules() {
   bool eachFileShouldHaveAModule = _filenames.size() > 1;
   bool allFilesHaveModules = _modulenames.size() == _filenames.size();
   if (eachFileShouldHaveAModule && !allFilesHaveModules) {
@@ -259,7 +261,7 @@ void Assembler::checkIfAllFilesHaveModules() {
 }
 
 
-void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
+void OldAssembler::runFirstPass(std::vector<std::string>& fileContent) {
   _textSectionSize = 0;
   _dataSectionSize = 0;
   int positionCounter = 0, lineCounter = 1;
@@ -354,7 +356,7 @@ void Assembler::runFirstPass(std::vector<std::string>& fileContent) {
 }
 
 
-void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
+void OldAssembler::runSecondPass(std::vector<std::string>& fileContent) {
   int positionCounter = 0, lineCounter = 1;
   bool labelExists, operationFound, directiveFound,
     operand1FoundInInternSymTable, operand2FoundInInternSymTab,
@@ -523,7 +525,7 @@ void Assembler::runSecondPass(std::vector<std::string>& fileContent) {
 }
 
 
-void Assembler::adjustInternalSymbolsTable() {
+void OldAssembler::adjustInternalSymbolsTable() {
   for (auto const& pair : _symbolsTable) {
     auto key = pair.first;
     bool isLabelModulename = key == toLower(_modulename);
@@ -543,7 +545,7 @@ void Assembler::adjustInternalSymbolsTable() {
 }
 
 
-void Assembler::adjustDefinitionsTable() {
+void OldAssembler::adjustDefinitionsTable() {
   for (auto& pair : _definitionsTable) {
     auto key = pair.first;
     bool isLabelModulename = key == toLower(_modulename);
@@ -563,13 +565,13 @@ void Assembler::adjustDefinitionsTable() {
 }
 
 
-void Assembler::adjustUsageTable() {
+void OldAssembler::adjustUsageTable() {
   for (auto& pair : _usageTable) {
     pair.second -= _dataSectionSize;
   }
 }
 
-void Assembler::adjustObjectCode() {
+void OldAssembler::adjustObjectCode() {
   // Se tenho que ajustar o código objeto, SECTION DATA
   // ctz vem primeiro
   // dataSectionSize + _textSectionSize == _objectCode.size() => True
@@ -591,7 +593,7 @@ void Assembler::adjustObjectCode() {
 }
 
 
-void Assembler::adjustRelocationBitMap() {
+void OldAssembler::adjustRelocationBitMap() {
   int textSectionStart = _objectCode.size() - _textSectionSize;
 
   // começar por SECTION TEXT
@@ -610,7 +612,7 @@ void Assembler::adjustRelocationBitMap() {
 }
 
 
-void Assembler::extractDefinitionsTableFromSymbolsTable() {
+void OldAssembler::extractDefinitionsTableFromSymbolsTable() {
   for (auto const& pair : _definitionsTable) {
     auto keyFromDefsTable = pair.first;
     // bool foundInST = _symbolsTable.find(keyFromDefsTable) != _symbolsTable.end();
@@ -622,7 +624,7 @@ void Assembler::extractDefinitionsTableFromSymbolsTable() {
 }
 
 
-std::string Assembler::findLabel(int& labelPosition, int& colonPosition) {
+std::string OldAssembler::findLabel(int& labelPosition, int& colonPosition) {
   std::string tk, label;
   // : ADD LABEL1  ;; ???
   for (size_t i = 0; i < _tokens.size(); i++) {
@@ -638,7 +640,7 @@ std::string Assembler::findLabel(int& labelPosition, int& colonPosition) {
 }
 
 
-std::string Assembler::findOperation(int labelPosition, int& operationPosition) {
+std::string OldAssembler::findOperation(int labelPosition, int& operationPosition) {
   //       : INSTRUCTION [OP1, [OP2]]
   // LABEL : INSTRUCTION [OP1, [OP2]]
   // LABEL : DIRECTIVE   [OP1]
@@ -664,7 +666,7 @@ std::string Assembler::findOperation(int labelPosition, int& operationPosition) 
 }
 
 
-std::vector<std::string> Assembler::findOperands(int labelPosition, int operationPosition) {
+std::vector<std::string> OldAssembler::findOperands(int labelPosition, int operationPosition) {
   std::vector<std::string> operands;
 
   auto labelExists = labelPosition >= 0;
@@ -684,7 +686,7 @@ std::vector<std::string> Assembler::findOperands(int labelPosition, int operatio
 }
 
 
-void Assembler::generateOutput() {
+void OldAssembler::generateOutput() {
   int counter = 0;
   for (auto filename : _filenames) {
     generateOutputForLinker(counter, filename);
@@ -736,7 +738,7 @@ void Assembler::generateOutput() {
 
 
 
-void Assembler::generateOutputForLinker(int counter, std::string filename) {
+void OldAssembler::generateOutputForLinker(int counter, std::string filename) {
   std::string finalString = "", outFilename = "";
   std::stringstream ss;
 
@@ -804,7 +806,7 @@ void Assembler::generateOutputForLinker(int counter, std::string filename) {
 }
 
 
-void Assembler::outputErrors() {
+void OldAssembler::outputErrors() {
   if (_errors.size() > 0) {
     for (auto err : _errors) {
       std::cout << err << std::endl;
@@ -814,7 +816,7 @@ void Assembler::outputErrors() {
 }
 
 
-void Assembler::outputData() {
+void OldAssembler::outputData() {
   for (size_t i = 0; i < _filenames.size(); i++) {
     std::cout << "\n### " << _filenames[i] << " ####"<< std::endl;
 
@@ -849,7 +851,7 @@ void Assembler::outputData() {
 }
 
 
-std::vector<std::string> Assembler::parseLine(std::string line) {
+std::vector<std::string> OldAssembler::parseLine(std::string line) {
   int newStart = 0;
   int tokenStartsAt = 0;
   std::string token = "";
@@ -868,7 +870,7 @@ std::vector<std::string> Assembler::parseLine(std::string line) {
 }
 
 
-std::string Assembler::findNextTokenStartingFrom(
+std::string OldAssembler::findNextTokenStartingFrom(
   size_t start,
   std::string line,
   int& tokenStartsAt
@@ -920,7 +922,7 @@ std::string Assembler::findNextTokenStartingFrom(
 }
 
 
-bool Assembler::isValidSymbol(std::string symbol) {
+bool OldAssembler::isValidSymbol(std::string symbol) {
   if (!std::isalpha(symbol[0]) && symbol[0] != '_') {
     return false;
   }
@@ -941,32 +943,32 @@ bool Assembler::isValidSymbol(std::string symbol) {
 }
 
 
-std::map<std::string, int> Assembler::symbolTable() {
+std::map<std::string, int> OldAssembler::symbolTable() {
   return _symbolsTable;
 }
 
 
-void Assembler::setSymbolTable(std::map<std::string, int> st) {
+void OldAssembler::setSymbolTable(std::map<std::string, int> st) {
   _symbolsTable = st;
 }
 
 
-void Assembler::setSourceFileContent(std::vector<std::string> content) {
+void OldAssembler::setSourceFileContent(std::vector<std::string> content) {
   _fileContent = content;
 }
 
 
-std::vector<std::string> Assembler::errors() {
+std::vector<std::string> OldAssembler::errors() {
   return _errors;
 }
 
 
-std::vector<int> Assembler::objectCode() {
+std::vector<int> OldAssembler::objectCode() {
   return _objectCode;
 }
 
 
-int Assembler::directiveSpace(int posCounter, std::vector<std::string>) {
+int OldAssembler::directiveSpace(int posCounter, std::vector<std::string>) {
   if (_isRunningSecondPass) {
     _objectCode.push_back(0);
     _relocationBitMap.push_back(0);
@@ -976,7 +978,7 @@ int Assembler::directiveSpace(int posCounter, std::vector<std::string>) {
 
 
 // vai dar errado se separar a label da linha?
-int Assembler::directiveConst(int posCounter, std::vector<std::string> operands) {
+int OldAssembler::directiveConst(int posCounter, std::vector<std::string> operands) {
   // Assumindo que todo caso correto
   // de diretiva const vem na forma a seguir:
   // {"DOIS", ":", "const", "2"}
@@ -997,16 +999,16 @@ int Assembler::directiveConst(int posCounter, std::vector<std::string> operands)
 }
 
 
-int Assembler::directiveBegin(int posCounter, std::vector<std::string>) {
+int OldAssembler::directiveBegin(int posCounter, std::vector<std::string>) {
   return posCounter;
 }
 
 
-int Assembler::directiveExtern(int posCounter, std::vector<std::string>) {
+int OldAssembler::directiveExtern(int posCounter, std::vector<std::string>) {
   return posCounter;
 }
 
 
-int Assembler::directiveSection(int posCounter, std::vector<std::string>) {
+int OldAssembler::directiveSection(int posCounter, std::vector<std::string>) {
   return posCounter;
 }
