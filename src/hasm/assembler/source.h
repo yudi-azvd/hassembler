@@ -5,8 +5,8 @@
 #include <vector>
 
 #include "line.h"
-#include "util/definitionstable.hpp"
-#include "util/usagetable.h"
+#include "hasm/util/definitionstable.hpp"
+#include "hasm/util/usagetable.h"
 
 
 /**
