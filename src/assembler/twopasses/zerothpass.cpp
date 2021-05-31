@@ -1,19 +1,28 @@
 #include "zerothpass.h"
 
 
-ZerothPass::ZerothPass(Source& s) : source{s} { }
+ZerothPass::ZerothPass() { }
+
+
+ZerothPass::ZerothPass(AssemblerData* ad) : assemblerData{ad} { }
 
 
 ZerothPass::~ZerothPass() {}
 
 
 void ZerothPass::run() {
+  for (auto source : assemblerData->getSources()) {
+    runOn(source);
+  }
+}
+
+
+void ZerothPass::runOn(Source* source) {
   int lineCounter = 1;
   int dataSectionLine = 0, textSectionLine = 0;
   std::vector<std::string> tokens;
 
-  auto sourceContent = source.getContent();
-  for (auto& line : sourceContent.getLines()) {
+  for (auto& line : source->getLines()) {
     if (line.isDisabled()) {
       lineCounter++;
       continue;
@@ -42,9 +51,9 @@ void ZerothPass::run() {
     lineCounter++;
   }
 
-  source.setDataSectionLine(dataSectionLine);
-  source.setTextSectionLine(textSectionLine);
-  source.setDataSectionComesFirst(
+  source->setDataSectionLine(dataSectionLine);
+  source->setTextSectionLine(textSectionLine);
+  source->setDataSectionComesFirst(
     dataSectionLine < textSectionLine
   );
 }

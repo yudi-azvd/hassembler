@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "sourcecontent.h"
+#include "line.h"
 
 
 /**
@@ -13,13 +13,9 @@
  */
 class Source {
 public:
-  Source(SourceContent& content);
-
   Source(std::vector<const char*> lines);
 
   ~Source();
-
-  SourceContent& getContent();
 
   void setDataSectionComesFirst(bool comesFirst);
 
@@ -33,6 +29,14 @@ public:
 
   int getTextSectionLine();
 
+  void setModulename(std::string name);
+
+  std::string getModulename();
+
+  std::vector<Line> getLines();
+
+  std::string getLineContentAt(int index);
+
 private:
   bool _dataSectionComesFirst = false;
 
@@ -40,14 +44,15 @@ private:
 
   int textSectionLine = 0;
 
-  SourceContent sourceContent;
+  std::string modulename = "";
+
+  std::vector<Line> lines;
 
 /*
   // Só está definido quando é compileOnly=true,
   // é o nome do arquivo objeto.
   std::string outputObjetctFilename;
 
-  std::string modulename;
 
   std::string inputFilename;
   SymbolsTable symbolsTable;

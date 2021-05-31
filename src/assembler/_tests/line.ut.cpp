@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "hasm/line.h"
+#include "assembler/line.h"
 
 
 TEST_CASE("simple line") {

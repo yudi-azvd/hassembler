@@ -4,7 +4,7 @@
 Line::Line() {}
 
 
-Line::Line(const char* c) : content{c} {}
+Line::Line(const char* ln) : content{ln} {}
 
 
 Line::~Line() {}

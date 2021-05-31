@@ -1,22 +1,16 @@
 #include "source.h"
 
 
-Source::Source(SourceContent& content)
-  : sourceContent{content}
-{}
-
-
-Source::Source(std::vector<const char*> lines)
-  : sourceContent{lines}
-{}
+Source::Source(std::vector<const char*> lns)
+  // : lines{lns}
+{
+  std::vector<Line> tmp(lns.begin(), lns.end());
+  lines = tmp;
+}
 
 
 Source::~Source() {}
 
-
-SourceContent& Source::getContent() {
-  return sourceContent;
-}
 
 
 void Source::setDataSectionComesFirst(bool comesFirst) {
@@ -47,3 +41,25 @@ int Source::getTextSectionLine() {
 void Source::setTextSectionLine(int line) {
   textSectionLine = line;
 }
+
+
+void Source::setModulename(std::string name) {
+  modulename = name;
+}
+
+
+std::string Source::getModulename() {
+  return modulename;
+}
+
+
+std::vector<Line> Source::getLines() {
+  return lines;
+}
+
+
+std::string Source::getLineContentAt(int index) {
+  return lines[index].getContent();
+}
+
+

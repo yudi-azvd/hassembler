@@ -21,6 +21,8 @@ public:
 private:
   HasmParameters parameters;
 
+  HasmData* hasmData;
+
   Assembler* assembler;
 };
 

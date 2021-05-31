@@ -5,9 +5,7 @@
 #include <vector>
 
 #include "hasmparameters.h"
-#include "source.h"
-
-#include "util/correctionfactortable.hpp"
+#include "assembler/assemblerdata.h"
 
 
 class HasmData {
@@ -19,7 +17,9 @@ public:
   bool mustLink();
 
 private:
-  std::vector<Source> sources;
+  AssemblerData* assemblerData;
+
+  // LinkerData* LinkerData;
 
   std::string outputFilename;
 

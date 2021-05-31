@@ -7,14 +7,14 @@ class Line {
 public:
   Line();
 
-  Line(const char* c);
+  Line(const char* ln);
 
   ~Line();
 
   const Line* operator=(const char* line);
 
   friend std::ostream& operator<<(std::ostream& os, const Line& ln) {
-    return os << ln.content + "aaaaaaaaaaaa";
+    return os << (ln._isDisabled ? "- " : "+ ") << ln.content;
   }
 
   std::string getContent();

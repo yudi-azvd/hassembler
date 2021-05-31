@@ -37,7 +37,6 @@ void HasmParametersParser::getFileNames() {
 
 
 void HasmParametersParser::checkForCompileOnlyFlag() {
-  size_t i;
   std::vector<std::string>::iterator it =
     std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
 
@@ -51,7 +50,6 @@ void HasmParametersParser::checkForCompileOnlyFlag() {
 
 
 void HasmParametersParser::checkForOuputFilenameFlag() {
-  int i, size = arguments.size();
   bool noSpaceForOutputName = false;
   std::vector<std::string>::iterator it
     = std::find(arguments.begin(), arguments.end(), OUTPUT_FILE_NAME_FLAG);
