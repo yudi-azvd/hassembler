@@ -15,6 +15,13 @@ void ZerothPass2::run() {
     definitionsTable = source->getDefinitionsTable();
     usageTable = source->getUsageTable();
     runOn(source);
+
+    try {
+      checkForBeginAndEndMatch();
+    }
+    catch(const AssemblyError& e) {
+      handleError(e);
+    }
   }
 }
 
@@ -30,7 +37,7 @@ void ZerothPass2::runOn(Source* src) {
     }
 
     try {
-      tryToRunOnLine(line);
+      runOnLine(line);
     }
     catch(const AssemblyError& e) {
       handleError(e);
@@ -38,41 +45,24 @@ void ZerothPass2::runOn(Source* src) {
 
     lineCounter++;
   }
-
-  try {
-    checkForBeginAndEndMatch();
-  }
-  catch(const AssemblyError& e) {
-    handleError(e);
-  }
 }
 
 
-void ZerothPass2::tryToRunOnLine(Line line) {
+void ZerothPass2::runOnLine(Line line) {
   tokens = Scanner::parseTokens(line.getContent());
   lowerCasedTokens = stringVectorLowerCased(tokens);
 
-  lineHasPublicDirective = findInVector(lowerCasedTokens, "public");
-  lineHasBeginDirective = findInVector(lowerCasedTokens, "begin");
-  lineHasEndDirective = findInVector(lowerCasedTokens, "end");
-  lineHasExternDirective = findInVector(lowerCasedTokens, "extern");
-
-  if (lineHasPublicDirective) {
-    handlePublicDirective();
-  }
-  else if (lineHasBeginDirective) {
-    handleBeginDirective();
-  }
-  else if(lineHasEndDirective) {
-    handleEndDirective();
-  }
-  else if (lineHasExternDirective) {
-    handleExternDirective();
-  }
+  handlePublicDirectiveIfItExists();
+  handleBeginDirectiveIfItExists();
+  handleEndDirectiveIfItExists();
+  handleExternDirectiveIfItExists();
 }
 
 
-void ZerothPass2::handlePublicDirective() {
+void ZerothPass2::handlePublicDirectiveIfItExists() {
+  if (!findInVector(lowerCasedTokens, "public"))
+    return;
+
   source->disableLine(lineCounter);
 
   if (tokens.size() != 2) // essa linha deve ser PUBLIC [SYMBOL]
@@ -85,19 +75,28 @@ void ZerothPass2::handlePublicDirective() {
 }
 
 
-void ZerothPass2::handleBeginDirective() {
+void ZerothPass2::handleBeginDirectiveIfItExists() {
+  if(!findInVector(lowerCasedTokens, "begin"))
+    return;
+
   source->setModulename(tokens[0]);
   source->disableLine(lineCounter);
 }
 
 
-void ZerothPass2::handleEndDirective() {
+void ZerothPass2::handleEndDirectiveIfItExists() {
+  if(!findInVector(lowerCasedTokens, "end"))
+    return;
+
   sourceHasEndDirective = true;
   source->disableLine(lineCounter);
 }
 
 
-void ZerothPass2::handleExternDirective() {
+void ZerothPass2::handleExternDirectiveIfItExists() {
+  if(!findInVector(lowerCasedTokens, "extern"))
+    return;
+
   source->disableLine(lineCounter);
 
   if (tokens.size() != 3 || lowerCasedTokens[2] != "extern") {

@@ -36,17 +36,17 @@ private:
 
   Source* source;
 
-  void tryToRunOnLine(Line line);
+  void runOnLine(Line line);
 
   void handleError(const AssemblyError& e);
 
-  void handlePublicDirective();
+  void handlePublicDirectiveIfItExists();
 
-  void handleBeginDirective();
+  void handleBeginDirectiveIfItExists();
 
-  void handleEndDirective();
+  void handleEndDirectiveIfItExists();
 
-  void handleExternDirective();
+  void handleExternDirectiveIfItExists();
 
   void checkForBeginAndEndMatch();
 
