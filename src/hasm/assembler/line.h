@@ -9,6 +9,8 @@ public:
 
   Line(const char* ln);
 
+  Line(std::string ln);
+
   ~Line();
 
   const Line* operator=(const char* line);

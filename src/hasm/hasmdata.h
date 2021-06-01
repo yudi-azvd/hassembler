@@ -18,6 +18,8 @@ public:
 
   std::vector<std::string> getFilenames();
 
+  void addSource(std::vector<std::string> source);
+
   bool mustLink();
 
 private:

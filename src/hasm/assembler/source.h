@@ -15,7 +15,7 @@
  */
 class Source {
 public:
-  Source(std::vector<const char*> lines);
+  Source(std::vector<std::string> source);
 
   ~Source();
 

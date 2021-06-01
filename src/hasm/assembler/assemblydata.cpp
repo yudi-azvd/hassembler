@@ -9,7 +9,7 @@ AssemblyData::~AssemblyData() {
 }
 
 
-void AssemblyData::addSource(std::vector<const char*> source) {
+void AssemblyData::addSource(std::vector<std::string> source) {
   Source* s = new Source(source);
   sources.push_back(s);
 }

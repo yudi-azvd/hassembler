@@ -19,6 +19,10 @@ std::vector<std::string> HasmData::getFilenames() {
 }
 
 
+void HasmData::addSource(std::vector<std::string> source) {
+  assemblyData->addSource(source);
+}
+
 
 bool HasmData::mustLink() {
   return _mustLink;

@@ -14,7 +14,7 @@ public:
 
   ~AssemblyData();
 
-  void addSource(std::vector<const char*> source);
+  void addSource(std::vector<std::string> source);
 
   size_t getSourcesSize();
 

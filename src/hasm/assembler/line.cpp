@@ -7,6 +7,9 @@ Line::Line() {}
 Line::Line(const char* ln) : content{ln} {}
 
 
+Line::Line(std::string ln) : content{ln} {}
+
+
 Line::~Line() {}
 
 

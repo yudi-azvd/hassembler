@@ -4,7 +4,10 @@
 #include "assembler/source.h"
 
 
-TEST_CASE("source") {
+TEST_SUITE_BEGIN("assembler-source");
+
+
+TEST_CASE("normal source") {
   Source s = {{
     "one: const 1",
     "two: const 2"
@@ -67,3 +70,6 @@ TEST_CASE("vector of pointers to source") {
   CHECK("n3: space"   == sourcesPtrVector[1]->getLineContentAt(0));
   CHECK("n4: const 4" == sourcesPtrVector[1]->getLineContentAt(1));
 }
+
+
+TEST_SUITE_END();

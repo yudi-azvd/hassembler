@@ -1,9 +1,10 @@
 #include "source.h"
 
 
-Source::Source(std::vector<const char*> lns) {
-  std::vector<Line> tmp(lns.begin(), lns.end());
-  lines = tmp;
+Source::Source(std::vector<std::string> source) {
+  for (auto line : source){
+    lines.push_back(line);
+  }
 }
 
 

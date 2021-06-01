@@ -24,6 +24,13 @@ void Input::readFile(std::string filename) {
   if (!infile.is_open()) {
     throw HasmException("file not found: " + filename);
   }
+
+  while(std::getline(infile, line)) {
+    source.push_back(line);
+  }
+
+  infile.close();
+  hasmData->addSource(source);
 }
 
 

@@ -7,15 +7,15 @@
 #include "util/util.h"
 
 
-TEST_SUITE_BEGIN("zerothpass2");
+TEST_SUITE_BEGIN("assembler-zerothpass2");
 
 
 TEST_CASE("should get module name") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "mod_a: begin",
     "end",
-  }});
+  });
 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
@@ -26,11 +26,11 @@ TEST_CASE("should get module name") {
 
 TEST_CASE("should add error when module begins but does not end") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "mod_a: begin",
     "random line",
     "random line",
-  }});
+  });
 
   AssemblyError expError(0, "module mod_a does not end. Use the END directive");
 
@@ -48,11 +48,11 @@ TEST_CASE("should add error when module begins but does not end") {
 
 TEST_CASE("should add error when module ends but does not begin") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "random line",
     "random line",
     "end"
-  }});
+  });
 
   AssemblyError expError(3, "module has not been defined but it has been ended");
 
@@ -70,12 +70,12 @@ TEST_CASE("should add error when module ends but does not begin") {
 
 TEST_CASE("should disable lines with BEGIN and END directives") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "my_module: begin",
     "random line",
     "random line",
     "end"
-  }});
+  });
 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
@@ -92,14 +92,14 @@ TEST_CASE("should disable lines with BEGIN and END directives") {
 
 TEST_CASE("should disable lines with PUBLIC directive") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "my_module: begin",
     "random line",
     "public RANDOM_LABEL",
     "random line",
     "public RANDOM_LABEL2",
     "end"
-  }});
+  });
 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
@@ -120,14 +120,14 @@ TEST_CASE("should disable lines with PUBLIC directive") {
 
 TEST_CASE("should add labels to definitions table when using PUBLIC directive") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "my_module: begin",
     "random line",
     "public MY_LABEL",
     "random line",
     "public RANDOM_LABEL",
     "end"
-  }});
+  });
 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
@@ -143,13 +143,13 @@ TEST_CASE("should add labels to definitions table when using PUBLIC directive") 
 
 TEST_CASE("should add error when using PUBLIC with missing symbol") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "my_module: begin",
     "random line",
     "public ", // símbolo faltando
     "random line",
     "end"
-  }});
+  });
 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
@@ -164,14 +164,14 @@ TEST_CASE("should add error when using PUBLIC with missing symbol") {
 
 TEST_CASE("should add labels to usage table when using EXTERN directive") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "my_module: begin",
     "random line",
     "MY_LABEL: EXTERN",
     "random line",
     "RANDOM_LABEL: EXTERN",
     "end"
-  }});
+  });
 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
@@ -187,13 +187,13 @@ TEST_CASE("should add labels to usage table when using EXTERN directive") {
 
 TEST_CASE("should add error when using EXTERN directive in incorrect manner") {
   AssemblyData assemblyData;
-  assemblyData.addSource({{
+  assemblyData.addSource({
     "my_module: begin",
     "random line",
     "MY_LABEL  EXTERN",
     "random line",
     "end"
-  }});
+  });
 
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
