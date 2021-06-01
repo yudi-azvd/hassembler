@@ -14,7 +14,7 @@ public:
 
   ~AssemblyData();
 
-  void addSource(std::vector<std::string> source);
+  void addSource(std::vector<std::string> source, std::string filaname="");
 
   size_t getSourcesSize();
 

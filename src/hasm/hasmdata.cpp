@@ -1,12 +1,18 @@
 #include "hasmdata.h"
 
+
 HasmData::HasmData(HasmParameters params) {
+  assemblyData = new AssemblyData();
+  //linkageData = new LinkageData();
+  inputFilenames = params.filenames;
   outputFilename = params.outputFilename;
   _mustLink = !params.isCompileOnly;
 }
 
 
-HasmData::~HasmData() {}
+HasmData::~HasmData() {
+  delete assemblyData;
+}
 
 
 AssemblyData* HasmData::getAssemblyData() {
@@ -15,12 +21,12 @@ AssemblyData* HasmData::getAssemblyData() {
 
 
 std::vector<std::string> HasmData::getFilenames() {
-  return assemblyData->getInputFilenames();
+  return inputFilenames;
 }
 
 
-void HasmData::addSource(std::vector<std::string> source) {
-  assemblyData->addSource(source);
+void HasmData::addSource(std::vector<std::string> source, std::string filename) {
+  assemblyData->addSource(source, filename);
 }
 
 

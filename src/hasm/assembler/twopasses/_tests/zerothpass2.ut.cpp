@@ -198,8 +198,6 @@ TEST_CASE("should add error when using EXTERN directive in incorrect manner") {
   ZerothPass2 zerothPass2(&assemblyData);
   zerothPass2.run();
 
-  auto usageTable = assemblyData.getNthSource(0)->getUsageTable();
-
   AssemblyError expError(3, "bad format using EXTERN directive. Use <LABEL>: EXTERN");
   auto gotError = assemblyData.getErrors().back();
 

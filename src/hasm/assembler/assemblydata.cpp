@@ -9,8 +9,8 @@ AssemblyData::~AssemblyData() {
 }
 
 
-void AssemblyData::addSource(std::vector<std::string> source) {
-  Source* s = new Source(source);
+void AssemblyData::addSource(std::vector<std::string> source, std::string filename) {
+  Source* s = new Source(source, filename);
   sources.push_back(s);
 }
 

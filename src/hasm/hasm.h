@@ -23,13 +23,13 @@ public:
 private:
   HasmParameters parameters;
 
-  HasmData* hasmData;
+  HasmData* hasmData = nullptr;
 
-  OldAssembler* oldAssembler;
+  OldAssembler* oldAssembler = nullptr;
 
-  Input* input;
+  Input* input = nullptr;
 
-  Assembler* assembler;
+  Assembler* assembler = nullptr;
 
 };
 

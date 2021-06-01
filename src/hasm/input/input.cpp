@@ -30,7 +30,7 @@ void Input::readFile(std::string filename) {
   }
 
   infile.close();
-  hasmData->addSource(source);
+  hasmData->addSource(source, filename);
 }
 
 

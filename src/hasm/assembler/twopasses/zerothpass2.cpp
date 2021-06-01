@@ -1,6 +1,9 @@
 #include "zerothpass2.h"
 
 
+ZerothPass2::ZerothPass2() { }
+
+
 ZerothPass2::ZerothPass2(AssemblyData* ad) : assemblyData{ad} { }
 
 

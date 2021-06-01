@@ -18,14 +18,16 @@ public:
 
   std::vector<std::string> getFilenames();
 
-  void addSource(std::vector<std::string> source);
+  void addSource(std::vector<std::string> source, std::string filename="");
 
   bool mustLink();
 
 private:
-  AssemblyData* assemblyData;
+  AssemblyData* assemblyData = nullptr;
 
-  // LinkerData* LinkerData;
+  // LinkerData* LinkerData = nullptr;
+
+  std::vector<std::string> inputFilenames;
 
   std::string outputFilename;
 

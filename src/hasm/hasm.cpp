@@ -21,24 +21,43 @@ Hasm::Hasm(std::vector<std::string> args) {
   parameters = parser.run();
 
   hasmData = new HasmData(parameters);
-  oldAssembler = new OldAssembler(parameters.filenames);
+  // oldAssembler = new OldAssembler(parameters.filenames);
   input = new Input(hasmData);
   assembler = new TwoPassesAssembler(hasmData->getAssemblyData());
 }
 
 
 void Hasm::run() {
-  oldAssembler->assemble();
+  input->readFiles(); // Deve também lançar exceção se existirem arquivos
+                      // de tipos diferentes.
+
+  // oldAssembler->assemble();
+  assembler->run();
+
+  // for (auto source : hasmData->getAssemblyData()->getSources()) {
+  //   std::cout << *source << std::endl;
+  // }
+  // for (auto source : hasmData->getAssemblyData()->getNthSource(0)->) {
+  //   std::cout << *source << std::endl;
+  // }
+
+  for (int i = 0; i < hasmData->getAssemblyData()->getSources().size(); ++i) {
+    std::cout << "us table" << std::endl;
+    std::cout << *(hasmData->getAssemblyData()->getNthSource(i)->getUsageTable()) << std::endl;
+    std::cout << "def table" << std::endl;
+    std::cout << *(hasmData->getAssemblyData()->getNthSource(i)->getDefinitionsTable()) << std::endl;
+  }
 
   /*
-  input = new InputFiles(hasmData);
-  input.readFiles(); // Deve adicionar Sources em hasmData.assemblyData.
-                     // Deve também lançar exceção se existirem arquivos
-                     // de tipos diferentes.
-
-  if (input.areAssemblyFiles()) {
+  if (input.areAssemblyFiles() hasmData.isAssembleOnly()) {
     assembler = new TwoPassesAssembler(hasmData);
     assembler->run();
+
+    if (hasmData.isAssembleOnly) {
+      outputGen = new OutputGenerator(hasmData);
+      outputGen->run();
+      return;
+    }
   }
 
   if (hasmData.mustLink()) {

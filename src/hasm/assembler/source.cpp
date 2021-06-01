@@ -1,8 +1,10 @@
 #include "source.h"
 
 
-Source::Source(std::vector<std::string> source) {
-  for (auto line : source){
+Source::Source(std::vector<std::string> source, std::string filename) {
+  inputFilename = filename;
+
+  for (auto line : source) {
     lines.push_back(line);
   }
 }
@@ -88,13 +90,22 @@ UsageTable* Source::getUsageTable() {
 
 std::ostream& operator<<(std::ostream& os, const Source& s) {
   int lineCounter = 1;
-  os << s.inputFilename << std::endl;
+  char formattedLineCounter[5];
+
+  if (!s.inputFilename.empty()) {
+    std::string header = " FILENAME=" + s.inputFilename;
+    os << header << std::endl;
+    for(int i = 0; i < header.size()+1; ++i) os << "-";
+    os << std::endl;
+  }
+
   for (auto line : s.lines) {
-    os << (line.isDisabled() ? "-" : "+");
-    os << lineCounter <<": ";
+    os << (line.isDisabled() ? "-" : " ");
+    // Dificilmente uma arquivo .asm vai ter mais de 100 linhas
+    std::sprintf(formattedLineCounter, "%2d", lineCounter);
+    os << formattedLineCounter <<": ";
     os << line.getContent() << std::endl;
     ++lineCounter;
   }
   return os;
 }
-

@@ -15,7 +15,7 @@
  */
 class Source {
 public:
-  Source(std::vector<std::string> source);
+  Source(std::vector<std::string> source, std::string filename="");
 
   ~Source();
 

@@ -24,7 +24,12 @@ void ZerothPass::runOn(Source* source) {
 
   for (auto& line : source->getLines()) {
     if (line.isDisabled()) {
-      lineCounter++;
+      ++lineCounter;
+      continue;
+    }
+
+    if (tokens.empty()) {
+      ++lineCounter;
       continue;
     }
 

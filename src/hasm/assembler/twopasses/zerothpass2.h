@@ -21,6 +21,8 @@
  */
 class ZerothPass2 {
 public:
+  ZerothPass2();
+
   ZerothPass2(AssemblyData* ad);
 
   ~ZerothPass2();
