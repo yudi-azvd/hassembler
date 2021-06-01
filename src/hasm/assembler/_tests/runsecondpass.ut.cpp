@@ -5,6 +5,10 @@
 #include "assembler/oldassembler.h"
 #include "util/util.h"
 
+
+TEST_SUITE_BEGIN("oldassembler-runsecondpass");
+
+
 TEST_CASE("rsp print number") {
   std::vector<std::string> sourceFileContent = {
     "input b",
@@ -365,3 +369,6 @@ TEST_CASE("rsp label alone in line should work for instructions") {
   CHECK_EQ(0, as.errors().size());
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
+
+
+TEST_SUITE_END();

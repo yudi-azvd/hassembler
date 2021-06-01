@@ -5,6 +5,9 @@
 #include "assembler/line.h"
 
 
+TEST_SUITE_BEGIN("assembler-line");
+
+
 TEST_CASE("simple line") {
   Line line = "this line";
   CHECK(line.getContent() == "this line");
@@ -38,3 +41,6 @@ TEST_CASE("vector of const char* ") {
   CHECK(linesVector[1].getContent() == "line 2");
   CHECK(linesVector[2].getContent() == "line 3");
 }
+
+
+TEST_SUITE_END();

@@ -5,6 +5,7 @@
 // #include "assembler/oldassembler.h"
 // #include "util/util.h"
 
+
 // TEST_CASE("adjust data section") {
 //   std::map<std::string, int> symbolTable = {
 //     {"label1", 1},
@@ -20,7 +21,7 @@
 //     {"label4", 12},
 //   };
 
-//   Assembler as;
+//   OldAssembler as;
 
 //   int offset = 8;
 

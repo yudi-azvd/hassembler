@@ -6,6 +6,9 @@
 #include "assembler/scanner/scanner.h"
 
 
+TEST_SUITE_BEGIN("assembler-scanner-findnexttoken");
+
+
 TEST_CASE("basic cases") {
   int tokenStartsAt = 0;
   std::string token;
@@ -203,3 +206,6 @@ TEST_CASE("should work in iterative calls") {
   gotTokens.pop_back();
   CHECK_EQ(gotTokens, expectedtokens);
 }
+
+
+TEST_SUITE_END();

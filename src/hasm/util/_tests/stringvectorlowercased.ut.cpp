@@ -4,6 +4,10 @@
 #include "doctest/doctest.h"
 #include "util/util.h"
 
+
+TEST_SUITE_BEGIN("util-stringvectorlowercased");
+
+
 TEST_CASE("lowercaser") {
   std::vector<std::string> strs = {
     "Hello WOrld", "APPLE", "ANOTHER STring"};
@@ -24,3 +28,6 @@ TEST_CASE("lowercaser should not modify original string") {
 
   CHECK_NE(strs, gotLowered);
 }
+
+
+TEST_SUITE_END();

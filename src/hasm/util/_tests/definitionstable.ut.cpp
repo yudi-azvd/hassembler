@@ -4,6 +4,10 @@
 #include "doctest/doctest.h"
 #include "util/definitionstable.hpp"
 
+
+TEST_SUITE_BEGIN("util-definitionstable");
+
+
 TEST_CASE("basic definitions table - addition and has") {
   DefinitionsTable table;
 
@@ -24,3 +28,5 @@ TEST_CASE("definitions table - getPositionOf") {
   CHECK_EQ(table.getPositionOf("name200"), 200);
 }
 
+
+TEST_SUITE_END();

@@ -2,9 +2,11 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "assembler/oldassembler.h"
 #include "assembler/scanner/scanner.h"
 #include "util/util.h"
+
+
+TEST_SUITE_BEGIN("assembler-scanner-parsetokens");
 
 
 TEST_CASE("parse tokens") {
@@ -33,3 +35,6 @@ TEST_CASE("parse tokens") {
     CHECK_EQ(gotTokens, expectedTokens);
   }
 }
+
+
+TEST_SUITE_END();

@@ -2,10 +2,11 @@
 #include <vector>
 
 #include "doctest/doctest.h"
-#include "linker/linker.hpp"
 #include "util/correctionfactortable.hpp"
 
-#include "util/util.h"
+
+TEST_SUITE_BEGIN("util-correctionfactortable");
+
 
 TEST_CASE("basic code alignment") {
   CorrectionFactorTable table;
@@ -31,3 +32,6 @@ TEST_CASE("real alignment example") {
   CHECK_EQ(table.getSizeOf("mod_b"), 22);
   CHECK_EQ(table.getSizeOf("mod_c"), 71);
 }
+
+
+TEST_SUITE_END();

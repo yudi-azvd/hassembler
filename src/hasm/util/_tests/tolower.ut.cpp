@@ -4,6 +4,10 @@
 #include "doctest/doctest.h"
 #include "util/util.h"
 
+
+TEST_SUITE_BEGIN("util-tolower");
+
+
 TEST_CASE("should not modify original string") {
   std::string str = "Hello WOrld";
 
@@ -14,3 +18,6 @@ TEST_CASE("should not modify original string") {
   CHECK_EQ("n&1", toLower(str));
   CHECK_EQ("N&1", str);
 }
+
+
+TEST_SUITE_END();

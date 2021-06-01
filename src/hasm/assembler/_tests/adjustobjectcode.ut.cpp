@@ -5,6 +5,10 @@
 #include "assembler/oldassembler.h"
 #include "util/util.h"
 
+
+TEST_SUITE_BEGIN("oldassembler-adjustobjectcode");
+
+
 TEST_CASE("adjust object code - fibonacci") {
   std::map<std::string, int> expectedSymbolTable = {
     {"front", 10},
@@ -217,3 +221,6 @@ TEST_CASE("adjust object code - sumof2numbers") {
   INFO("got: ", strToIntMapToString(as.symbolTable()));
   CHECK_EQ(as.symbolTable(), expectedSymbolTable);
 }
+
+
+TEST_SUITE_END();

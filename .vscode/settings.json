@@ -1,5 +1,6 @@
 {
   "testExplorer.onReload": "retire",
+  "testMate.cpp.test.parallelExecutionLimit": 5,
   "testMate.cpp.test.advancedExecutables": [
     {
       // https://github.com/matepek/vscode-catch2-test-adapter/blob/master/documents/configuration/test.advancedExecutables.md#testgrouping
@@ -8,29 +9,23 @@
         "testGrouping": {
           "groupByExecutable": {
             "label": "${filename}",
-            "description": "${relDirpath}",
-            "groupBySource": {
-              "label": "${sourceRelPath[1]}",
-              "groupBySource": {
-                "label": "${sourceRelPath[2]}",
-                "groupBySource": {
-                  "label": "${sourceRelPath[3:]}",
-                }
-              }
+            "description": "${relDirpath}/",
+            "groupBySource": "[-1]",
+            "groupByTags": {
+              "tags": [],
+              "label": "${tag}"
             }
           },
         }
       },
     }
   ],
-  "testMate.cpp.test.parallelExecutionLimit": 5,
   "triggerTaskOnSave.on": true,
   "triggerTaskOnSave.tasks": {
     "Build utests": [
       "src/**"
     ],
     "Build hasm": [
-      "src/**/!_tests/",
       "src/**",
     ]
   },

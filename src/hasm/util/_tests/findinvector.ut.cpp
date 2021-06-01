@@ -4,6 +4,10 @@
 #include "doctest/doctest.h"
 #include "util/util.h"
 
+
+TEST_SUITE_BEGIN("util-findinvector");
+
+
 TEST_CASE("should find in vector") {
   std::vector<std::string> strs = {
     "Hello WOrld", "APPLE", "ANOTHER STring"};
@@ -18,3 +22,6 @@ TEST_CASE("should not find in vector") {
 
   CHECK_FALSE(findInVector(strs, "non-existing"));
 }
+
+
+TEST_SUITE_END();

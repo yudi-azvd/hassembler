@@ -5,6 +5,9 @@
 #include "assembler/scanner/scanner.h"
 
 
+TEST_SUITE_BEGIN("assembler-scanner-isvalidsymbol");
+
+
 TEST_CASE("should accept normal words") {
   CHECK(Scanner::isValidSymbol("label"));
   CHECK(Scanner::isValidSymbol("banana"));
@@ -83,5 +86,4 @@ TEST_CASE("should not accept symbols longer than 50 characters") {
 }
 
 
-
-
+TEST_SUITE_END();

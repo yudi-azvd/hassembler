@@ -7,6 +7,9 @@
 #include "util/util.h"
 
 
+TEST_SUITE_BEGIN("oldassembler-runfirstpass");
+
+
 TEST_CASE("sum of two numbers") {
   std::map<std::string, int> gotSymbolTable;
   std::map<std::string, int> expectedSymbolTable = {
@@ -373,3 +376,6 @@ TEST_CASE("rfp label alone in line should work for instructions") {
   CHECK_EQ(0, as.errors().size());
   CHECK_EQ(gotSymbolTable, expectedSymbolTable);
 }
+
+
+TEST_SUITE_END();

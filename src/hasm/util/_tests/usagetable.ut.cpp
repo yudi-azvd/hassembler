@@ -4,6 +4,10 @@
 #include "doctest/doctest.h"
 #include "util/usagetable.h"
 
+
+TEST_SUITE_BEGIN("util-usagetable");
+
+
 TEST_CASE("basic usage table - has") {
   UsageTable table;
 

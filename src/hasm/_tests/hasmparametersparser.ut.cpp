@@ -4,6 +4,8 @@
 #include "hasm/hasmparametersparser.h"
 
 
+TEST_SUITE("hasm-hasmparameters-parser") {
+
 TEST_CASE("should get correct file names") {
   std::vector<std::string> args = {"a.asm", "b.asm"};
 
@@ -141,3 +143,9 @@ TEST_CASE("should throw exception when using wrong constructor") {
     FAIL_CHECK("exception not caught");
   }
 }
+
+}
+
+
+
+// TEST_SUITE_END();
