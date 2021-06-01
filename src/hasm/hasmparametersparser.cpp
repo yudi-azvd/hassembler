@@ -1,12 +1,6 @@
 #include "hasmparametersparser.h"
 
 
-HasmParametersParser::HasmParametersParser() {
-  throw std::runtime_error("default constructor should not be used. Use "
-  "'HasmParametersParser(std::vector<std::string> args)' instead");
-}
-
-
 HasmParametersParser::~HasmParametersParser() {}
 
 
@@ -30,7 +24,7 @@ HasmParameters HasmParametersParser::run() {
 
 void HasmParametersParser::getFileNames() {
   if (arguments.size() == 0) {
-    throw HasmParameterException("Não há arquivos de entrada");
+    throw HasmParameterException("no input files");
   }
 
   hasmParameters.filenames = arguments;
@@ -68,7 +62,7 @@ void HasmParametersParser::checkForOuputFilenameFlag() {
   bool noSpaceForOutputName = false;
   noSpaceForOutputName = iter + 1 > arguments.end() - 1;
   if (noSpaceForOutputName) {
-    throw HasmParameterException("Falta o nome do arquivo depois de '-o'");
+    throw HasmParameterException("missing file name after '-o'");
   }
 
   hasmParameters.outputFilename = *(iter + 1);
@@ -89,7 +83,7 @@ bool HasmParametersParser::flagNotFound() {
 void HasmParametersParser::throwIfOutputNameEqualsInputName() {
   for (auto fileName : hasmParameters.filenames) {
     if (fileName == hasmParameters.outputFilename)
-      throw HasmParameterException("Nome de saída é igual ao nome de entrada");
+      throw HasmParameterException("output name is same as input name");
   }
 }
 
@@ -98,6 +92,6 @@ void HasmParametersParser::throwIfThereAreMultipleFilesAndOutputFlag() {
   bool hasOutputFileName = !hasmParameters.outputFilename.empty();
   bool hasMultipleInputFiles = hasmParameters.filenames.size() > 1;
   if (hasMultipleInputFiles && hasOutputFileName) {
-    throw HasmParameterException("Não é permitido usar '-o' com mútiplos arquivos");
+    throw HasmParameterException("not allowed to use '-o' with multiple input files");
   }
 }

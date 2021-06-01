@@ -14,7 +14,7 @@
 class HasmParameterException : public HasmException {
 public:
   HasmParameterException(std::string m) {
-    msg = "erro: " +  m;
+    msg = "error: " +  m;
   }
 
   const char* what() const noexcept override {

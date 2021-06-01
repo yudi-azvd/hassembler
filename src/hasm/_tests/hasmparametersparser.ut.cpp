@@ -6,21 +6,6 @@
 
 TEST_SUITE("hasm-hasmparameters-parser") {
 
-TEST_CASE("should throw exception when using wrong constructor") {
-  try {
-    HasmParametersParser parser;
-  }
-  catch (std::runtime_error& e) {
-    std::string exceptionMessage(e.what());
-    CHECK("default constructor should not be used. Use "
-      "'HasmParametersParser(std::vector<std::string> args)' instead"
-      == exceptionMessage);
-  }
-  catch(...) {
-    FAIL_CHECK("exception not caught");
-  }
-}
-
 
 TEST_CASE("should get correct file names") {
   std::vector<std::string> args = {"a.asm", "b.asm"};
@@ -99,7 +84,7 @@ TEST_CASE("should throw exception when input name is the same as output name") {
 
   HasmParametersParser parser(args);
   CHECK_THROWS_WITH_AS(parser.run(),
-    "erro: Nome de saída é igual ao nome de entrada",
+    "error: output name is same as input name",
     HasmParameterException
   );
 }
@@ -110,7 +95,7 @@ TEST_CASE("should throw exception when no output name is given using -o flag") {
 
   HasmParametersParser parser(args);
   CHECK_THROWS_WITH_AS(parser.run(),
-    "erro: Falta o nome do arquivo depois de '-o'",
+    "error: missing file name after '-o'",
     HasmParameterException);
 }
 
@@ -122,7 +107,7 @@ TEST_CASE("should throw exception when given multiple input files while  using"
 
   HasmParametersParser parser(args);
   CHECK_THROWS_WITH_AS(parser.run(),
-    "erro: Não é permitido usar '-o' com mútiplos arquivos",
+    "error: not allowed to use '-o' with multiple input files",
     HasmParameterException);
 }
 
@@ -132,7 +117,7 @@ TEST_CASE("should throw exception when no input files are given") {
 
   HasmParametersParser parser(args);
   CHECK_THROWS_WITH_AS(parser.run(),
-    "erro: Não há arquivos de entrada",
+    "error: no input files",
     HasmParameterException);
 }
 
@@ -143,12 +128,8 @@ TEST_CASE("should throw exception when no input files are given while using -o")
 
   HasmParametersParser parser(args);
   CHECK_THROWS_WITH_AS(parser.run(),
-    "erro: Não há arquivos de entrada",
+    "error: no input files",
     HasmParameterException);
 }
 
 }
-
-
-
-// TEST_SUITE_END();

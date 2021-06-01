@@ -11,8 +11,6 @@
 
 class HasmParametersParser {
 public:
-  HasmParametersParser();
-
   HasmParametersParser(std::vector<std::string> args);
 
   ~HasmParametersParser();
