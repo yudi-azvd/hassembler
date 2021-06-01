@@ -36,6 +36,11 @@ void AssemblyData::addError(std::string filename, int line, std::string message)
 }
 
 
+void AssemblyData::addError(const AssemblyError& e) {
+  errors.push_back(e);
+}
+
+
 std::vector<AssemblyError> AssemblyData::getErrors() {
   return errors;
 }

@@ -24,6 +24,8 @@ public:
 
   void addError(std::string filename, int line, std::string message);
 
+  void addError(const AssemblyError& e);
+
   std::vector<AssemblyError> getErrors();
 
   std::vector<std::string> getInputFilenames();

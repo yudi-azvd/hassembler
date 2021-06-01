@@ -33,14 +33,18 @@ void ZerothPass2::runOn(Source* src) {
       tryToRunOnLine(line);
     }
     catch(const AssemblyError& e) {
-      std::cerr << e << '\n';
-      // handleError()
+      handleError(e);
     }
 
     lineCounter++;
   }
 
-  checkForBeginAndEndMatch();
+  try {
+    checkForBeginAndEndMatch();
+  }
+  catch(const AssemblyError& e) {
+    handleError(e);
+  }
 }
 
 
@@ -70,20 +74,14 @@ void ZerothPass2::tryToRunOnLine(Line line) {
 
 void ZerothPass2::handlePublicDirective() {
   source->disableLine(lineCounter);
-  if (tokens.size() != 2) {  // essa linha deve ser PUBLIC [SYMBOL]
-    // throw AssemblyError(
-    //   source->getInputfilename(),
-    //   lineCounter,
-    //   "missing symbol");
 
-    assemblyData->addError(
+  if (tokens.size() != 2) // essa linha deve ser PUBLIC [SYMBOL]
+    throw AssemblyError(
       source->getInputfilename(),
       lineCounter,
       "missing symbol");
-  }
-  else {
-    definitionsTable->add(tokens[1], 0);
-  }
+
+  definitionsTable->add(tokens[1], 0);
 }
 
 
@@ -100,33 +98,47 @@ void ZerothPass2::handleEndDirective() {
 
 
 void ZerothPass2::handleExternDirective() {
-  if (tokens.size() != 3) {
-    assemblyData->addError(
+  source->disableLine(lineCounter);
+
+  if (tokens.size() != 3 || lowerCasedTokens[2] != "extern") {
+    throw AssemblyError(
       source->getInputfilename(),
       lineCounter,
       "bad format using EXTERN directive. Use <LABEL>: EXTERN"
     );
   }
-  else {
-    source->disableLine(lineCounter);
-    usageTable->add(tokens[0], 0);
+
+  if (tokens[1] != ":") {
+    throw AssemblyError(
+      source->getInputfilename(),
+      lineCounter,
+      "bad format using EXTERN directive. Missing ':'"
+    );
   }
+
+  usageTable->add(tokens[0], 0);
 }
 
 
 void ZerothPass2::checkForBeginAndEndMatch() {
   if (source->hasModule() && !sourceHasEndDirective) {
-    assemblyData->addError(
+    throw AssemblyError(
       source->getInputfilename(),
       0,
       "module " + source->getModulename() +
-      " does not end. Use the END directive");
+      " does not end. Use the END directive"
+    );
   }
 
   if (!source->hasModule() && sourceHasEndDirective) {
-    assemblyData->addError(
+    throw AssemblyError(
       source->getInputfilename(),
       lineCounter-1, // última linha
       "module has not been defined but it has been ended");
   }
+}
+
+
+void ZerothPass2::handleError(const AssemblyError& e) {
+  assemblyData->addError(e);
 }

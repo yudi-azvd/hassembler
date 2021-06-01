@@ -38,6 +38,8 @@ private:
 
   void tryToRunOnLine(Line line);
 
+  void handleError(const AssemblyError& e);
+
   void handlePublicDirective();
 
   void handleBeginDirective();
