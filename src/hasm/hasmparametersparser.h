@@ -24,11 +24,15 @@ private:
 
   const std::string COMPILE_ONLY_FLAG = "-c";
 
+  const std::string DUMP_HASM_DATA_FLAG = "-dh";
+
   std::vector<std::string> arguments;
 
-  HasmParameters assemblyParameters;
+  HasmParameters hasmParameters;
 
   bool hasMultipleInputFiles();
+
+  void checkForDumpHasmDataFlag();
 
   void checkForOuputFilenameFlag();
 

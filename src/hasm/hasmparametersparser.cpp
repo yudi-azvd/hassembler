@@ -17,13 +17,14 @@ HasmParametersParser::HasmParametersParser(std::vector<std::string> args) {
 
 
 HasmParameters HasmParametersParser::run() {
+  checkForDumpHasmDataFlag();
   checkForOuputFilenameFlag();
   checkForCompileOnlyFlag();
   getFileNames();
   throwIfOutputNameEqualsInputName();
   throwIfThereAreMultipleFilesAndOutputFlag();
 
-  return assemblyParameters;
+  return hasmParameters;
 }
 
 
@@ -32,27 +33,37 @@ void HasmParametersParser::getFileNames() {
     throw HasmParameterException("Não há arquivos de entrada");
   }
 
-  assemblyParameters.filenames = arguments;
+  hasmParameters.filenames = arguments;
 }
 
 
-void HasmParametersParser::checkForCompileOnlyFlag() {
-  std::vector<std::string>::iterator it =
-    std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
+void HasmParametersParser::checkForDumpHasmDataFlag() {
+  auto it = std::find(arguments.begin(), arguments.end(), DUMP_HASM_DATA_FLAG);
 
   bool flagNotFound = it == arguments.end();
   if (flagNotFound)
     return;
 
-  assemblyParameters.isCompileOnly = true;
+  hasmParameters.dumpHasmData = true;
+  arguments.erase(it);
+}
+
+
+void HasmParametersParser::checkForCompileOnlyFlag() {
+  auto it = std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
+
+  bool flagNotFound = it == arguments.end();
+  if (flagNotFound)
+    return;
+
+  hasmParameters.isCompileOnly = true;
   arguments.erase(it);
 }
 
 
 void HasmParametersParser::checkForOuputFilenameFlag() {
   bool noSpaceForOutputName = false;
-  std::vector<std::string>::iterator it
-    = std::find(arguments.begin(), arguments.end(), OUTPUT_FILE_NAME_FLAG);
+  auto it = std::find(arguments.begin(), arguments.end(), OUTPUT_FILE_NAME_FLAG);
 
   bool flagNotFound = it == arguments.end();
   if (flagNotFound)
@@ -63,22 +74,22 @@ void HasmParametersParser::checkForOuputFilenameFlag() {
     throw HasmParameterException("Falta o nome do arquivo depois de '-o'");
   }
 
-  assemblyParameters.outputFilename = *(it + 1);
+  hasmParameters.outputFilename = *(it + 1);
   arguments.erase(it, it + 2); // erase: [inicio, fim)
 }
 
 
 void HasmParametersParser::throwIfOutputNameEqualsInputName() {
-  for (auto fileName : assemblyParameters.filenames) {
-    if (fileName == assemblyParameters.outputFilename)
+  for (auto fileName : hasmParameters.filenames) {
+    if (fileName == hasmParameters.outputFilename)
       throw HasmParameterException("Nome de saída é igual ao nome de entrada");
   }
 }
 
 
 void HasmParametersParser::throwIfThereAreMultipleFilesAndOutputFlag() {
-  bool hasOutputFileName = !assemblyParameters.outputFilename.empty();
-  bool hasMultipleInputFiles = assemblyParameters.filenames.size() > 1;
+  bool hasOutputFileName = !hasmParameters.outputFilename.empty();
+  bool hasMultipleInputFiles = hasmParameters.filenames.size() > 1;
   if (hasMultipleInputFiles && hasOutputFileName) {
     throw HasmParameterException("Não é permitido usar '-o' com mútiplos arquivos");
   }

@@ -31,6 +31,7 @@ private:
 
   Assembler* assembler = nullptr;
 
+  void dumpHasmData();
 };
 
 

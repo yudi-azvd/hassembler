@@ -28,12 +28,12 @@ void ZerothPass::runOn(Source* source) {
       continue;
     }
 
+    tokens = Scanner::parseTokens(line.getContent());
     if (tokens.empty()) {
       ++lineCounter;
       continue;
     }
 
-    tokens = Scanner::parseTokens(line.getContent());
     if (toLower(tokens[0]) != "section") {
       lineCounter++;
       continue;

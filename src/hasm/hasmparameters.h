@@ -7,6 +7,8 @@
 struct HasmParameters {
   bool isCompileOnly = false;
 
+  bool dumpHasmData = false;
+
   std::vector<std::string> filenames;
 
   std::string outputFilename;

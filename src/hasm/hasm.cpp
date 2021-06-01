@@ -34,20 +34,6 @@ void Hasm::run() {
   // oldAssembler->assemble();
   assembler->run();
 
-  // for (auto source : hasmData->getAssemblyData()->getSources()) {
-  //   std::cout << *source << std::endl;
-  // }
-  // for (auto source : hasmData->getAssemblyData()->getNthSource(0)->) {
-  //   std::cout << *source << std::endl;
-  // }
-
-  for (int i = 0; i < hasmData->getAssemblyData()->getSources().size(); ++i) {
-    std::cout << "us table" << std::endl;
-    std::cout << *(hasmData->getAssemblyData()->getNthSource(i)->getUsageTable()) << std::endl;
-    std::cout << "def table" << std::endl;
-    std::cout << *(hasmData->getAssemblyData()->getNthSource(i)->getDefinitionsTable()) << std::endl;
-  }
-
   /*
   if (input.areAssemblyFiles() hasmData.isAssembleOnly()) {
     assembler = new TwoPassesAssembler(hasmData);
@@ -68,4 +54,24 @@ void Hasm::run() {
   outputGen = new OutputGenerator(hasmData);
   outputGen->run();
   */
+
+  if (parameters.dumpHasmData) {
+    dumpHasmData();
+  }
+}
+
+void Hasm::dumpHasmData() {
+  // for (auto source : hasmData->getAssemblyData()->getSources()) {
+  //   std::cout << *source << std::endl;
+  // }
+  // for (auto source : hasmData->getAssemblyData()->getNthSource(0)->) {
+  //   std::cout << *source << std::endl;
+  // }
+
+  for (size_t i = 0; i < hasmData->getAssemblyData()->getSources().size(); ++i) {
+    std::cout << "us table" << std::endl;
+    std::cout << *(hasmData->getAssemblyData()->getNthSource(i)->getUsageTable()) << std::endl;
+    std::cout << "def table" << std::endl;
+    std::cout << *(hasmData->getAssemblyData()->getNthSource(i)->getDefinitionsTable()) << std::endl;
+  }
 }
