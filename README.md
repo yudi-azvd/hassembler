@@ -71,7 +71,7 @@ Você ainda pode copiar esse executável para qualquer lugar do seu computaddor
 e usá-lo normalmente atentando-se somente aos caminhos dos arquivos usados como
 argumentos para `hasm`.
 
-**Cheque a [documentação](docs/README.md)**
+Cheque a **[documentação](docs/README.md)**
 para mais informações sobre o uso e o funcionamento do Hassembler.
 
 
