@@ -28,6 +28,8 @@ private:
 
   std::vector<std::string> arguments;
 
+  std::vector<std::string>::iterator iter;
+
   HasmParameters hasmParameters;
 
   bool hasMultipleInputFiles();
@@ -37,6 +39,10 @@ private:
   void checkForOuputFilenameFlag();
 
   void checkForCompileOnlyFlag();
+
+  void find(const std::string flag);
+
+  bool flagNotFound();
 
   void getFileNames();
 

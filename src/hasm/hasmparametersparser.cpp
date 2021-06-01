@@ -38,44 +38,51 @@ void HasmParametersParser::getFileNames() {
 
 
 void HasmParametersParser::checkForDumpHasmDataFlag() {
-  auto it = std::find(arguments.begin(), arguments.end(), DUMP_HASM_DATA_FLAG);
+  find(DUMP_HASM_DATA_FLAG);
 
-  bool flagNotFound = it == arguments.end();
-  if (flagNotFound)
+  if (flagNotFound())
     return;
 
   hasmParameters.dumpHasmData = true;
-  arguments.erase(it);
+  arguments.erase(iter);
 }
 
 
 void HasmParametersParser::checkForCompileOnlyFlag() {
-  auto it = std::find(arguments.begin(), arguments.end(), COMPILE_ONLY_FLAG);
+  find(COMPILE_ONLY_FLAG);
 
-  bool flagNotFound = it == arguments.end();
-  if (flagNotFound)
+  if (flagNotFound())
     return;
 
   hasmParameters.isCompileOnly = true;
-  arguments.erase(it);
+  arguments.erase(iter);
 }
 
 
 void HasmParametersParser::checkForOuputFilenameFlag() {
-  bool noSpaceForOutputName = false;
-  auto it = std::find(arguments.begin(), arguments.end(), OUTPUT_FILE_NAME_FLAG);
+  find(OUTPUT_FILE_NAME_FLAG);
 
-  bool flagNotFound = it == arguments.end();
-  if (flagNotFound)
+  if (flagNotFound())
     return;
 
-  noSpaceForOutputName = it + 1 > arguments.end() - 1;
+  bool noSpaceForOutputName = false;
+  noSpaceForOutputName = iter + 1 > arguments.end() - 1;
   if (noSpaceForOutputName) {
     throw HasmParameterException("Falta o nome do arquivo depois de '-o'");
   }
 
-  hasmParameters.outputFilename = *(it + 1);
-  arguments.erase(it, it + 2); // erase: [inicio, fim)
+  hasmParameters.outputFilename = *(iter + 1);
+  arguments.erase(iter, iter + 2); // erase: [inicio, fim)
+}
+
+
+void HasmParametersParser::find(const std::string flag) {
+  iter = std::find(arguments.begin(), arguments.end(), flag);
+}
+
+
+bool HasmParametersParser::flagNotFound() {
+  return iter == arguments.end();
 }
 
 
