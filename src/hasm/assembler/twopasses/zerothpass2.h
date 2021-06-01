@@ -1,6 +1,7 @@
 #ifndef ZEROTHPASS2_H_INCLUDED
 #define ZEROTHPASS2_H_INCLUDED
 
+#include <algorithm>
 
 #include "assembler/scanner/scanner.h"
 #include "assembler/assemblydata.h"
@@ -50,6 +51,8 @@ private:
 
   void checkForBeginAndEndMatch();
 
+  bool found(std::string directive);
+
   DefinitionsTable* definitionsTable;
 
   UsageTable* usageTable;
@@ -69,6 +72,8 @@ private:
   std::vector<std::string> tokens;
 
   std::vector<std::string> lowerCasedTokens;
+
+  std::vector<std::string>::iterator iter;
 };
 
 

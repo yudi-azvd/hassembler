@@ -60,7 +60,7 @@ void ZerothPass2::runOnLine(Line line) {
 
 
 void ZerothPass2::handlePublicDirectiveIfItExists() {
-  if (!findInVector(lowerCasedTokens, "public"))
+  if (!found("public"))
     return;
 
   source->disableLine(lineCounter);
@@ -76,7 +76,7 @@ void ZerothPass2::handlePublicDirectiveIfItExists() {
 
 
 void ZerothPass2::handleBeginDirectiveIfItExists() {
-  if(!findInVector(lowerCasedTokens, "begin"))
+  if(!found("begin"))
     return;
 
   source->setModulename(tokens[0]);
@@ -85,7 +85,7 @@ void ZerothPass2::handleBeginDirectiveIfItExists() {
 
 
 void ZerothPass2::handleEndDirectiveIfItExists() {
-  if(!findInVector(lowerCasedTokens, "end"))
+  if(!found("end"))
     return;
 
   sourceHasEndDirective = true;
@@ -94,7 +94,7 @@ void ZerothPass2::handleEndDirectiveIfItExists() {
 
 
 void ZerothPass2::handleExternDirectiveIfItExists() {
-  if(!findInVector(lowerCasedTokens, "extern"))
+  if(!found("extern"))
     return;
 
   source->disableLine(lineCounter);
@@ -135,6 +135,13 @@ void ZerothPass2::checkForBeginAndEndMatch() {
       lineCounter-1, // última linha
       "module has not been defined but it has been ended");
   }
+}
+
+
+bool ZerothPass2::found(std::string directive) {
+  iter = std::find(lowerCasedTokens.begin(),
+    lowerCasedTokens.end(), directive);
+  return iter != lowerCasedTokens.end();
 }
 
 
