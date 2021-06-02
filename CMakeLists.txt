@@ -62,6 +62,7 @@ add_library(util STATIC
   src/hasm/util/correctionfactortable.cpp
   src/hasm/util/definitionstable.cpp
   src/hasm/util/usagetable.cpp
+  src/hasm/util/symbolstable.cpp
   )
 target_include_directories(util PUBLIC
   ${PROJECT_SOURCE_DIR}/src/hasm/util)
