@@ -44,10 +44,13 @@ add_library(assembler STATIC
   src/hasm/assembler/twopasses/twopassesassembler.cpp
   src/hasm/assembler/twopasses/zerothpass.cpp
   src/hasm/assembler/twopasses/zerothpass2.cpp
+  src/hasm/assembler/twopasses/firstpass.cpp
+  src/hasm/assembler/parser/parser.cpp
   src/hasm/assembler/scanner/scanner.cpp)
 target_include_directories(assembler PUBLIC
   ${PROJECT_SOURCE_DIR}/src/assembler
   ${PROJECT_SOURCE_DIR}/src/hasm/assembler/twopasses
+  ${PROJECT_SOURCE_DIR}/src/hasm/assembler/parser
   ${PROJECT_SOURCE_DIR}/src/hasm/assembler/scanner)
 
 
@@ -86,6 +89,7 @@ file(GLOB srcs_utests
   "src/hasm/assembler/_tests/*.ut.cpp"
     "src/hasm/assembler/twopasses/_tests/*.ut.cpp"
     "src/hasm/assembler/scanner/_tests/*.ut.cpp"
+    "src/hasm/assembler/parser/_tests/*.ut.cpp"
   "src/hasm/linker/_tests/*.ut.cpp"
   "src/hasm/util/_tests/*.ut.cpp")
 add_executable(utests

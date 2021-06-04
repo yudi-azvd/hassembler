@@ -20,6 +20,11 @@ public:
     message = msg;
   }
 
+  std::string getMessage() {
+    return "assembly error [" + filename + "]("
+      + std::to_string(line) + "): " + message;
+  }
+
   ~AssemblyError() {}
 
   friend bool operator==(const AssemblyError& lhs, const AssemblyError& rhs) {
@@ -29,9 +34,9 @@ public:
   }
 
   friend std::ostream& operator<<(std::ostream& os, const AssemblyError& e) {
-    return os << "assembly error: "
-      << (e.filename) << ":" <<
-      e.line << ": " << e.message;
+    return os << "assembly error ["
+      << (e.filename) << "](" <<
+      e.line << "): " << e.message;
   }
 
 private:

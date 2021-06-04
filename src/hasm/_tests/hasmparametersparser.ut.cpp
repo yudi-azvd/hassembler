@@ -4,7 +4,7 @@
 #include "hasm/hasmparametersparser.h"
 
 
-TEST_SUITE("hasm-hasmparameters-parser") {
+TEST_SUITE("hasm-hasmparametersparser") {
 
 
 TEST_CASE("should get correct file names") {

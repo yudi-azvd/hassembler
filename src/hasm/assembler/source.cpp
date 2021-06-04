@@ -88,6 +88,11 @@ UsageTable* Source::getUsageTable() {
 }
 
 
+SymbolsTable* Source::getSymbolsTable() {
+  return &symbolsTable;
+}
+
+
 std::ostream& operator<<(std::ostream& os, const Source& s) {
   int lineCounter = 1;
   char formattedLineCounter[5];
@@ -95,7 +100,7 @@ std::ostream& operator<<(std::ostream& os, const Source& s) {
   if (!s.inputFilename.empty()) {
     std::string header = " FILENAME=" + s.inputFilename;
     os << header << std::endl;
-    for(int i = 0; i < header.size()+1; ++i) os << "-";
+    for(size_t i = 0; i < header.size()+1; ++i) os << "-";
     os << std::endl;
   }
 

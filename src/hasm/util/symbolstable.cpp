@@ -27,4 +27,3 @@ bool SymbolsTable::isExternal(std::string name) {
     throw std::runtime_error("error: symbol '"+name+"' not found");
   return iter->second.isExternal;
 }
-

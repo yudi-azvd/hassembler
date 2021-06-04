@@ -6,12 +6,6 @@
 
 
 class SymbolsTable {
-private:
-  struct Symbol {
-    int position;
-    bool isExternal;
-  };
-
 public:
   SymbolsTable() {};
 
@@ -25,7 +19,32 @@ public:
 
   bool isExternal(std::string name);
 
+  friend bool operator==(const SymbolsTable& lhs, const SymbolsTable& rhs) {
+    return lhs.table == rhs.table;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, const SymbolsTable& st) {
+    os << "[" << std::boolalpha; // habilita escrita true e false
+    for (auto& pair : st.table) {
+      os << "(" << pair.first << ", "
+        << pair.second.position
+        << ", ext=" << pair.second.isExternal << ") ";
+    }
+
+    return os << "]\n"; // deixa '\n' aqui?
+  }
+
 private:
+  struct Symbol {
+    int position;
+    bool isExternal;
+
+    friend bool operator==(const Symbol& lhs, const Symbol& rhs) {
+      return (lhs.isExternal == rhs.isExternal)
+        && (lhs.position == rhs.position);
+    }
+  };
+
   std::map<std::string, Symbol> table;
 
   std::map<std::string, Symbol>::iterator iter;

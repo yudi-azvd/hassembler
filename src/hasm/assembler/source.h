@@ -4,9 +4,10 @@
 #include <iostream>
 #include <vector>
 
+#include "util/definitionstable.hpp"
+#include "util/usagetable.h"
+#include "util/symbolstable.h"
 #include "line.h"
-#include "hasm/util/definitionstable.hpp"
-#include "hasm/util/usagetable.h"
 
 
 /**
@@ -49,6 +50,8 @@ public:
 
   UsageTable* getUsageTable();
 
+  SymbolsTable* getSymbolsTable();
+
   friend std::ostream& operator<<(std::ostream& os, const Source& s);
 
 private:
@@ -67,6 +70,8 @@ private:
   DefinitionsTable definitionsTable;
 
   UsageTable usageTable;
+
+  SymbolsTable symbolsTable;
 
 /*
   // Só está definido quando é compileOnly=true,

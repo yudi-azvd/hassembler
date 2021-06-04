@@ -10,11 +10,10 @@
           "groupByExecutable": {
             "label": "${filename}",
             "description": "${relDirpath}/",
-            "groupBySource": "[-1]",
             "groupByTags": {
-              "tags": [],
-              "label": "${tag}"
-            }
+              // "tags": [],
+              "label": "${tags}"
+            },
           },
         }
       },
@@ -26,6 +25,7 @@
       "src/**"
     ],
     "Build hasm": [
+      "src/**/!_tests/",
       "src/**",
     ]
   },
