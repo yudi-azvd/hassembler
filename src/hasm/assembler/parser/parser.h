@@ -3,16 +3,23 @@
 
 #include <iostream>
 #include <vector>
+#include <functional>
 
 #include "assembler/assemblyerror.h"
 
 
 /**
  * Realiza a análise sintática de uma linha.
+ *
+ * Sobre ponteiros para funções:
+ * https://www.learncpp.com/cpp-tutorial/function-pointers/
  */
 class Parser {
 public:
   void runOn(std::vector<std::string> tokens);
+
+  void setCallbackErrorFunction(
+    std::function<void(std::string)> callbackErrorFunction);
 
   std::string getLabel();
 
@@ -35,15 +42,17 @@ private:
 
   void findOperands();
 
+  std::function<void(std::string)> callbackErrorFunction;
+
   std::vector<std::string> tokens;
 
   std::string label;
 
-  size_t labelIndex;
+  size_t labelIndex = 0;
 
   std::string operation;
 
-  size_t operationIndex;
+  size_t operationIndex = 0;
 
   std::string operand1;
 

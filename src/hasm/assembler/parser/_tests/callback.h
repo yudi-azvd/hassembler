@@ -1,0 +1,8 @@
+#ifndef CALLBACKERRORFUNCTION_H_INCLUDED
+#define CALLBACKERRORFUNCTION_H_INCLUDED
+
+
+#include "assembler/assemblydata.h"
+
+
+#endif // CALLBACKERRORFUNCTION_H_INCLUDED

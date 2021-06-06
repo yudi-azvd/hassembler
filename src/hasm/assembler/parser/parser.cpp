@@ -50,7 +50,9 @@ void Parser::findLabel() {
   if (colonIndex == 0 || colonIndex == tokens.size()) {
     // Só vai dar certo nos testes. Doctest só pega erro que
     // é exceção std::exception.
+
     // throw AssemblyError("", 0, "missing label before ':'");
+    callbackErrorFunction("missing label before ':'");
     label.clear();
     return;
   }
@@ -80,6 +82,7 @@ void Parser::findOperation() {
 }
 
 
+// Talvez seja mehor separar em findOperand1 e 2
 void Parser::findOperands() {
   operand1.clear();
   operand2.clear();
@@ -108,6 +111,14 @@ void Parser::findOperands() {
 
   operand2 = tokens[operationIndex + 2];
 }
+
+
+void Parser::setCallbackErrorFunction(
+  std::function<void(std::string)> callback
+) {
+  callbackErrorFunction = callback;
+}
+
 
 
 // talvez não seja necessário

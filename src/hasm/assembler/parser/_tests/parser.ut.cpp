@@ -3,36 +3,69 @@
 
 #include "doctest/doctest.h"
 #include "assembler/assemblyerror.h"
+#include "assembler/assemblydata.h"
 #include "assembler/parser/parser.h"
+#include "passinterface.h"
 
 
 TEST_SUITE_BEGIN("assembler-parser");
 
 
-TEST_CASE("should get all empty when line is empty") {
+class AssemblerPassMock : public Pass {
+public:
+  AssemblyData assemblyData;
+
+  void callback(std::string errorMessage) {
+    assemblyData.addError("", 0, errorMessage);
+  }
+
+  void run() {};
+};
+
+
+TEST_CASE("parser") {
+  AssemblerPassMock mock;
   Parser parser;
-  std::vector<std::string> tokens = {};
+  std::vector<std::string> tokens;
+  // usar function ptr ou std::function?
+  // parser.setCallbackErrorFunction(&AssemblerPassMock::callback);
 
-  parser.runOn(tokens);
+  SUBCASE("should get all empty when line is empty") {
+    tokens = {};
 
-  CHECK(parser.getLabel().empty());
-  CHECK(parser.getOperation().empty());
-  CHECK(parser.getOperand1().empty());
-  CHECK(parser.getOperand2().empty());
+    parser.runOn(tokens);
+
+    CHECK(parser.getLabel().empty());
+    CHECK(parser.getOperation().empty());
+    CHECK(parser.getOperand1().empty());
+    CHECK(parser.getOperand2().empty());
+  }
+
+  SUBCASE("should get label") {
+    tokens = {"label", ":", "const", "3"};
+    auto expectedLabel = "label";
+
+    parser.runOn(tokens);
+    auto gotLabel = parser.getLabel();
+
+    CHECK(expectedLabel == gotLabel);
+  }
+
+  // ad.clearErros();
 }
 
 
-TEST_CASE("should get label") {
-  Parser parser;
-  std::vector<std::string> tokens
-    = {"label", ":", "const", "3"};
-  auto expectedLabel = "label";
+// TEST_CASE("should get label") {
+//   Parser parser;
+//   std::vector<std::string> tokens
+//     = {"label", ":", "const", "3"};
+//   auto expectedLabel = "label";
 
-  parser.runOn(tokens);
-  auto gotLabel = parser.getLabel();
+//   parser.runOn(tokens);
+//   auto gotLabel = parser.getLabel();
 
-  CHECK(expectedLabel == gotLabel);
-}
+//   CHECK(expectedLabel == gotLabel);
+// }
 
 
 TEST_CASE("should throw missing label error") {
@@ -84,6 +117,7 @@ TEST_CASE("should get instruction as operation with no label") {
 
 TEST_CASE("should get COPY as operation with no label") {
   Parser parser;
+  // parser.setCallbackErrorFunction(callback);
   std::vector<std::string> tokens
     = {"copy", "label1", ",", "label2"};
 

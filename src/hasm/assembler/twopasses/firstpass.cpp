@@ -30,8 +30,11 @@ void FirstPass::runOn(Source* src) {
 
 
 void FirstPass::runOn(Line line) {
+  // scanner.setAssemblyData(assemblyData);
+  // scanner.setSource(source);
   tokens = Scanner::parseTokens(line.getContent());
-
+  // parser.setAssemblyData(assemblyData);
+  // parser.setSource(source);
   if (tokens.empty()) {
     return;
   }
