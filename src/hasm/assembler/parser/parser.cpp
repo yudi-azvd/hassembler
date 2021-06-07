@@ -28,6 +28,21 @@ std::string Parser::getOperand2() {
 }
 
 
+void Parser::setAssemblyData(AssemblyData* ad) {
+  assemblyData = ad;
+}
+
+
+void Parser::setLineCounter(int line) {
+  lineCounter = line;
+}
+
+
+void Parser::setFilename(std::string fn) {
+  filename = fn;
+}
+
+
 void Parser::parse() {
   if (tokens.size() == 0)
     return;
@@ -48,12 +63,7 @@ void Parser::findLabel() {
   }
 
   if (colonIndex == 0 || colonIndex == tokens.size()) {
-    // Só vai dar certo nos testes. Doctest só pega erro que
-    // é exceção std::exception.
-
-    // throw AssemblyError("", 0, "missing label before ':'");
-    callbackErrorFunction("missing label before ':'");
-    label.clear();
+    assemblyData->addError(filename, lineCounter, "missing label before ':'");
     return;
   }
 
@@ -111,14 +121,6 @@ void Parser::findOperands() {
 
   operand2 = tokens[operationIndex + 2];
 }
-
-
-void Parser::setCallbackErrorFunction(
-  std::function<void(std::string)> callback
-) {
-  callbackErrorFunction = callback;
-}
-
 
 
 // talvez não seja necessário

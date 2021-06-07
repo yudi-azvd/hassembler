@@ -6,20 +6,15 @@
 #include <functional>
 
 #include "assembler/assemblyerror.h"
+#include "assembler/assemblydata.h"
 
 
 /**
  * Realiza a análise sintática de uma linha.
- *
- * Sobre ponteiros para funções:
- * https://www.learncpp.com/cpp-tutorial/function-pointers/
  */
 class Parser {
 public:
   void runOn(std::vector<std::string> tokens);
-
-  void setCallbackErrorFunction(
-    std::function<void(std::string)> callbackErrorFunction);
 
   std::string getLabel();
 
@@ -29,7 +24,18 @@ public:
 
   std::string getOperand2();
 
+  void setAssemblyData(AssemblyData* assemblyData);
+
+  void setLineCounter(int lineCounter);
+
+  void setFilename(std::string filename);
 private:
+  AssemblyData* assemblyData;
+
+  std::string filename;
+
+  int lineCounter;
+
   const std::string LABEL_TOKEN = ":";
 
   void clear();
@@ -41,8 +47,6 @@ private:
   void findOperation();
 
   void findOperands();
-
-  std::function<void(std::string)> callbackErrorFunction;
 
   std::vector<std::string> tokens;
 
