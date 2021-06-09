@@ -5,6 +5,7 @@
 #include "assembler/scanner/scanner.h"
 #include "assembler/assemblydata.h"
 #include "parser.h"
+#include "util/util.h"
 
 
 class FirstPass {

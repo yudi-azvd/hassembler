@@ -32,34 +32,37 @@ void FirstPass::runOn(Source* src) {
 
 
 void FirstPass::runOn(Line line) {
-  // scanner.setAssemblyData(assemblyData);
-  // scanner.setSource(source);
   tokens = Scanner::parseTokens(line.getContent());
-  parser.setLineCounter(lineCounter);
   if (tokens.empty()) {
     return;
   }
-  /*
-  ### label, operation, operand1 e 2 tudo lower cased
-  parser.runOn(tokens); // throws
-  label = parser.getLabel()
-  operation = parser.getOperation() // instrução ou diretiva
-  operand1 = parser.getOperand1()
-  operand2 = parser.getOperand2()
+
+  bool symbolsTableHasLabel, usageTableHasLabel;
+
+  parser.setLineCounter(lineCounter);
+  parser.runOn(tokens);
+  std::string label = toLower(parser.getLabel());
+  std::string operation = toLower(parser.getOperation()); // instrução ou diretiva
+  std::string operand1 = toLower(parser.getOperand1());
+  std::string operand2 = toLower(parser.getOperand2());
 
   if (!label.empty()) {
-    labelFoundInSymbolsTable = symbolsTable.find(label);
-    labelFoundInUsageTable = usageTable.find(label);
+    symbolsTableHasLabel = source->getSymbolsTable()->has(label);
+    usageTableHasLabel = source->getUsageTable()->has(label);
 
-    if (!labelFoundInSymbolsTable && !labelFoundInUsageTable) {
-      usageTable.add(label);
+    if (!symbolsTableHasLabel && !usageTableHasLabel) {
+      source->getUsageTable()->add(label, positionCounter);
+      source->getSymbolsTable()->add(label, positionCounter);
+      positionCounter++;
     }
     else {
-      add? AssemblyError(source->getFilename(),
+      assemblyData->addError(
+        source->getInputfilename(),
         lineCounter, "symbol " + label + " redefined");
     }
   }
 
+  /*
   labelIsAloneInLine = !label.empty() &&
     operation.empty() && operand1.empty() && operand2.empty();
   if (labelIsAloneInLine) {
