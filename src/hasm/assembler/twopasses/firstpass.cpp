@@ -5,6 +5,7 @@ FirstPass::FirstPass(AssemblyData* ad) {
   if (ad == nullptr)
     throw std::runtime_error("assemblyData cannot be null");
   assemblyData = ad;
+  parser.setAssemblyData(assemblyData);
 }
 
 
@@ -21,6 +22,7 @@ void FirstPass::runOn(Source* src) {
   positionCounter = 0;
   textSectionSize = 0;
   dataSectionSize = 0;
+  parser.setFilename(src->getInputfilename());
 
   for (auto ln : source->getLines()) {
     runOn(ln);
@@ -33,8 +35,7 @@ void FirstPass::runOn(Line line) {
   // scanner.setAssemblyData(assemblyData);
   // scanner.setSource(source);
   tokens = Scanner::parseTokens(line.getContent());
-  // parser.setAssemblyData(assemblyData);
-  // parser.setSource(source);
+  parser.setLineCounter(lineCounter);
   if (tokens.empty()) {
     return;
   }

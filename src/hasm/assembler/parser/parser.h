@@ -3,9 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include <functional>
 
-#include "assembler/assemblyerror.h"
 #include "assembler/assemblydata.h"
 
 

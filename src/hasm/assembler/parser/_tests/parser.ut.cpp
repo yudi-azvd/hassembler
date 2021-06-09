@@ -160,8 +160,8 @@ TEST_CASE("parser") {
   }
 
 
-  SUBCASE("should not get second operand with COPY as operation") {
-    tokens = {"label", ":",  "copy",  "label1", ";", "label2"};
+  SUBCASE("should get oprands with COPY as operation without comma") {
+    tokens = {"label", ":",  "copy",  "label1", "label2"};
 
     parser.runOn(tokens);
 
@@ -169,8 +169,6 @@ TEST_CASE("parser") {
     CHECK("label2" == parser.getOperand2());
   }
 }
-
-
 
 
 TEST_SUITE_END();

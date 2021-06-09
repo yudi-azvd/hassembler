@@ -4,6 +4,7 @@
 
 #include "assembler/scanner/scanner.h"
 #include "assembler/assemblydata.h"
+#include "parser.h"
 
 
 class FirstPass {
@@ -26,6 +27,8 @@ private:
   Source* source;
 
   Line line;
+
+  Parser parser;
 
   int positionCounter;
 
