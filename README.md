@@ -21,8 +21,9 @@ vetores.
 - Strings?
 - E mais outras coisas se eu tiver paciência.
 
-Se você estiver muito impaciente para montar e ligar, você pode usar o programa
-em uma [versão anterior](docs/curiosidades.md#trabalhos-originais).
+Se você estiver muito impaciente para montar e ligar o seus códigos em Assembly 
+Hipostético, você pode usar o programa em uma 
+[versão anterior](docs/curiosidades.md#trabalhos-originais).
 
 
 ## Fique atento
