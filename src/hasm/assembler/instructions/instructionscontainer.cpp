@@ -4,6 +4,7 @@ InstructionContainer::InstructionContainer() {
   registerInstructions();
 }
 
+
 InstructionContainer::~InstructionContainer() {}
 
 
@@ -38,6 +39,7 @@ void InstructionContainer::registerInstructions() {
   container[JmpnInstruction().getName()] = JmpnInstruction();
   container[JmppInstruction().getName()] = JmppInstruction();
   container[JmpzInstruction().getName()] = JmpzInstruction();
+  container[CopyInstruction().getName()] = CopyInstruction();
   container[LoadInstruction().getName()] = LoadInstruction();
   container[StoreInstruction().getName()] = StoreInstruction();
   container[InputInstruction().getName()] = InputInstruction();
