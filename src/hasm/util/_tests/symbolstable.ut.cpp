@@ -20,7 +20,7 @@ TEST_CASE("should not create symbol trying to access non existing symbol") {
 
   CHECK_FALSE(table.has("non-existing"));
   CHECK_FALSE(table.has("non-existing"));
-  CHECK_THROWS_AS(table.getPositionOf("non-existing"), std::runtime_error);
+  CHECK_THROWS_AS(table.getPositionOf("non-existing"), std::out_of_range);
 }
 
 

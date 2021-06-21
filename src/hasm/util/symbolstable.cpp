@@ -14,16 +14,10 @@ bool SymbolsTable::has(std::string name) {
 
 
 int SymbolsTable::getPositionOf(std::string name) {
-  iter = table.find(name);
-  if (iter == table.end())
-    throw std::runtime_error("error: symbol '"+name+"' not found");
-  return iter->second.position;
+  return table.at(name).position;
 }
 
 
 bool SymbolsTable::isExternal(std::string name) {
-  iter = table.find(name);
-  if (iter == table.end())
-    throw std::runtime_error("error: symbol '"+name+"' not found");
-  return iter->second.isExternal;
+  return table.at(name).isExternal;
 }
