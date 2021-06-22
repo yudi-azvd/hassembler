@@ -5,7 +5,7 @@ name: Build
 
 on:
   push:
-    branches: [main,dev]
+    branches: [main,dev,github-actions]
 
 env:
   BUILD_TYPE: Release
