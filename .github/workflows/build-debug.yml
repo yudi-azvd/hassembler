@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Configure CMake
         run: cd build; cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
