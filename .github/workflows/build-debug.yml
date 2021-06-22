@@ -1,0 +1,42 @@
+# Totalmente tirado de:
+# https://github.com/actions/starter-workflows/blob/81295d6e715c29e03102adbe7d8e2f946a5fc8ac/ci/cmake.yml
+
+# create-release
+# https://github.com/actions/create-release - descontinuado
+# ! checar os outros links listados oa próprio repositório !
+# destaque para os
+# - https://github.com/softprops/action-gh-release
+# - https://github.com/ncipollo/release-action
+
+# running locally
+# https://github.com/nektos/act
+
+
+name: Build
+
+on:
+  push:
+    branches: [github-actions]
+
+env:
+  BUILD_TYPE: Release
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    # cada '-' é um step, se não me engano
+      - uses: actions/checkout@v2
+      - uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Configure CMake
+        run: cd build; cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G Ninja
+
+      - name: Build
+        run: cd build; cmake --build . --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        run: cd build; ./utests
+
+
