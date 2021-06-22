@@ -1,0 +1,29 @@
+# Totalmente tirado de:
+# https://github.com/actions/starter-workflows/blob/81295d6e715c29e03102adbe7d8e2f946a5fc8ac/ci/cmake.yml
+
+name: Build
+
+on:
+  push:
+    branches: [main,dev]
+
+env:
+  BUILD_TYPE: Release
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure CMake
+      - uses: actions/checkout@v2
+        run: cd build; cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cmake --build . --config ${{env.BUILD_TYPE}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build # cd build ??
+        run: ./utests
+
+
