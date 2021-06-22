@@ -15,8 +15,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure CMake
       - uses: actions/checkout@v2
+
+      - name: Configure CMake
         run: cd build; cmake .. -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
