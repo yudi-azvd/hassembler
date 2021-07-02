@@ -14,8 +14,9 @@ projeto e abrir [issues](https://github.com/yudi-azvd/hassembler/issues/new).
 Para compilar esse projeto, você vai precisar ter os seguintes programas
 instalados em seu computador:
 
-- [CMake](https://cmake.org/download/)
+- g++^7.5 (versão usada nesse projeto)
 - [Make](https://www.gnu.org/software/make/)
+- [CMake](https://cmake.org/download/)
 <!-- (ou [Ninja](https://ninja-build.org/)) -->
 
 

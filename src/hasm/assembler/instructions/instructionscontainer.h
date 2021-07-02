@@ -8,11 +8,11 @@
 #include "allinstructions.h"
 
 
-class InstructionContainer {
+class InstructionsContainer {
 public:
-  InstructionContainer();
+  InstructionsContainer();
 
-  ~InstructionContainer();
+  ~InstructionsContainer();
 
   bool has(std::string instructionName);
 

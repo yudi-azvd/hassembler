@@ -1,19 +1,19 @@
 #include "instructionscontainer.h"
 
-InstructionContainer::InstructionContainer() {
+InstructionsContainer::InstructionsContainer() {
   registerInstructions();
 }
 
 
-InstructionContainer::~InstructionContainer() {}
+InstructionsContainer::~InstructionsContainer() {}
 
 
-bool InstructionContainer::has(std::string instructionName) {
+bool InstructionsContainer::has(std::string instructionName) {
   return container.find(instructionName) != container.end();
 }
 
 
-uint16_t InstructionContainer::getSizeOf(std::string instructionName) {
+uint16_t InstructionsContainer::getSizeOf(std::string instructionName) {
   if (!has(instructionName)) {
     // return? exception?
   }
@@ -22,7 +22,7 @@ uint16_t InstructionContainer::getSizeOf(std::string instructionName) {
 }
 
 
-uint16_t InstructionContainer::getOpcodeOf(std::string instructionName) {
+uint16_t InstructionsContainer::getOpcodeOf(std::string instructionName) {
   if (!has(instructionName)) {
     // return? exception?
   }
@@ -30,7 +30,7 @@ uint16_t InstructionContainer::getOpcodeOf(std::string instructionName) {
 }
 
 
-void InstructionContainer::registerInstructions() {
+void InstructionsContainer::registerInstructions() {
   container[AddInstruction().getName()] = AddInstruction();
   container[SubInstruction().getName()] = SubInstruction();
   container[MulInstruction().getName()] = MulInstruction();
