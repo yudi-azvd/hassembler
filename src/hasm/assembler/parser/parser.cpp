@@ -5,6 +5,7 @@ void Parser::runOn(std::vector<std::string> tks) {
   tokens = tks;
   clear();
   parse();
+  // throwIfThereAreErrors();
 }
 
 
@@ -64,6 +65,8 @@ void Parser::findLabel() {
 
   if (colonIndex == 0 || colonIndex == tokens.size()) {
     assemblyData->addError(filename, lineCounter, "missing label before ':'");
+    // addError("missing label before ':'"); // ou ...
+    // addError(ParserException::ErrorCode::MISSING_LABEL);
     return;
   }
 
@@ -83,7 +86,6 @@ void Parser::findOperation() {
 
   bool thereIsNoOperation = labelIndex + 2 >= tokens.size();
   if (thereIsNoOperation) {
-    operation.clear();
     return;
   }
 

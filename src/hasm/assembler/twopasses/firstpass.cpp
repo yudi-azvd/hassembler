@@ -32,19 +32,31 @@ void FirstPass::runOn(Source* src) {
 
 
 void FirstPass::runOn(Line line) {
-  tokens = Scanner::parseTokens(line.getContent());
+  tokens = scanner.parseTokens(line.getContent());
   if (tokens.empty()) {
     return;
   }
 
-  bool symbolsTableHasLabel, usageTableHasLabel;
+  /*
+  tokens = scanner.run(line.getContent());
+  if (tokens.empty()) return;
+  parser.run(tokens);
+  addErrors(scanner.getErrorMessages());
+  addErrors(parser.getErrorMessages());
 
+  addScannerAndParserErrors(); { precisa desse método?
+    addErrors(scanner.getErrorMessages());
+    addErrors(parser.getErrorMessages());
+  }
+  */
+
+  bool symbolsTableHasLabel, usageTableHasLabel;
   parser.setLineCounter(lineCounter);
   parser.runOn(tokens);
-  std::string label = toLower(parser.getLabel());
-  std::string operation = toLower(parser.getOperation()); // instrução ou diretiva
-  std::string operand1 = toLower(parser.getOperand1());
-  std::string operand2 = toLower(parser.getOperand2());
+  auto label = toLower(parser.getLabel());
+  auto operation = toLower(parser.getOperation()); // instrução ou diretiva
+  auto operand1 = toLower(parser.getOperand1());
+  auto operand2 = toLower(parser.getOperand2());
 
   if (!label.empty()) {
     symbolsTableHasLabel = source->getSymbolsTable()->has(label);

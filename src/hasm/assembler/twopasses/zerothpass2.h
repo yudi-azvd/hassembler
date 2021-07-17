@@ -74,6 +74,8 @@ private:
   std::vector<std::string> lowerCasedTokens;
 
   std::vector<std::string>::iterator iter;
+
+  Scanner scanner;
 };
 
 

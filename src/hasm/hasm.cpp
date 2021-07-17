@@ -33,6 +33,17 @@ void Hasm::run() {
 
   // oldAssembler->assemble();
   assembler->run();
+  // runAssemblers():
+  // for (auto ad : hasmData.getAssemblies()) { // vector<AssemblyData*>
+  //   assembler = new TwoPassesAssembler(ad);
+  //   assembler->run();
+  //   hasmData.addErrors(assembler.getErrors()); // atenção se .getErrors() vier vazio
+  //   delete assembler;
+  // }
+
+  // if (hasmData.hasErrors()) {
+  //   // interrupt
+  // }
 
   /*
   if (input.areAssemblyFiles() hasmData.isAssembleOnly()) {

@@ -31,6 +31,8 @@ private:
 
   Parser parser;
 
+  Scanner scanner;
+
   int positionCounter;
 
   int lineCounter;

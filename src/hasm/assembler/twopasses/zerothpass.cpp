@@ -28,7 +28,7 @@ void ZerothPass::runOn(Source* source) {
       continue;
     }
 
-    tokens = Scanner::parseTokens(line.getContent());
+    tokens = scanner.parseTokens(line.getContent());
     if (tokens.empty()) {
       ++lineCounter;
       continue;

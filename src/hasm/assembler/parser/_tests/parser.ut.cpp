@@ -50,6 +50,19 @@ TEST_CASE("parser") {
     );
   }
 
+  // SUBCASE("should throw missing label error") {
+  //   tokens = {":", "const", "3"};
+
+  //   try {
+  //     parser.runOn(tokens);
+  //     FAIL("should've thrown missing label");
+  //   }
+  //   catch (ParserException& e) {
+  //     REQUIRE(e.getErrorCodes().size() == 1);
+  //     CHECK_EQ(e.getErrorCodes().back(), ParserException::ErrorCode::MISSING_LABEL);
+  //   }
+  // }
+
   SUBCASE("should get operation") {
     tokens = {"label", ":", "const", "3"};
 

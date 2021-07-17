@@ -12,7 +12,8 @@ TEST_SUITE_BEGIN("assembler-scanner-parsetokens");
 TEST_CASE("parse tokens") {
   std::string line;
   std::vector<std::string> expectedTokens;
-  std::vector<std::string> gotTokens;
+  std::vector<std::string> actualTokens;
+  Scanner scanner;
 
   std::vector<LineAndItsTokens> linesAndItsExpectedTokens {
     {"N2: SPACE", {"N2", ":", "SPACE"}},
@@ -29,10 +30,10 @@ TEST_CASE("parse tokens") {
     line = lineExpectedTokens.line;
     expectedTokens = lineExpectedTokens.tokens;
 
-    gotTokens = Scanner::parseTokens(line);
+    actualTokens = scanner.parseTokens(line);
     INFO(i, ": [", line, "]");
-    INFO(i++, ": [", vectorToString(gotTokens), "]");
-    CHECK_EQ(gotTokens, expectedTokens);
+    INFO(i++, ": [", vectorToString(actualTokens), "]");
+    CHECK_EQ(actualTokens, expectedTokens);
   }
 }
 

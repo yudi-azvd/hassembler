@@ -21,6 +21,8 @@ private:
   void runOn(Source* source);
 
   AssemblyData* assemblyData;
+
+  Scanner scanner;
 };
 
 

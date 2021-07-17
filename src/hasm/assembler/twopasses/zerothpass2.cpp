@@ -49,7 +49,7 @@ void ZerothPass2::runOn(Source* src) {
 
 
 void ZerothPass2::runOnLine(Line line) {
-  tokens = Scanner::parseTokens(line.getContent());
+  tokens = scanner.parseTokens(line.getContent());
   lowerCasedTokens = stringVectorLowerCased(tokens);
 
   handlePublicDirectiveIfItExists();

@@ -11,7 +11,9 @@ TEST_SUITE_BEGIN("assembler-instructionscontainer");
 TEST_CASE("instruction container has instructions") {
   InstructionsContainer instructionContainer;
 
-  CHECK_FALSE(instructionContainer.has("non-existing-instruction"));
+  SUBCASE("non-existing-instruction") {
+    CHECK_FALSE(instructionContainer.has("non-existing-instruction"));
+  }
 
   SUBCASE("add") {
     CHECK(instructionContainer.has("add"));

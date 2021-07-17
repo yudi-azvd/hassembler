@@ -4,99 +4,25 @@
 #include <iostream>
 #include <vector>
 
-
+/**
+ * Realiza a análise léxica da linha.
+ * Deveria Zerar o estado do objeto a cada vez que parseTokens/runs é chamado.
+ */
 class Scanner {
 public:
-  static std::vector<std::string> parseTokens(std::string line) {
-    int newStart = 0;
-    int tokenStartsAt = 0;
-    std::string token = "";
-    std::vector<std::string> tokens;
+  // Scanner();
 
-    while (tokenStartsAt >= 0) {
-      token = findNextTokenStartingFrom(newStart, line, tokenStartsAt);
-      newStart = tokenStartsAt + token.length();
-      tokens.push_back(token);
-    }
+  ~Scanner();
 
-    tokens.pop_back();
-    tokens.shrink_to_fit();
+  std::vector<std::string> parseTokens(const std::string line);
 
-    return tokens;
-  }
-
-
-  static std::string findNextTokenStartingFrom(
+  std::string findNextTokenStartingFrom(
     size_t start,
     std::string line,
     int& tokenStartsAt
-  ) {
-    size_t i;
-    char c;
-    bool symbolStarted = false,
-      isCommentDelimiter, isTokenDelimiter, isWhitespace;
-    std::string symbol = "";
+  );
 
-    for (i = start; i < line.length(); i++) {
-      c = line[i];
-      isCommentDelimiter = c == ';';
-      isWhitespace = (c == ' ' || c == '\t' || c == '\r');
-      isTokenDelimiter = c == ':' || c == ',';
-
-      if (isCommentDelimiter) {
-        tokenStartsAt = symbolStarted
-          ? i-symbol.length()
-          : -1;
-        return symbol;
-      }
-
-      if (!symbolStarted && isWhitespace) {
-        continue;
-      }
-
-      if (symbolStarted && (isWhitespace || isTokenDelimiter)) {
-        tokenStartsAt = i-symbol.length();
-        return symbol;
-      }
-
-      if (!isWhitespace) {
-        symbolStarted = true;
-        symbol.push_back(c);
-
-        if (isTokenDelimiter) {
-          tokenStartsAt = i;
-          return symbol;
-        }
-      }
-    }
-
-    tokenStartsAt = symbolStarted
-      ? i-symbol.length()
-      : -1;
-
-    return symbol;
-  }
-
-
-  static bool isValidSymbol(std::string symbol) {
-    if (!std::isalpha(symbol[0]) && symbol[0] != '_') {
-      return false;
-    }
-
-    if (symbol.length() >= 50) {
-      return false;
-    }
-
-    bool isValidChar = true;
-    for (auto c : symbol) {
-      isValidChar = std::isalpha(c) || std::isdigit(c) || c == '_';
-      if (!isValidChar) {
-        return false;
-      }
-    }
-
-    return true;
-  }
+  bool isValidSymbol(std::string symbol);
 };
 
 
