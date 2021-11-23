@@ -7,7 +7,8 @@
       "args": [
         "-g",
         "-Wall",
-        // "-std=c++11",
+        "-pedantic",
+        "-Wextra",
         "${file}",
         "-o",
         "${fileDirname}/${fileBasenameNoExtension}"
@@ -33,7 +34,7 @@
         "panel": "dedicated",
         "clear": true
       },
-      "command": "cd build ; ninja -j4 utests",
+      "command": "cd build ; ninja -j 4 utests",
       "problemMatcher": []
     },
     {
@@ -45,7 +46,7 @@
         "panel": "dedicated",
         "clear": true
       },
-      "command": "cd build ; ninja -j4 hasm",
+      "command": "cd build ; ninja -j 4 hasm",
       "problemMatcher": []
     },
   ],

@@ -23,7 +23,8 @@ std::map<std::string, int>& DefinitionsTable::getTable() {
 
 std::ostream& operator<<(std::ostream& os, const DefinitionsTable& dt) {
   os << "[";
-  for (auto pair : dt.table) os << pair.first << ": " << pair.second << ", ";
+  for (auto pair : dt.table) 
+    os << pair.first << ": " << pair.second << ", ";
   return os << "]";
 }
 

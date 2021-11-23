@@ -10,8 +10,6 @@
  */
 class Scanner {
 public:
-  // Scanner();
-
   ~Scanner();
 
   std::vector<std::string> parseTokens(const std::string line);
@@ -27,6 +25,3 @@ public:
 
 
 #endif // SCANNER_H_INCLUDED
-
-/*
-*/
