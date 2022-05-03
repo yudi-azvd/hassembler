@@ -2,7 +2,7 @@
 #include <vector>
 #include <map>
 
-#include "doctest/doctest.h"
+#include "doctest.h"
 #include "assembler/oldassembler.h"
 #include "util/util.h"
 

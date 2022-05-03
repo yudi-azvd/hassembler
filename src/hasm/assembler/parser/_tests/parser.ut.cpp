@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "doctest/doctest.h"
+#include "doctest.h"
 #include "assembler/assemblyerror.h"
 #include "assembler/assemblydata.h"
 #include "assembler/parser/parser.h"

@@ -3,22 +3,24 @@ _Essa documentação ainda está desenvolvimento_.
 
 
 ## Conjunto de instruções da máquina hipotética
-| Mnemônico | Opcode | Tamanho<br>(palavras) | Ação                     |
-|-----------|--------|-----------------------|--------------------------|
-| ADD       | 01     | 2                     | `ACC = ACC + mem[OP]`      |
-| SUB       | 02     | 2                     | `ACC = ACC - mem[OP]`      |
-| MUL       | 03     | 2                     | `ACC = ACC * mem[OP]`      |
-| DIV       | 04     | 2                     | `ACC = ACC / mem[OP]`      |
-| JMP       | 05     | 2                     | `PC = OP            `      |
-| JMPN      | 06     | 2                     | `se ACC < 0 então PC = OP `|
-| JMPP      | 07     | 2                     | `se ACC > 0 então PC = OP `|
-| JMPZ      | 08     | 2                     | `se ACC = 0 então PC = OP `|
-| COPY      | 09     | 3                     | `mem[OP2] = mem[OP1]`      |
-| LOAD      | 10     | 2                     | `ACC = mem[OP]      `      |
-| STORE     | 11     | 2                     | `mem[OP] = ACC      `      |
-| INPUT     | 12     | 2                     | `mem[OP] = entrada  `      |
-| OUTPUT    | 13     | 2                     | `saída = mem[OP]    `      |
-| STOP      | 14     | 1                     | Suspende a execução      |
+
+| Mnemônico | Opcode | Tamanho<br>(palavras) | Ação                        |
+| --------- | ------ | --------------------- | --------------------------- |
+| ADD       | 01     | 2                     | `ACC = ACC + mem[OP]`       |
+| SUB       | 02     | 2                     | `ACC = ACC - mem[OP]`       |
+| MUL       | 03     | 2                     | `ACC = ACC * mem[OP]`       |
+| DIV       | 04     | 2                     | `ACC = ACC / mem[OP]`       |
+| JMP       | 05     | 2                     | `PC = OP            `       |
+| JMPN      | 06     | 2                     | `se ACC < 0 então PC = OP ` |
+| JMPP      | 07     | 2                     | `se ACC > 0 então PC = OP ` |
+| JMPZ      | 08     | 2                     | `se ACC = 0 então PC = OP ` |
+| COPY      | 09     | 3                     | `mem[OP2] = mem[OP1]`       |
+| LOAD      | 10     | 2                     | `ACC = mem[OP]      `       |
+| STORE     | 11     | 2                     | `mem[OP] = ACC      `       |
+| INPUT     | 12     | 2                     | `mem[OP] = entrada  `       |
+| OUTPUT    | 13     | 2                     | `saída = mem[OP]    `       |
+| STOP      | 14     | 1                     | Suspende a execução         |
+
 <small> Tabela feita com <a href="https://www.tablesgenerator.com/markdown_tables#"> Tables Generator</a></small>.
 
 
@@ -75,8 +77,8 @@ _Essa parte ainda vai ser melhorada_. Se você quiser simular o programa
 anterior, você pode usar o simulador do
 [Trabalho 2](https://github.com/yudi-azvd/hassembler/tree/sb-trabalho-2) e
 compilá-lo seguindo as instruções do
-[README.md](https://github.com/yudi-azvd/hassembler/tree/sb-trabalho-2#usar-e-executar). Depois disso, copie o `simulador` para o
-diretório do `fatorial.obj`.
+[README.md](https://github.com/yudi-azvd/hassembler/tree/sb-trabalho-2#usar-e-executar).
+Depois disso, copie o `simulador` para o diretório do `fatorial.obj`.
 
 Antes de simular, faça uma pequena correção em `fatorial.obj`: remova tudo o que
 vem antes do primeiro número que vem depois do `T`. Esse processo pode ser

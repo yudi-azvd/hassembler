@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "doctest/doctest.h"
+#include "doctest.h"
 #include "assembler/instructions/instruction.h"
 #include "assembler/instructions/allinstructions.h"
 

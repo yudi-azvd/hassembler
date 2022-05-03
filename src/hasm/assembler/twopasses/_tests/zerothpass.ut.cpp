@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "doctest/doctest.h"
+#include "doctest.h"
 #include "assembler/twopasses/zerothpass.h"
 #include "util/util.h"
 

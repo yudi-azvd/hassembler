@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "doctest/doctest.h"
+#include "doctest.h"
 #include "assembler/source.h"
 
 

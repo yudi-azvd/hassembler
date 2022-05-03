@@ -18,7 +18,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -ansi -pedantic -std=c++11")
 include_directories(
   src
   src/hasm
-  lib
+  lib/doctest
 )
 
 
